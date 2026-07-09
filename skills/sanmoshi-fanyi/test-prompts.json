@@ -1,0 +1,69 @@
+{
+  "skill": "sanmoshi-fanyi",
+  "version": "0.1.0",
+  "test_cases": [
+    {
+      "id": "should-trigger-01",
+      "type": "should_trigger",
+      "prompt": "材料原文：'以前村里各干各的，没人张罗，现在成立了养牛合作社，统一品种、统一防疫，牛肉卖到了大城市。' 请帮我把这段话翻译成申论规范表达。",
+      "expected_behavior": "判断为'现象描述型'材料，使用'现象→术语'模式，翻译出'发展集体经济'或'推进产业化经营'等规范表达",
+      "notes": "典型的现象描述→术语翻译场景，与书中'村民各过各的→合作社'案例高度相似"
+    },
+    {
+      "id": "should-trigger-02",
+      "type": "should_trigger",
+      "prompt": "材料说'社区请了律师每周来坐班，居民有法律问题当场就能咨询，不用自己跑律所了'，这个做法用规范词怎么概括？",
+      "expected_behavior": "判断为'做法叙述型'材料，使用'做法→概括'模式，提取功能属性概括为'提供法律援助服务'或'公共法律服务进社区'等",
+      "notes": "具体做法→抽象对策的翻译，需要忽略细节（律师、每周、坐班）提取功能属性"
+    },
+    {
+      "id": "should-trigger-03",
+      "type": "should_trigger",
+      "prompt": "材料描述'这条街上每家店卖的小吃都差不多，烤鱿鱼、臭豆腐、奶茶，跟其他古镇一模一样，游客来了转一圈就走'。请概括这里存在的问题。",
+      "expected_behavior": "判断为'问题暴露型'材料，使用'问题→定性'模式，翻译出'同质化'这一定性词",
+      "notes": "与书中景区纪念品雷同案例几乎一致，是问题→定性的典型场景"
+    },
+    {
+      "id": "should-trigger-04",
+      "type": "should_trigger",
+      "prompt": "材料说'村里通了宽带之后，老人们也学会了用手机跟在外地打工的子女视频聊天，逢人就说腰包虽然没鼓但心里踏实了'，请翻译成规范表达。",
+      "expected_behavior": "判断为'结果/效果描述型'，使用因果倒推：视频聊天→精神层面满足→对策应为'丰富精神文化生活'或'完善公共文化服务'",
+      "notes": "E段步骤3的补充检验场景——材料描述结果而非做法，需要因果倒推"
+    },
+    {
+      "id": "should-not-trigger-01",
+      "type": "should_not_trigger",
+      "prompt": "我已经翻译出了'分级诊疗'和'远程医疗'两个规范词，在描述'三甲医院专家到乡镇坐诊'的材料里，用哪个更准确？",
+      "expected_behavior": "不应触发本skill（翻译），而应触发wenti-celue-yinghe（近义区分）",
+      "notes": "用户已有候选规范词，需要精准选择而非翻译——这是wenti-celue-yinghe的核心场景"
+    },
+    {
+      "id": "should-not-trigger-02",
+      "type": "should_not_trigger",
+      "prompt": "材料里出现'自治委员会'这个词，我应该直接联想到什么规范词？",
+      "expected_behavior": "不应触发本skill（完整推理翻译），而应触发xinhao-ci-fanyi（信号词快速匹配）",
+      "notes": "材料中有明确信号词'自治委员会'，属于快速触发场景，不需要走完整的三模式推理"
+    },
+    {
+      "id": "should-not-trigger-03",
+      "type": "should_not_trigger",
+      "prompt": "我答了一道产业对策题，只写了'统一标准'和'品牌化'两个要点，标准答案有4个要点，我是不是漏了维度？",
+      "expected_behavior": "不应触发本skill（翻译），而应触发fen-weidu-moban（维度检查）",
+      "notes": "用户已有规范词，关心的是维度覆盖完整性，是维度模板的场景"
+    },
+    {
+      "id": "edge-case-01",
+      "type": "edge_case",
+      "prompt": "材料说'村里建了微信群，有什么通知群里一发大家都知道，以前贴告示栏半天没人看'。请问这段材料怎么翻译？另外'发展集体经济'和'推进乡村治理'在这里哪个更合适？",
+      "expected_behavior": "翻译部分触发sanmoshi-fanyi（做法→概括：信息化手段提升治理效率），选词部分触发wenti-celue-yinghe。两个skill都可能被激活。",
+      "notes": "翻译+选词的复合需求，sanmoshi-fanyi处理翻译部分，wenti-celue-yinghe处理选词部分"
+    },
+    {
+      "id": "edge-case-02",
+      "type": "edge_case",
+      "prompt": "材料说'县里给每个村配了一个快递柜，村民网购的东西不用再去镇上取了'。这段话需要翻译吗？感觉已经挺规范的了。",
+      "expected_behavior": "应触发sanmoshi-fanyi——虽然材料看起来相对规范，但仍需翻译为'完善农村物流基础设施'或'打通快递进村最后一公里'等更精炼的政策表达",
+      "notes": "边界场景：材料看似已较规范，但仍有翻译空间——从具体操作到制度化表达的升维"
+    }
+  ]
+}
