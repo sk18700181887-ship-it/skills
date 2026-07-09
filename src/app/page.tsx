@@ -7,7 +7,7 @@ import {
   PenTool, Timer, Mic, Trophy, Crown, ArrowRight, Zap,
   Flame, TrendingUp, Users, Star, Heart, Sparkles,
   MessageCircle, Quote, ChevronRight, CheckCircle2,
-  BookHeart, TreePine
+  BookHeart, TreePine, MapPin
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -282,12 +282,79 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* 学习进度 + 情绪树洞 */}
+      {/* 学习雷达图 + 全国可视化入口 + 情绪树洞 */}
       <div className="grid md:grid-cols-3 gap-6">
-        {/* 五大模块 */}
-        <Card className="p-5 md:col-span-2 animate-fade-up delay-500">
-          <h3 className="font-semibold mb-4">五大模块正确率</h3>
-          <div className="grid grid-cols-5 gap-4">
+        {/* 能力雷达图 */}
+        <Card className="p-5 md:col-span-1 animate-fade-up delay-500">
+          <h3 className="font-semibold mb-4">能力雷达图</h3>
+          <div className="relative w-full aspect-square max-w-[220px] mx-auto">
+            <svg viewBox="0 0 200 200" className="w-full h-full">
+              {/* 网格线 */}
+              {[0.2, 0.4, 0.6, 0.8, 1.0].map(scale => {
+                const pts = [
+                  [100, 100 - 80 * scale], [100 + 76 * scale, 100 - 25 * scale],
+                  [100 + 47 * scale, 100 + 65 * scale], [100 - 47 * scale, 100 + 65 * scale],
+                  [100 - 76 * scale, 100 - 25 * scale],
+                ];
+                return (
+                  <polygon key={scale} points={pts.map(p => p.join(',')).join(' ')}
+                    fill="none" stroke="var(--border)" strokeWidth="0.5" />
+                );
+              })}
+              {/* 数据区域 */}
+              {(() => {
+                const values = [0.88, 0.82, 0.76, 0.65, 0.58];
+                const pts = [
+                  [100, 100 - 80 * values[0]], [100 + 76 * values[1], 100 - 25 * values[1]],
+                  [100 + 47 * values[2], 100 + 65 * values[2]], [100 - 47 * values[3], 100 + 65 * values[3]],
+                  [100 - 76 * values[4], 100 - 25 * values[4]],
+                ];
+                return (
+                  <polygon points={pts.map(p => p.join(',')).join(' ')}
+                    fill="rgba(243,160,76,0.15)" stroke="rgba(243,160,76,0.8)" strokeWidth="2"
+                    className="animate-scale-in" />
+                );
+              })()}
+              {/* 标签 */}
+              {[
+                { label: '资料分析', x: 100, y: 14, anchor: 'middle' as const },
+                { label: '判断推理', x: 190, y: 78, anchor: 'start' as const },
+                { label: '言语理解', x: 158, y: 175, anchor: 'start' as const },
+                { label: '数量关系', x: 42, y: 175, anchor: 'end' as const },
+                { label: '常识判断', x: 10, y: 78, anchor: 'end' as const },
+              ].map(l => (
+                <text key={l.label} x={l.x} y={l.y} textAnchor={l.anchor}
+                  fill="var(--muted-foreground)" fontSize="9" fontFamily="system-ui">
+                  {l.label}
+                </text>
+              ))}
+            </svg>
+          </div>
+          <div className="grid grid-cols-5 gap-1 mt-3">
+            {[
+              { name: '资料', rate: 88, color: 'text-emerald-600' },
+              { name: '判断', rate: 82, color: 'text-sky-600' },
+              { name: '言语', rate: 76, color: 'text-amber-600' },
+              { name: '数量', rate: 65, color: 'text-orange-600' },
+              { name: '常识', rate: 58, color: 'text-rose-600' },
+            ].map(m => (
+              <div key={m.name} className="text-center">
+                <div className={`text-sm font-bold font-serif ${m.color}`}>{m.rate}%</div>
+                <div className="text-[9px] text-muted-foreground">{m.name}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* 全国可视化入口 + 五大模块条形图 */}
+        <Card className="p-5 animate-fade-up delay-500">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-semibold text-sm">五大模块正确率</h3>
+            <Link href="/map" className="flex items-center gap-1 text-xs text-primary hover:underline">
+              <MapPin className="w-3 h-3" /> 全国可视化
+            </Link>
+          </div>
+          <div className="space-y-3">
             {[
               { name: '资料分析', rate: 88, color: 'bg-emerald-500' },
               { name: '判断推理', rate: 82, color: 'bg-sky-500' },
@@ -300,11 +367,35 @@ export default function Dashboard() {
                   <span className="text-muted-foreground">{m.name}</span>
                   <span className="font-semibold">{m.rate}%</span>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className={`h-full rounded-full ${m.color} animate-progress`} style={{ width: `${m.rate}%` }} />
+                <div className="h-5 rounded-lg bg-muted overflow-hidden relative">
+                  <div className={`h-full rounded-lg ${m.color} animate-progress transition-all`} style={{ width: `${m.rate}%` }} />
+                  <div className="absolute inset-0 flex items-center pl-2">
+                    <span className="text-[9px] font-bold text-white drop-shadow-sm">{m.rate}%</span>
+                  </div>
                 </div>
               </div>
             ))}
+          </div>
+          {/* 全国难度速览 */}
+          <div className="mt-4 p-3 rounded-xl bg-muted/30 border border-border/50">
+            <div className="flex items-center gap-1.5 mb-2">
+              <MapPin className="w-3 h-3 text-primary" />
+              <span className="text-xs font-medium">热门省份难度速览</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { name: '山东', diff: '极难', color: 'bg-red-100 text-red-700' },
+                { name: '河南', diff: '极难', color: 'bg-red-100 text-red-700' },
+                { name: '广东', diff: '难', color: 'bg-orange-100 text-orange-700' },
+                { name: '江苏', diff: '难', color: 'bg-orange-100 text-orange-700' },
+                { name: '浙江', diff: '中高', color: 'bg-yellow-100 text-yellow-700' },
+                { name: '四川', diff: '中等', color: 'bg-lime-100 text-lime-700' },
+              ].map(p => (
+                <span key={p.name} className={`text-[10px] px-2 py-0.5 rounded-full ${p.color} font-medium`}>
+                  {p.name}·{p.diff}
+                </span>
+              ))}
+            </div>
           </div>
         </Card>
 

@@ -56,6 +56,25 @@ export default function PracticePage() {
         )}
       </div>
 
+      {/* 模块进度可视化 */}
+      <div className="grid grid-cols-5 gap-2 animate-fade-up delay-100">
+        {[
+          { name: '言语', done: 3, total: 3, color: 'bg-amber-500' },
+          { name: '判断', done: 2, total: 3, color: 'bg-sky-500' },
+          { name: '数量', done: 1, total: 2, color: 'bg-orange-500' },
+          { name: '资料', done: 1, total: 1, color: 'bg-emerald-500' },
+          { name: '常识', done: 0, total: 1, color: 'bg-rose-500' },
+        ].map(m => (
+          <div key={m.name} className="p-2 rounded-lg border border-border/50 text-center card-hover">
+            <div className="text-xs font-medium mb-1">{m.name}</div>
+            <div className="h-1.5 rounded-full bg-muted overflow-hidden mb-1">
+              <div className={`h-full rounded-full ${m.color} animate-progress`} style={{ width: m.total > 0 ? `${(m.done / m.total) * 100}%` : '0%' }} />
+            </div>
+            <div className="text-[9px] text-muted-foreground">{m.done}/{m.total}</div>
+          </div>
+        ))}
+      </div>
+
       {/* 题目卡片 */}
       <Card className="p-6 animate-fade-up delay-100">
         <div className="flex items-center justify-between mb-4">

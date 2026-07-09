@@ -56,7 +56,54 @@ export default function MockPage() {
 
       {/* 历史成绩 */}
       {tab === 'results' && (
-        <div className="space-y-4 animate-fade-up delay-100">
+        <div className="space-y-5 animate-fade-up delay-100">
+          {/* 成绩趋势折线图 */}
+          <Card className="p-5">
+            <h3 className="font-semibold mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" /> 模考成绩趋势
+            </h3>
+            <div className="h-48 relative">
+              <svg viewBox="0 0 600 180" className="w-full h-full" preserveAspectRatio="none">
+                {/* Y 轴刻度线 */}
+                {[0, 1, 2, 3, 4].map(i => (
+                  <g key={i}>
+                    <line x1="40" y1={20 + i * 35} x2="580" y2={20 + i * 35} stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4" />
+                    <text x="35" y={24 + i * 35} textAnchor="end" fill="var(--muted-foreground)" fontSize="9">{100 - i * 20}</text>
+                  </g>
+                ))}
+                {/* 趋势线 */}
+                {(() => {
+                  const data = [58, 62, 59, 67, 71, 68, 74, 78];
+                  const labels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月'];
+                  const step = (580 - 40) / (data.length - 1);
+                  const points = data.map((v, i) => `${40 + i * step},${180 - (v / 100) * 160}`);
+                  return (
+                    <>
+                      <polyline points={points.join(' ')} fill="none" stroke="var(--color-primary, #F3A04C)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="animate-draw-line" />
+                      {/* 渐变填充 */}
+                      <defs>
+                        <linearGradient id="trendGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="rgba(243,160,76,0.2)" />
+                          <stop offset="100%" stopColor="rgba(243,160,76,0)" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points={`${points.join(' ')} ${40 + (data.length - 1) * step},180 40,180`} fill="url(#trendGrad)" />
+                      {/* 数据点 */}
+                      {data.map((v, i) => (
+                        <g key={i}>
+                          <circle cx={40 + i * step} cy={180 - (v / 100) * 160} r="4" fill="var(--color-primary, #F3A04C)" stroke="white" strokeWidth="2" />
+                          <text x={40 + i * step} y={175 - (v / 100) * 160} textAnchor="middle" fill="var(--muted-foreground)" fontSize="9">{v}</text>
+                          <text x={40 + i * step} y="195" textAnchor="middle" fill="var(--muted-foreground)" fontSize="8">{labels[i]}</text>
+                        </g>
+                      ))}
+                    </>
+                  );
+                })()}
+              </svg>
+            </div>
+          </Card>
+
+          {/* 历史列表 */}
           {RECENT_MOCKS.map((r, i) => (
             <Card key={i} className="p-5 animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
               <div className="flex items-center justify-between">
@@ -84,19 +131,58 @@ export default function MockPage() {
 
       {/* AI 预测 */}
       {tab === 'predict' && (
-        <div className="grid md:grid-cols-3 gap-4 animate-fade-up delay-100">
-          {[
-            { icon: BarChart3, label: '预测行测分', value: '72.5', color: 'text-primary', sub: '基于模考趋势推算' },
-            { icon: TrendingUp, label: '上岸概率', value: '41%', color: 'text-emerald-600', sub: '综合排名与岗位竞争' },
-            { icon: Sparkles, label: 'AI 评语', value: '稳步上升', color: 'text-amber-600', sub: '近 3 次模考均提升 5 分+' },
-          ].map((item, i) => (
-            <Card key={i} className="p-5 text-center card-hover animate-scale-in" style={{animationDelay: `${i*0.1}s`}}>
-              <item.icon className={`w-8 h-8 mx-auto mb-3 ${item.color}`} />
-              <div className={`text-2xl font-bold ${item.color} animate-count-up`}>{item.value}</div>
-              <div className="text-xs font-medium mt-1">{item.label}</div>
-              <div className="text-[10px] text-muted-foreground mt-1">{item.sub}</div>
-            </Card>
-          ))}
+        <div className="space-y-5 animate-fade-up delay-100">
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { icon: BarChart3, label: '预测行测分', value: '72.5', color: 'text-primary', sub: '基于模考趋势推算' },
+              { icon: TrendingUp, label: '上岸概率', value: '41%', color: 'text-emerald-600', sub: '综合排名与岗位竞争' },
+              { icon: Sparkles, label: 'AI 评语', value: '稳步上升', color: 'text-amber-600', sub: '近 3 次模考均提升 5 分+' },
+            ].map((item, i) => (
+              <Card key={i} className="p-5 text-center card-hover animate-scale-in" style={{animationDelay: `${i*0.1}s`}}>
+                <item.icon className={`w-8 h-8 mx-auto mb-3 ${item.color}`} />
+                <div className={`text-2xl font-bold ${item.color} animate-count-up`}>{item.value}</div>
+                <div className="text-xs font-medium mt-1">{item.label}</div>
+                <div className="text-[10px] text-muted-foreground mt-1">{item.sub}</div>
+              </Card>
+            ))}
+          </div>
+
+          {/* 上岸概率仪表盘 */}
+          <Card className="p-5">
+            <h3 className="font-semibold mb-4">上岸概率仪表盘</h3>
+            <div className="flex items-center gap-8 justify-center">
+              <div className="relative w-48 h-48">
+                <svg viewBox="0 0 200 200" className="w-full h-full -rotate-90">
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="var(--border)" strokeWidth="16" />
+                  <circle cx="100" cy="100" r="80" fill="none" stroke="var(--color-primary, #F3A04C)"
+                    strokeWidth="16" strokeDasharray={`${41 * 5.03} ${100 * 5.03 - 41 * 5.03}`}
+                    strokeLinecap="round" className="transition-all duration-1000" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl font-bold font-serif text-primary">41%</span>
+                  <span className="text-[10px] text-muted-foreground">上岸概率</span>
+                </div>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { label: '行测能力', value: 72, color: 'bg-primary' },
+                  { label: '申论能力', value: 65, color: 'bg-amber-500' },
+                  { label: '竞争压力', value: 85, color: 'bg-rose-500' },
+                  { label: '岗位匹配', value: 60, color: 'bg-sky-500' },
+                ].map(item => (
+                  <div key={item.label} className="w-48">
+                    <div className="flex justify-between text-xs mb-1">
+                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="font-semibold">{item.value}%</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-muted overflow-hidden">
+                      <div className={`h-full rounded-full ${item.color} animate-progress`} style={{ width: `${item.value}%` }} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Card>
         </div>
       )}
     </div>

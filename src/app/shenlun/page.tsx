@@ -80,21 +80,52 @@ export default function ShenlunPage() {
                 <Star className="w-4 h-4 text-primary" /> 批改结果
               </h3>
 
-              {/* 总分 */}
-              <div className="flex items-center gap-6 mb-5">
-                <div className="text-center">
+              {/* 总分 + 五维雷达图 */}
+              <div className="flex items-start gap-6 mb-5">
+                <div className="text-center shrink-0">
                   <div className={`text-4xl font-bold ${scoreColor(result.score)}`}>{result.score}</div>
                   <div className="text-xs text-muted-foreground mt-1">/ {result.fullScore} 分</div>
+                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium mt-2 inline-block">{result.tag}</span>
                 </div>
                 <div className="flex-1">
-                  <div className="h-3 rounded-full bg-muted overflow-hidden">
-                    <div className="h-full rounded-full bg-gradient-to-r from-primary to-[oklch(0.72_0.14_85)] transition-all duration-1000" style={{ width: `${pct}%` }} />
-                  </div>
-                  <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-                    <span>0</span><span>超越 {pct - 10}% 考生</span><span>{result.fullScore}</span>
+                  {/* 五维雷达图 */}
+                  <div className="w-full max-w-[200px] mx-auto">
+                    <svg viewBox="0 0 200 200" className="w-full h-full">
+                      {[0.2, 0.4, 0.6, 0.8, 1.0].map(scale => {
+                        const pts = [
+                          [100, 100 - 70 * scale], [100 + 66 * scale, 100 - 22 * scale],
+                          [100 + 41 * scale, 100 + 57 * scale], [100 - 41 * scale, 100 + 57 * scale],
+                          [100 - 66 * scale, 100 - 22 * scale],
+                        ];
+                        return <polygon key={scale} points={pts.map(p => p.join(',')).join(' ')} fill="none" stroke="var(--border)" strokeWidth="0.5" />;
+                      })}
+                      {(() => {
+                        const dims = [
+                          { label: '立意', value: 0.82 },
+                          { label: '结构', value: 0.78 },
+                          { label: '论证', value: 0.71 },
+                          { label: '语言', value: 0.65 },
+                          { label: '卷面', value: 0.88 },
+                        ];
+                        const pts = [
+                          [100, 100 - 70 * dims[0].value], [100 + 66 * dims[1].value, 100 - 22 * dims[1].value],
+                          [100 + 41 * dims[2].value, 100 + 57 * dims[2].value], [100 - 41 * dims[3].value, 100 + 57 * dims[3].value],
+                          [100 - 66 * dims[4].value, 100 - 22 * dims[4].value],
+                        ];
+                        return <polygon points={pts.map(p => p.join(',')).join(' ')} fill="rgba(243,160,76,0.15)" stroke="rgba(243,160,76,0.8)" strokeWidth="2" />;
+                      })()}
+                      {[
+                        { label: '立意', x: 100, y: 20, anchor: 'middle' as const },
+                        { label: '结构', x: 180, y: 80, anchor: 'start' as const },
+                        { label: '论证', x: 152, y: 170, anchor: 'start' as const },
+                        { label: '语言', x: 48, y: 170, anchor: 'end' as const },
+                        { label: '卷面', x: 20, y: 80, anchor: 'end' as const },
+                      ].map(l => (
+                        <text key={l.label} x={l.x} y={l.y} textAnchor={l.anchor} fill="var(--muted-foreground)" fontSize="10" fontFamily="system-ui">{l.label}</text>
+                      ))}
+                    </svg>
                   </div>
                 </div>
-                <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">{result.tag}</span>
               </div>
 
               {/* 亮点与待改进 */}

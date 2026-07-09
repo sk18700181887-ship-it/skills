@@ -47,6 +47,7 @@ src/
 │   ├── mock/page.tsx        # /mock 模考中心（全国排名 + 成绩预测）
 │   ├── interview/page.tsx   # /interview AI 面试模拟（4 大题型 + 实时点评）
 │   ├── diary/page.tsx       # /diary 上岸日记（心情记录 + AI陪伴 + 情绪树洞 + 能量站）
+│   ├── map/page.tsx         # /map 全国公考可视化（省份热力图 + 地市难度 + 岗位分布 + 国考系统）
 │   ├── rank/page.tsx        # /rank 排行榜 + 上岸榜
 │   └── vip/page.tsx         # /vip 会员套餐 & 协议班
 ├── components/

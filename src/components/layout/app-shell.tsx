@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { USER, BRAND, NEXT_EXAM, ANNOUNCEMENTS, JOURNEY_PHASES } from '@/lib/data';
 import {
   Compass, Sparkles, ClipboardCheck, BookOpen, Timer, Mic, ShieldCheck,
-  Home, Trophy, Crown, ChevronRight, Bell, Flame, BookHeart,
+  Home, Trophy, Crown, ChevronRight, Bell, Flame, BookHeart, MapPin,
 } from 'lucide-react';
 import { useState } from 'react';
 import { AICompanion } from '@/components/ai-companion';
@@ -17,6 +17,7 @@ const ICON_MAP: Record<string, React.ElementType> = {
 const NAV = [
   { group: '考公全路径', items: JOURNEY_PHASES },
   { group: '更多', items: [
+    { id: 'map', label: '全国可视化', icon: 'Home', href: '/map', desc: '省份热力图 + 岗位难度', aiFeature: 'AI 难度预测', free: true },
     { id: 'diary', label: '上岸日记', icon: 'Home', href: '/diary', desc: '心情记录 + AI 陪伴', aiFeature: 'AI 情绪陪伴', free: true },
     { id: 'rank', label: '排行榜', icon: 'Home', href: '/rank', desc: '学习排名 + 上岸榜', aiFeature: '', free: true },
     { id: 'vip', label: '会员中心', icon: 'Home', href: '/vip', desc: 'VIP 套餐 + 协议班', aiFeature: '', free: true },
@@ -24,7 +25,7 @@ const NAV = [
 ];
 
 // Replace generic 'Home' icons in "更多" section
-const MORE_ICON_FIX: Record<string, React.ElementType> = { rank: Trophy, vip: Crown, diary: BookHeart };
+const MORE_ICON_FIX: Record<string, React.ElementType> = { rank: Trophy, vip: Crown, diary: BookHeart, map: MapPin };
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

@@ -44,6 +44,50 @@ export default function GongjiPage() {
         ))}
       </div>
 
+      {/* 全模块覆盖率环形图 */}
+      <Card className="p-5 animate-fade-up delay-100">
+        <h3 className="font-semibold mb-4">全模块覆盖率总览</h3>
+        <div className="flex items-center gap-6 justify-center">
+          <div className="relative w-40 h-40">
+            <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+              {GONGJI_MODULES.reduce<{ offset: number; elements: React.ReactNode[] }>((acc, m, i) => {
+                const segLen = 100 / GONGJI_MODULES.length;
+                const filled = (m.coverage / 100) * segLen;
+                const colors = ['#F3A04C', '#3B82F6', '#10B981', '#8B5CF6', '#EF4444', '#06B6D4'];
+                const el = (
+                  <g key={i}>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="var(--border)" strokeWidth="12"
+                      strokeDasharray={`${segLen} ${100 - segLen}`} strokeDashoffset={-acc.offset} />
+                    <circle cx="50" cy="50" r="40" fill="none" stroke={colors[i]} strokeWidth="12"
+                      strokeDasharray={`${filled} ${100 - filled}`} strokeDashoffset={-acc.offset} strokeLinecap="round" />
+                  </g>
+                );
+                return { offset: acc.offset + segLen, elements: [...acc.elements, el] };
+              }, { offset: 0, elements: [] }).elements}
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-lg font-bold font-serif">{Math.round(GONGJI_MODULES.reduce((s, m) => s + m.coverage, 0) / GONGJI_MODULES.length)}%</span>
+              <span className="text-[9px] text-muted-foreground">总覆盖率</span>
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            {GONGJI_MODULES.map((m, i) => {
+              const colors = ['bg-amber-500', 'bg-blue-500', 'bg-emerald-500', 'bg-violet-500', 'bg-rose-500', 'bg-cyan-500'];
+              return (
+                <div key={m.name} className="flex items-center gap-2 text-xs">
+                  <div className={`w-2.5 h-2.5 rounded-sm shrink-0 ${colors[i]}`} />
+                  <span className="w-16">{m.name}</span>
+                  <div className="w-16 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div className={`h-full rounded-full ${colors[i]}`} style={{ width: `${m.coverage}%` }} />
+                  </div>
+                  <span className="text-muted-foreground w-8 text-right">{m.coverage}%</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Card>
+
       {/* 模块详情 */}
       <Card className="p-5 animate-fade-up delay-100">
         <div className="flex items-center justify-between mb-4">

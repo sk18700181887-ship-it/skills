@@ -361,3 +361,42 @@ body {
   mask-composite: exclude;
   pointer-events: none;
 }
+
+/* 柱状图升起动画 */
+@keyframes bar-rise {
+  from { height: 0; }
+}
+.animate-bar-rise {
+  animation: bar-rise 0.6s ease-out both;
+}
+
+/* 雷达图刻度线 */
+.radar-grid {
+  position: relative;
+}
+.radar-grid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px dashed var(--border);
+}
+
+/* 脉冲圆点 */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 1; }
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+.animate-ping-slow {
+  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* 趋势线动画 */
+@keyframes draw-line {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+.animate-draw-line {
+  stroke-dasharray: 1000;
+  animation: draw-line 1.5s ease-out both;
+}

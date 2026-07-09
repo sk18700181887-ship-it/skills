@@ -485,6 +485,96 @@ export const ASHORE_CASES = [
 ];
 
 /* ========== 情绪陪伴 ========== */
+/* ========== 全国公考可视化 ========== */
+export type DiffLevel = '极难' | '难' | '中高' | '中等' | '中低' | '较易';
+
+export const PROVINCE_DATA = [
+  { id: 'sd', name: '山东', short: '鲁', difficulty: '极难' as DiffLevel, avgRatio: 68, posts: 4280, hotCities: ['济南','青岛','烟台','潍坊'], salary: '9-14万', color: '#dc2626' },
+  { id: 'gd', name: '广东', short: '粤', difficulty: '极难' as DiffLevel, avgRatio: 62, posts: 5620, hotCities: ['广州','深圳','佛山','东莞'], salary: '12-22万', color: '#dc2626' },
+  { id: 'js', name: '江苏', short: '苏', difficulty: '极难' as DiffLevel, avgRatio: 58, posts: 4860, hotCities: ['南京','苏州','无锡','常州'], salary: '10-18万', color: '#dc2626' },
+  { id: 'zj', name: '浙江', short: '浙', difficulty: '难' as DiffLevel, avgRatio: 52, posts: 3980, hotCities: ['杭州','宁波','温州','嘉兴'], salary: '10-18万', color: '#f97316' },
+  { id: 'hb', name: '湖北', short: '鄂', difficulty: '难' as DiffLevel, avgRatio: 48, posts: 3240, hotCities: ['武汉','宜昌','襄阳','荆州'], salary: '8-13万', color: '#f97316' },
+  { id: 'sc', name: '四川', short: '川', difficulty: '难' as DiffLevel, avgRatio: 46, posts: 3860, hotCities: ['成都','绵阳','德阳','宜宾'], salary: '8-14万', color: '#f97316' },
+  { id: 'hn', name: '河南', short: '豫', difficulty: '难' as DiffLevel, avgRatio: 55, posts: 4120, hotCities: ['郑州','洛阳','开封','新乡'], salary: '7-12万', color: '#f97316' },
+  { id: 'he', name: '河北', short: '冀', difficulty: '中高' as DiffLevel, avgRatio: 42, posts: 3180, hotCities: ['石家庄','保定','唐山','廊坊'], salary: '7-11万', color: '#eab308' },
+  { id: 'fj', name: '福建', short: '闽', difficulty: '中高' as DiffLevel, avgRatio: 40, posts: 2640, hotCities: ['福州','厦门','泉州','漳州'], salary: '8-14万', color: '#eab308' },
+  { id: 'ah', name: '安徽', short: '皖', difficulty: '中高' as DiffLevel, avgRatio: 38, posts: 2860, hotCities: ['合肥','芜湖','蚌埠','马鞍山'], salary: '7-12万', color: '#eab308' },
+  { id: 'jx', name: '江西', short: '赣', difficulty: '中等' as DiffLevel, avgRatio: 34, posts: 2240, hotCities: ['南昌','赣州','九江','上饶'], salary: '7-11万', color: '#84cc16' },
+  { id: 'ln', name: '辽宁', short: '辽', difficulty: '中等' as DiffLevel, avgRatio: 32, posts: 2480, hotCities: ['沈阳','大连','鞍山','锦州'], salary: '7-11万', color: '#84cc16' },
+  { id: 'cq', name: '重庆', short: '渝', difficulty: '中等' as DiffLevel, avgRatio: 36, posts: 1860, hotCities: ['渝中','江北','南岸','沙坪坝'], salary: '8-13万', color: '#84cc16' },
+  { id: 'sx', name: '陕西', short: '陕', difficulty: '中等' as DiffLevel, avgRatio: 35, posts: 2080, hotCities: ['西安','咸阳','宝鸡','渭南'], salary: '7-12万', color: '#84cc16' },
+  { id: 'gx', name: '广西', short: '桂', difficulty: '中低' as DiffLevel, avgRatio: 28, posts: 1960, hotCities: ['南宁','柳州','桂林','北海'], salary: '7-10万', color: '#22c55e' },
+  { id: 'yn', name: '云南', short: '滇', difficulty: '中低' as DiffLevel, avgRatio: 26, posts: 2180, hotCities: ['昆明','曲靖','玉溪','大理'], salary: '7-10万', color: '#22c55e' },
+  { id: 'gz', name: '贵州', short: '黔', difficulty: '中低' as DiffLevel, avgRatio: 24, posts: 1680, hotCities: ['贵阳','遵义','六盘水','毕节'], salary: '7-10万', color: '#22c55e' },
+  { id: 'gs', name: '甘肃', short: '甘', difficulty: '较易' as DiffLevel, avgRatio: 18, posts: 1420, hotCities: ['兰州','天水','酒泉','白银'], salary: '6-9万', color: '#14b8a6' },
+  { id: 'hlj', name: '黑龙江', short: '黑', difficulty: '较易' as DiffLevel, avgRatio: 20, posts: 1860, hotCities: ['哈尔滨','齐齐哈尔','大庆','牡丹江'], salary: '6-10万', color: '#14b8a6' },
+  { id: 'nm', name: '内蒙古', short: '蒙', difficulty: '较易' as DiffLevel, avgRatio: 16, posts: 1540, hotCities: ['呼和浩特','包头','鄂尔多斯','赤峰'], salary: '7-11万', color: '#14b8a6' },
+  { id: 'xj', name: '新疆', short: '新', difficulty: '较易' as DiffLevel, avgRatio: 12, posts: 1280, hotCities: ['乌鲁木齐','克拉玛依','昌吉','伊犁'], salary: '7-12万', color: '#14b8a6' },
+  { id: 'xz', name: '西藏', short: '藏', difficulty: '较易' as DiffLevel, avgRatio: 8, posts: 620, hotCities: ['拉萨','日喀则','林芝','山南'], salary: '10-16万', color: '#14b8a6' },
+  { id: 'qh', name: '青海', short: '青', difficulty: '较易' as DiffLevel, avgRatio: 10, posts: 580, hotCities: ['西宁','海东','海西','海南州'], salary: '8-13万', color: '#14b8a6' },
+  { id: 'nx', name: '宁夏', short: '宁', difficulty: '较易' as DiffLevel, avgRatio: 14, posts: 480, hotCities: ['银川','石嘴山','吴忠','固原'], salary: '7-11万', color: '#14b8a6' },
+  { id: 'hainan', name: '海南', short: '琼', difficulty: '中低' as DiffLevel, avgRatio: 22, posts: 860, hotCities: ['海口','三亚','儋州','琼海'], salary: '7-12万', color: '#22c55e' },
+  { id: 'jilin', name: '吉林', short: '吉', difficulty: '中低' as DiffLevel, avgRatio: 22, posts: 1640, hotCities: ['长春','吉林市','四平','延边'], salary: '6-10万', color: '#22c55e' },
+  { id: 'shanxi', name: '山西', short: '晋', difficulty: '中等' as DiffLevel, avgRatio: 34, posts: 2180, hotCities: ['太原','大同','临汾','运城'], salary: '7-11万', color: '#84cc16' },
+  { id: 'hunan', name: '湖南', short: '湘', difficulty: '难' as DiffLevel, avgRatio: 46, posts: 3240, hotCities: ['长沙','株洲','湘潭','衡阳'], salary: '8-13万', color: '#f97316' },
+];
+
+export const DIFFICULTY_SCALE: { level: DiffLevel; range: string; color: string; desc: string }[] = [
+  { level: '极难', range: '55+:1', color: '#dc2626', desc: '全国竞争最激烈，岗位少考生多' },
+  { level: '难', range: '40-54:1', color: '#f97316', desc: '竞争激烈，热门省份/城市' },
+  { level: '中高', range: '30-39:1', color: '#eab308', desc: '竞争偏高，需充分备考' },
+  { level: '中等', range: '25-34:1', color: '#84cc16', desc: '竞争适中，认真备考有机会' },
+  { level: '中低', range: '18-24:1', color: '#22c55e', desc: '竞争较低，上岸概率较高' },
+  { level: '较易', range: '<18:1', color: '#14b8a6', desc: '竞争最低，保底选择' },
+];
+
+// 各地市竞争比细分（以山东为例展开）
+export const CITY_DETAIL_SD = [
+  { city: '济南', ratio: 86, posts: 520, difficulty: '极难' as DiffLevel, topPost: '市发改委·综合管理', topRatio: '128:1' },
+  { city: '青岛', ratio: 78, posts: 620, difficulty: '极难' as DiffLevel, topPost: '市大数据局·信息化管理', topRatio: '96:1' },
+  { city: '烟台', ratio: 42, posts: 380, difficulty: '难' as DiffLevel, topPost: '市统计局·统计信息化', topRatio: '58:1' },
+  { city: '潍坊', ratio: 38, posts: 340, difficulty: '中高' as DiffLevel, topPost: '市行政审批局·综合岗', topRatio: '52:1' },
+  { city: '临沂', ratio: 35, posts: 460, difficulty: '中高' as DiffLevel, topPost: '市市场监管局·执法岗', topRatio: '48:1' },
+  { city: '淄博', ratio: 30, posts: 280, difficulty: '中等' as DiffLevel, topPost: '市信息中心·技术岗', topRatio: '42:1' },
+  { city: '济宁', ratio: 32, posts: 320, difficulty: '中等' as DiffLevel, topPost: '市财政局·财务管理', topRatio: '45:1' },
+  { city: '威海', ratio: 28, posts: 180, difficulty: '中等' as DiffLevel, topPost: '市卫健委·综合管理', topRatio: '38:1' },
+  { city: '泰安', ratio: 22, posts: 240, difficulty: '中低' as DiffLevel, topPost: '市住建局·工程技术', topRatio: '32:1' },
+  { city: '德州', ratio: 18, posts: 220, difficulty: '较易' as DiffLevel, topPost: '市基层·信息服务', topRatio: '22:1' },
+  { city: '聊城', ratio: 16, posts: 200, difficulty: '较易' as DiffLevel, topPost: '市司法局·司法辅助', topRatio: '20:1' },
+  { city: '菏泽', ratio: 14, posts: 320, difficulty: '较易' as DiffLevel, topPost: '市基层·综合管理', topRatio: '18:1' },
+  { city: '枣庄', ratio: 15, posts: 160, difficulty: '较易' as DiffLevel, topPost: '市基层·公共服务', topRatio: '19:1' },
+  { city: '滨州', ratio: 17, posts: 180, difficulty: '较易' as DiffLevel, topPost: '市基层·综合岗', topRatio: '21:1' },
+  { city: '东营', ratio: 20, posts: 140, difficulty: '中低' as DiffLevel, topPost: '市自然资源局·技术岗', topRatio: '28:1' },
+  { city: '日照', ratio: 19, posts: 150, difficulty: '较易' as DiffLevel, topPost: '市基层·窗口服务', topRatio: '24:1' },
+];
+
+// 岗位类型分布
+export const POST_DISTRIBUTION = [
+  { type: '综合管理', count: 28420, ratio: 22, color: '#f3a04c', difficulty: '中高' },
+  { type: '行政执法', count: 24180, ratio: 19, color: '#e58522', difficulty: '中等' },
+  { type: '专业技术', count: 18640, ratio: 14, color: '#22c55e', difficulty: '中低' },
+  { type: '财务管理', count: 15280, ratio: 12, color: '#3b82f6', difficulty: '中高' },
+  { type: '信息技术', count: 12680, ratio: 10, color: '#8b5cf6', difficulty: '中等' },
+  { type: '文字综合', count: 10420, ratio: 8, color: '#ec4899', difficulty: '难' },
+  { type: '法律司法', count: 8640, ratio: 7, color: '#f97316', difficulty: '难' },
+  { type: '教育文化', count: 6280, ratio: 5, color: '#14b8a6', difficulty: '中等' },
+  { type: '其他', count: 4860, ratio: 3, color: '#6b7280', difficulty: '中等' },
+];
+
+// 国考热门系统
+export const GUOKAO_SYSTEMS = [
+  { name: '税务系统', posts: 14820, ratio: 58, difficulty: '难' as DiffLevel, salary: '9-14万' },
+  { name: '海关系统', posts: 4280, ratio: 52, difficulty: '难' as DiffLevel, salary: '10-16万' },
+  { name: '统计调查队', posts: 3640, ratio: 38, difficulty: '中高' as DiffLevel, salary: '8-12万' },
+  { name: '铁路公安', posts: 2860, ratio: 28, difficulty: '中等' as DiffLevel, salary: '9-13万' },
+  { name: '海事局', posts: 1640, ratio: 22, difficulty: '中低' as DiffLevel, salary: '9-14万' },
+  { name: '气象局', posts: 1280, ratio: 18, difficulty: '较易' as DiffLevel, salary: '8-12万' },
+  { name: '水利系统', posts: 1860, ratio: 24, difficulty: '中低' as DiffLevel, salary: '8-13万' },
+  { name: '审计署', posts: 620, ratio: 68, difficulty: '极难' as DiffLevel, salary: '10-15万' },
+  { name: '证监会', posts: 380, ratio: 82, difficulty: '极难' as DiffLevel, salary: '15-25万' },
+  { name: '银保监', posts: 580, ratio: 72, difficulty: '极难' as DiffLevel, salary: '12-20万' },
+];
+
 export const MOOD_OPTIONS = [
   { id: 'great', emoji: '😄', label: '状态很好', color: '#22c55e' },
   { id: 'good', emoji: '🙂', label: '还行', color: '#84cc16' },
