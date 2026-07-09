@@ -1,65 +1,75 @@
-# 项目上下文
+# AGENTS.md · 上岸引擎（SaaS 商业版）
 
-### 版本技术栈
+## 项目概览
+面向公务员 / 事业单位 / 选调生考生的 **AI 智能公考备考 SaaS**。核心商业闭环：免费引流 → 单点付费 → VIP 订阅 → 协议班高客单。
 
-- **Framework**: Next.js 16 (App Router)
-- **Core**: React 19
-- **Language**: TypeScript 5
-- **UI 组件**: shadcn/ui (基于 Radix UI)
-- **Styling**: Tailwind CSS 4
+- 品牌名：**上岸引擎**（原型迭代自"考编备考全攻略生成器"）
+- 定位：AI 陪练 + 智能推题 + 全国模考排名 + 申论批改 + 协议班陪跑
+- 技术栈：Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4 + shadcn/ui
+- 端口：`process.env.DEPLOY_RUN_PORT`（默认 5000）
+- 数据：目前所有数据为客户端 Mock（`src/lib/data.ts`），未接入后端
+
+## 商业模型
+| 层级 | 定位 | 关键页面 |
+| --- | --- | --- |
+| 免费引流 | AI 岗位匹配（预览）、每日 10 题、公开课、错题本、上岸榜 | `/`、`/match`、`/practice`、`/rank` |
+| 单点付费 | 深度岗位报告 ¥29.9、AI 批改 ¥9.9/次、真人批改 ¥199/篇 | `/match`、`/shenlun` |
+| VIP 订阅 | 月卡 ¥68 / 季卡 ¥168 / 年卡 ¥498 | `/vip` |
+| 协议班 | ¥9800，笔试不过退 ¥8000 | `/vip` |
+| 增长机制 | 老带新双向返现、限时倒计时、排行榜社交激励 | `/vip`、`/rank` |
 
 ## 目录结构
-
 ```
-├── public/                 # 静态资源
-├── scripts/                # 构建与启动脚本
-│   ├── build.sh            # 构建脚本
-│   ├── dev.sh              # 开发环境启动脚本
-│   ├── prepare.sh          # 预处理脚本
-│   └── start.sh            # 生产环境启动脚本
-├── src/
-│   ├── app/                # 页面路由与布局
-│   ├── components/ui/      # Shadcn UI 组件库
-│   ├── hooks/              # 自定义 Hooks
-│   ├── lib/                # 工具库
-│   │   └── utils.ts        # 通用工具函数 (cn)
-│   └── server.ts           # 自定义服务端入口
-├── next.config.ts          # Next.js 配置
-├── package.json            # 项目依赖管理
-└── tsconfig.json           # TypeScript 配置
+src/
+├── app/
+│   ├── layout.tsx           # RootLayout · 挂载 AppShell（侧边栏 + 主区）
+│   ├── globals.css          # Tailwind + Design Tokens + 自定义类（vip-gradient / brand-gradient / stamp / vip-text）
+│   ├── page.tsx             # / 学习中心 Dashboard
+│   ├── match/page.tsx       # /match AI 岗位匹配
+│   ├── practice/page.tsx    # /practice 智能题库（含每日一题）
+│   ├── shenlun/page.tsx     # /shenlun 申论 AI 批改（核心付费点）
+│   ├── mock/page.tsx        # /mock 模考中心
+│   ├── vip/page.tsx         # /vip 会员套餐 & 协议班（核心转化页）
+│   └── rank/page.tsx        # /rank 排行榜 + 上岸榜
+├── components/
+│   ├── layout/app-shell.tsx # 全站侧边栏 + Logo + 用户卡片 + 倒计时
+│   ├── common.tsx           # 通用 PageHeader / VipLock / PriceTag / Stat
+│   └── ui/                  # shadcn/ui 组件（Radix）
+├── lib/
+│   ├── data.ts              # 全站 Mock 数据（USER、TODAY_TASKS、JOB_CATEGORIES、VIP_PLANS 等）
+│   └── utils.ts             # cn() 等工具
+DESIGN.md                    # 商业版设计规范（视觉/交互）
+AGENTS.md                    # 本文档
+.coze                        # 预置，勿改
 ```
 
-- 项目文件（如 app 目录、pages 目录、components 等）默认初始化到 `src/` 目录下。
+## 常用命令
+| 场景 | 命令 |
+| --- | --- |
+| 启动开发服务 | `coze dev`（主仓沙箱已常驻） |
+| 构建生产 | `coze build` |
+| 启动生产 | `coze start` |
+| 类型检查 | `pnpm ts-check` |
+| Lint | `pnpm lint --quiet` |
 
-## 包管理规范
+## 修改指南
+- **改数据（岗位库 / 城市梯队 / 套餐价格 / 排行榜）**：直接改 `src/lib/data.ts` 中对应的常量导出，无需改渲染。价格调整需同步更新 `VIP_PLANS`、`AGREEMENT_PLAN` 以及页面里的一次性引用。
+- **改视觉 Token**：先读 `DESIGN.md`，再改 `globals.css` 中的 `:root` CSS 变量与 `.vip-gradient / .brand-gradient / .stamp` 等自定义类。
+- **新增页面**：
+  1. 在 `src/app/<slug>/page.tsx` 创建 client 页面（如需交互）；
+  2. 在 `src/components/layout/app-shell.tsx` 的 `NAV` 数组中追加导航项；
+  3. 页面不需再包 `AppShell`，`layout.tsx` 已自动挂载。
+- **付费按钮跳转**：所有 VIP CTA 使用 `<Link href="/vip">` 收敛，方便未来替换为真实支付流程。
+- **VIP 锁定态**：使用 `<VipLock />`（`src/components/common.tsx`）覆盖内容，或者用 `USER.isVip` 判断分支渲染。
 
-**仅允许使用 pnpm** 作为包管理器，**严禁使用 npm 或 yarn**。
-**常用命令**：
-- 安装依赖：`pnpm add <package>`
-- 安装开发依赖：`pnpm add -D <package>`
-- 安装所有依赖：`pnpm install`
-- 移除依赖：`pnpm remove <package>`
+## 设计约束
+- 视觉基调延续"档案纸秩序感 + 朱砂橘印章"，商业版新增"金黑对比"用于 VIP 权益（`.vip-gradient`），务必只在付费元素使用，避免全站过度商业化。
+- 严禁引入图表库、字体 CDN、彩色霓虹按钮；卡片以细描边 + 极浅底色为主。
+- 打印样式（如有）仅隐藏侧栏，正文铺满，与 DESIGN.md 保持一致。
 
-## 开发规范
-
-### 编码规范
-
-- 默认按 TypeScript `strict` 心智写代码；优先复用当前作用域已声明的变量、函数、类型和导入，禁止引用未声明标识符或拼错变量名。
-- 禁止隐式 `any` 和 `as any`；函数参数、返回值、解构项、事件对象、`catch` 错误在使用前应有明确类型或先完成类型收窄，并清理未使用的变量和导入。
-
-### next.config 配置规范
-
-- 配置的路径不要写死绝对路径，必须使用 path.resolve(__dirname, ...)、import.meta.dirname 或 process.cwd() 动态拼接。
-
-### Hydration 问题防范
-
-1. 严禁在 JSX 渲染逻辑中直接使用 typeof window、Date.now()、Math.random() 等动态数据。**必须使用 'use client' 并配合 useEffect + useState 确保动态内容仅在客户端挂载后渲染**；同时严禁非法 HTML 嵌套（如 <p> 嵌套 <div>）。
-2. **禁止使用 head 标签**，优先使用 metadata，详见文档：https://nextjs.org/docs/app/api-reference/functions/generate-metadata
-   1. 三方 CSS、字体等资源可在 `globals.css` 中顶部通过 `@import` 引入或使用 next/font
-   2. preload, preconnect, dns-prefetch 通过 ReactDOM 的 preload、preconnect、dns-prefetch 方法引入
-   3. json-ld 可阅读 https://nextjs.org/docs/app/guides/json-ld
-
-## UI 设计与组件规范 (UI & Styling Standards)
-
-- 模板默认预装核心组件库 `shadcn/ui`，位于`src/components/ui/`目录下
-- Next.js 项目**必须默认**采用 shadcn/ui 组件、风格和规范，**除非用户指定用其他的组件和规范。**
+## 已知限制 & 后续工作
+1. 数据均为 Mock，未接入后端（真实用户 / 支付 / 题库 API 待接）。
+2. 支付按钮当前为占位，需接入微信 / 支付宝 SDK 或后端下单接口。
+3. AI 批改结果为固定 mock，需接入 LLM 集成（预留 `/shenlun` 页面的 `runReview` 调用位）。
+4. 用户认证、订单、错题本持久化需要后端与数据库（推荐后续接入 Supabase）。
+5. 移动端可进一步优化：底部 Tab bar、Sheet 抽屉替代 Sidebar。
