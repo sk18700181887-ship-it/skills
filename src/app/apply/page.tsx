@@ -1,134 +1,124 @@
 'use client';
+
 import { useState } from 'react';
-import Link from 'next/link';
-import { CITY_TIERS, APPLY_WISDOM, AI_PREDICTION, USER } from '@/lib/data';
-import { PageHeader, VipLock, PriceTag } from '@/components/common';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { ClipboardList, Shield, CheckCircle2, TrendingUp, AlertTriangle, Sparkles, Plus, X } from 'lucide-react';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Target, Sparkles, TrendingUp, Users, AlertTriangle, CheckCircle2, Copy, Check } from 'lucide-react';
+import { APPLY_STRATEGY } from '@/lib/data';
 
 export default function ApplyPage() {
-  const [province, setProvince] = useState('山东省');
-  const [copied, setCopied] = useState(false);
-  const tiers = CITY_TIERS.find((c) => c.province === province) || CITY_TIERS[0];
+  const [selected, setSelected] = useState<string[]>([]);
+  const [showResult, setShowResult] = useState(false);
 
-  const handleCopy = () => {
-    const text = APPLY_WISDOM.map((w) => `${w.type}：${w.desc}\n提示：${w.tip}`).join('\n\n');
-    navigator.clipboard.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
+  const toggle = (id: string) => {
+    setSelected(prev => prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]);
+    setShowResult(false);
   };
 
   return (
-    <div className="p-4 lg:p-6 max-w-6xl mx-auto space-y-6">
-      <PageHeader title="报名决策" subtitle="AI 帮你分析冲稳保组合，避免全灭翻车" />
+    <div className="space-y-6 max-w-6xl">
+      <div className="animate-fade-up">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <ClipboardList className="w-5 h-5 text-primary" /> 报名决策
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">AI 冲稳保组合推荐 + 竞争比预测，帮你科学填报</p>
+      </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          {/* 冲稳保组合 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Target className="w-4 h-4 text-primary" />
-                  冲稳保组合推荐 · {province}
-                </CardTitle>
-                <select value={province} onChange={(e) => setProvince(e.target.value)}
-                  className="text-xs rounded border px-2 py-1 bg-white">
-                  {CITY_TIERS.map((c) => <option key={c.province}>{c.province}</option>)}
-                </select>
+      {/* 冲稳保策略 */}
+      <div className="grid md:grid-cols-3 gap-4 animate-fade-up delay-75">
+        {APPLY_STRATEGY.map((s, i) => (
+          <Card
+            key={s.type}
+            className={`p-5 cursor-pointer transition-all duration-300 ${
+              selected.includes(s.type) ? 'ring-2 ring-primary shadow-lg scale-[1.02]' : 'card-hover'
+            } animate-scale-in delay-${(i+1)*75}`}
+            onClick={() => toggle(s.type)}
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                s.type === '冲' ? 'bg-rose-50 text-rose-600' :
+                s.type === '稳' ? 'bg-amber-50 text-amber-600' :
+                'bg-emerald-50 text-emerald-600'
+              }`}>
+                {s.type === '冲' ? <TrendingUp className="w-5 h-5" /> :
+                 s.type === '稳' ? <CheckCircle2 className="w-5 h-5" /> :
+                 <Shield className="w-5 h-5" />}
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid sm:grid-cols-3 gap-4">
-                {[
-                  { label: '冲刺岗位', desc: '1-2个，竞争激烈但上限高', cities: tiers.sprint.slice(0, 2), color: 'var(--err)', bg: 'var(--err)' },
-                  { label: '稳定岗位', desc: '2-3个，中等竞争有把握', cities: tiers.stable.slice(0, 3), color: 'var(--warn)', bg: 'var(--warn)' },
-                  { label: '保底岗位', desc: '1-2个，低竞争兜底', cities: tiers.safety.slice(0, 2), color: 'var(--ok)', bg: 'var(--ok)' },
-                ].map((tier) => (
-                  <div key={tier.label} className="rounded-xl border-2 p-4" style={{ borderColor: `${tier.bg}30` }}>
-                    <div className="text-sm font-bold" style={{ color: tier.color }}>{tier.label}</div>
-                    <div className="text-[11px] text-muted-foreground mt-0.5">{tier.desc}</div>
-                    <div className="mt-3 space-y-1.5">
-                      {tier.cities.map((c) => (
-                        <div key={c} className="text-sm flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: tier.color }} />
-                          {c}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* 报名须知 */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-primary" />
-                  报名避坑须知
-                </CardTitle>
-                <Button variant="ghost" size="sm" onClick={handleCopy} className="text-xs h-7">
-                  {copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                  {copied ? '已复制' : '复制'}
-                </Button>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {APPLY_WISDOM.map((w) => (
-                <div key={w.type}>
-                  <div className="text-sm font-medium flex items-center gap-2">
-                    <AlertTriangle className={`w-3.5 h-3.5 text-[var(--${w.color})]`} />{w.type}
-                  </div>
-                  <div className="mt-1 text-xs text-muted-foreground pl-5.5">{w.desc}</div>
-                  <div className="text-xs text-primary pl-5.5">提示：{w.tip}</div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right: AI Advisor */}
-        <div className="space-y-4">
-          <Card className="border-primary/30 bg-primary/3">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-primary" />
-                AI 报名顾问
-                <Badge className="text-[9px] bg-primary/15 text-primary">AI</Badge>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!USER.isVip ? (
-                <>
-                  <VipLock message="AI 报名顾问为 VIP 专属" />
-                  <Link href="/vip">
-                    <Button className="w-full mt-2" size="sm">开通 VIP</Button>
-                  </Link>
-                </>
-              ) : (
-                <div className="space-y-3">
-                  <div className="text-center p-3 rounded-lg bg-white">
-                    <div className="text-xs text-muted-foreground">当前方案推荐指数</div>
-                    <div className="text-2xl font-bold font-serif text-primary">92</div>
-                    <div className="text-[10px] text-[var(--ok)]">冲稳保组合合理，上岸概率较高</div>
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    <div className="font-medium text-foreground">AI 建议</div>
-                    <ul className="mt-1 space-y-1">
-                      <li>· 建议保底岗位选择限制专业+应届的岗位</li>
-                      <li>· 冲刺岗位竞争比超 200:1，需谨慎</li>
-                      <li>· 省考报名期后 3 天可查看实时竞争比</li>
-                    </ul>
-                  </div>
+              {selected.includes(s.type) && (
+                <div className="w-5 h-5 rounded-full bg-primary text-white flex items-center justify-center animate-scale-in">
+                  <CheckCircle2 className="w-3 h-3" />
                 </div>
               )}
-            </CardContent>
+            </div>
+            <h3 className="font-bold text-lg mb-1">{s.type}·{s.color === 'err' ? '冲刺' : s.color === 'warn' ? '稳妥' : '保底'}</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed mb-3">{s.desc}</p>
+            <div className="p-2 rounded-lg bg-muted/50">
+              <p className="text-[10px] text-primary font-medium">💡 {s.tip}</p>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      {/* 生成组合 */}
+      <Card className="p-5 animate-fade-up delay-150">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="w-4 h-4 text-primary animate-pulse-glow" />
+          <h2 className="font-semibold">AI 组合推荐</h2>
+        </div>
+        <p className="text-sm text-muted-foreground mb-4">选择你需要的策略组合，AI 将生成最优报名方案</p>
+        <div className="flex items-center gap-2 flex-wrap mb-4">
+          {selected.map(s => (
+            <span key={s} className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium flex items-center gap-1 animate-scale-in">
+              {s}策略
+              <X className="w-3 h-3 cursor-pointer" onClick={() => toggle(s)} />
+            </span>
+          ))}
+          {selected.length === 0 && <span className="text-sm text-muted-foreground">请先选择策略组合</span>}
+        </div>
+        <Button onClick={() => setShowResult(true)} disabled={selected.length === 0} className="btn-press">
+          <Sparkles className="w-4 h-4 mr-1" /> 生成报名方案
+        </Button>
+      </Card>
+
+      {/* 推荐结果 */}
+      {showResult && (
+        <div className="space-y-3 animate-fade-up">
+          <h3 className="font-semibold">推荐岗位组合</h3>
+          {[
+            { type: '冲', name: '省发改委综合管理', ratio: '68:1', city: '济南', tip: '专业对口但竞争激烈' },
+            { type: '稳', name: '市统计局信息管理', ratio: '32:1', city: '烟台', tip: '专业匹配度高，竞争适中' },
+            { type: '保', name: '县行政审批局', ratio: '15:1', city: '泰安', tip: '限制条件多，上岸概率高' },
+          ].filter(j => selected.includes(j.type)).map((job, i) => (
+            <Card key={i} className={`p-4 card-hover animate-slide-right delay-${(i+1)*100} border-l-4 ${
+              job.type === '冲' ? 'border-l-rose-400' : job.type === '稳' ? 'border-l-amber-400' : 'border-l-emerald-400'
+            }`}>
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                      job.type === '冲' ? 'bg-rose-50 text-rose-700' :
+                      job.type === '稳' ? 'bg-amber-50 text-amber-700' :
+                      'bg-emerald-50 text-emerald-700'
+                    }`}>{job.type}</span>
+                    <h4 className="font-semibold text-sm">{job.name}</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{job.city} · 竞争比 {job.ratio}</p>
+                  <p className="text-[10px] text-primary mt-1">💡 {job.tip}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+          <Card className="p-4 bg-amber-50 border-amber-100 animate-fade-up delay-300">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-amber-800">报名策略提醒</p>
+                <p className="text-xs text-amber-700 mt-1">每次报名务必配置冲稳保组合，避免全部押注同一城市。建议冲刺 1 个、稳定 1-2 个、保底 1 个。</p>
+              </div>
+            </div>
           </Card>
         </div>
-      </div>
+      )}
     </div>
   );
 }

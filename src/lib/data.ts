@@ -152,6 +152,67 @@ export const AI_PREDICTION = {
   suggestions: ['优先报考限制专业的技术岗', '山东省内避开济南/青岛核心区', '申论至少拿到 35 分以上'],
 };
 
+/* ========== 二、岗位匹配（Match）========== */
+export const PROFESSION_LIB = [
+  {
+    name: '计算机信息类',
+    keywords: ['计算机','软件','网络','物联网','数据','信息','人工智能','通信','电子'],
+    positions: [
+      { title: '信息化管理', org: '大数据局/政府办/行政审批局', desc: '数字政府、数据治理、系统建设', competition: '中等' },
+      { title: '网络安全', org: '公安网安/网信部门', desc: '安全监管、技术侦察、系统安全', competition: '较高' },
+      { title: '税务信息化', org: '税务局信息中心', desc: '系统运维、数据分析', competition: '中等' },
+      { title: '统计信息化', org: '统计局/调查队', desc: '数据处理、平台维护', competition: '中低' },
+      { title: '事业技术岗', org: '信息中心/高校/医院信息科', desc: '运维、开发、信息化服务', competition: '较低' },
+    ],
+  },
+  {
+    name: '财会经管类',
+    keywords: ['会计','财务','金融','经济','管理','工商','审计'],
+    positions: [
+      { title: '财务管理', org: '财政局/审计局/机关财务', desc: '预算、核算、审计监督', competition: '中等' },
+      { title: '税务征管', org: '税务局', desc: '税收征管、纳税服务', competition: '中等' },
+      { title: '经济管理', org: '发改/商务/市场监管', desc: '产业、项目、市场监管', competition: '中等' },
+      { title: '事业财务岗', org: '高校/医院/中心站所', desc: '财务核算、资产管理', competition: '中低' },
+    ],
+  },
+  {
+    name: '法学类',
+    keywords: ['法学','法律','知识产权','政治学'],
+    positions: [
+      { title: '行政执法', org: '市场监管/司法/城管', desc: '执法办案、法制审核', competition: '中等' },
+      { title: '司法行政', org: '司法局/法院/检察院', desc: '法治宣传、案件辅助', competition: '较高' },
+      { title: '纪检监察辅助', org: '纪检/审计相关单位', desc: '监督检查、材料整理', competition: '中等' },
+    ],
+  },
+  {
+    name: '中文新闻类',
+    keywords: ['汉语言','新闻','传播','秘书','中文','文秘'],
+    positions: [
+      { title: '文字综合', org: '办公室/宣传部', desc: '公文、调研、综合材料', competition: '中等' },
+      { title: '宣传文化', org: '宣传/文旅/融媒体', desc: '宣传策划、内容生产', competition: '中等' },
+      { title: '基层综合岗', org: '街道/乡镇', desc: '材料、协调、群众工作', competition: '中低' },
+    ],
+  },
+  {
+    name: '理工科通用类',
+    keywords: ['建筑','土木','化工','生物','物理','数学','机械','电气'],
+    positions: [
+      { title: '工程技术岗', org: '住建/水利/交通/自然资源', desc: '工程管理、技术保障', competition: '中等' },
+      { title: '检验检测', org: '质量监管/市场监管', desc: '技术检验、标准执行', competition: '中低' },
+      { title: '事业专业岗', org: '研究机构/事业单位', desc: '专业研究、技术服务', competition: '中低' },
+    ],
+  },
+  {
+    name: '通用综合类',
+    keywords: [] as string[],
+    positions: [
+      { title: '综合管理', org: '各级机关事业单位', desc: '综合事务、协调执行', competition: '中等' },
+      { title: '公共服务', org: '街道/基层单位', desc: '窗口服务、基层治理', competition: '中低' },
+      { title: '事业综合岗', org: '学校/医院/中心站所', desc: '行政管理、项目执行', competition: '较低' },
+    ],
+  },
+];
+
 /* ========== 三、报名决策（Apply）========== */
 export const CITY_TIERS = [
   {

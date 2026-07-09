@@ -1,119 +1,150 @@
 'use client';
-import { EXAM_TYPES, EXAM_TIMELINE, REVIEW_CHECKLIST, USER } from '@/lib/data';
-import { PageHeader, VipLock } from '@/components/common';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Compass, Calendar, ShieldCheck, Sparkles, CheckCircle2, AlertTriangle, Clock } from 'lucide-react';
+
+import { useState } from 'react';
+import { Compass, Search, ChevronRight, Sparkles, BookOpen, GraduationCap, Shield, Building2, Heart, Swords } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+const EXAM_TYPES = [
+  { name: '国考', icon: Shield, color: 'text-rose-600 bg-rose-50', desc: '中央及国家机关公务员', salary: '15-25万/年', difficulty: '★★★★★', ratio: '60:1', period: '每年11月底笔试' },
+  { name: '省考', icon: Building2, color: 'text-sky-600 bg-sky-50', desc: '省、市、县、乡四级机关', salary: '10-20万/年', difficulty: '★★★★☆', ratio: '40:1', period: '各省不同，多为4月' },
+  { name: '事业单位', icon: Heart, color: 'text-emerald-600 bg-emerald-50', desc: '教育、医疗、科研等公益岗', salary: '8-15万/年', difficulty: '★★★☆☆', ratio: '25:1', period: '全年分散招录' },
+  { name: '选调生', icon: GraduationCap, color: 'text-violet-600 bg-violet-50', desc: '党政领导干部后备人才', salary: '12-22万/年', difficulty: '★★★★☆', ratio: '20:1', period: '每年12月-次年1月' },
+  { name: '三支一扶', icon: BookOpen, color: 'text-amber-600 bg-amber-50', desc: '支教、支农、支医、帮扶', salary: '5-8万/年', difficulty: '★★☆☆☆', ratio: '10:1', period: '每年4-6月' },
+  { name: '军队文职', icon: Swords, color: 'text-indigo-600 bg-indigo-50', desc: '军队编制非现役岗位', salary: '10-18万/年', difficulty: '★★★☆☆', ratio: '15:1', period: '每年3-4月' },
+];
+
+const FAQ = [
+  { q: '应届生身份有多重要？', a: '非常重要！国考约70%岗位限应届，省考约40%。不要随便签劳动合同或三方协议，否则失去应届资格。' },
+  { q: '考公和考研怎么选？', a: '看你的核心诉求。想进体制选考公，想深造选考研。如果本科专业冷门，考研换专业后再考公也是常见策略。' },
+  { q: '行测申论各占多少分？', a: '国考/省考行测申论各100分，总分200。行测全是客观题，申论为主观题。事业单位考公基+综合写作。' },
+  { q: '备考需要多长时间？', a: '零基础建议6-8个月系统备考。3-4个月适合有基础的。1个月突击仅适合部分模块提分。' },
+  { q: '党员对考公有多大优势？', a: '选调生必须党员或预备党员。普通岗位有部分限党员岗位，竞争比一般低30%。建议在校积极入党。' },
+];
 
 export default function ExplorePage() {
+  const [faqOpen, setFaqOpen] = useState<number | null>(null);
+  const [query, setQuery] = useState('');
+  const [aiAnswer, setAiAnswer] = useState('');
+  const [typing, setTyping] = useState(false);
+
+  const handleAsk = () => {
+    if (!query.trim()) return;
+    setTyping(true);
+    setAiAnswer('');
+    const answer = `关于"${query}"：考公报名需关注国家公务员局官网（bm.scs.gov.cn），每年10月中旬发布公告，11月底笔试。建议先确认自身条件（专业、学历、政治面貌），再筛选合适岗位。如需更详细分析，可使用「AI 岗位匹配」功能获取个性化推荐。`;
+    let i = 0;
+    const timer = setInterval(() => {
+      setAiAnswer(answer.slice(0, i + 1));
+      i++;
+      if (i >= answer.length) { clearInterval(timer); setTyping(false); }
+    }, 20);
+  };
+
   return (
-    <div className="p-4 lg:p-6 max-w-6xl mx-auto space-y-6">
-      <PageHeader title="考公全景" subtitle="从了解考试到政审体检，完整考公路径一览" />
+    <div className="space-y-6 max-w-6xl">
+      {/* 页面头部 */}
+      <div className="animate-fade-up">
+        <h1 className="text-xl font-bold flex items-center gap-2">
+          <Compass className="w-5 h-5 text-primary" /> 了解考公
+        </h1>
+        <p className="text-sm text-muted-foreground mt-1">6 类公职考试全景对比 + AI 考公百科，帮你找到最适合的路</p>
+      </div>
 
-      <Tabs defaultValue="types" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="types">考试类型</TabsTrigger>
-          <TabsTrigger value="timeline">全年时间线</TabsTrigger>
-          <TabsTrigger value="review">政审体检</TabsTrigger>
-        </TabsList>
-
-        {/* 考试类型 */}
-        <TabsContent value="types">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {EXAM_TYPES.map((e) => (
-              <Card key={e.id} className="relative overflow-hidden">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-base">{e.short}</CardTitle>
-                    <Badge variant="outline" className="text-[10px]">难度 {e.difficulty}</Badge>
-                  </div>
-                  <div className="text-xs text-muted-foreground">{e.name}</div>
-                </CardHeader>
-                <CardContent className="space-y-2 text-sm">
-                  <div className="flex items-start gap-2"><Clock className="w-3.5 h-3.5 mt-0.5 text-muted-foreground shrink-0" /><span>{e.period}</span></div>
-                  <div className="flex items-start gap-2"><span className="w-3.5 text-center text-muted-foreground shrink-0 text-xs">科</span><span>{e.subjects}</span></div>
-                  <div className="flex items-start gap-2"><span className="w-3.5 text-center text-muted-foreground shrink-0 text-xs">比</span><span>平均竞争比 {e.avgRatio}</span></div>
-                  <div className="rounded-lg bg-primary/5 border border-primary/10 p-2 text-xs">
-                    <Sparkles className="w-3 h-3 text-primary inline mr-1" />
-                    <span className="text-primary font-medium">AI 提示：</span>{e.tip}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+      {/* AI 考公百科 */}
+      <Card className="p-5 animate-fade-up delay-75">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center animate-pulse-glow">
+            <Sparkles className="w-4 h-4 text-primary" />
           </div>
-        </TabsContent>
+          <h2 className="font-semibold">AI 考公百科</h2>
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">免费</span>
+        </div>
+        <div className="flex gap-2">
+          <Input
+            placeholder="输入考公问题，如：应届生能报哪些岗位？"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
+            className="flex-1"
+          />
+          <Button onClick={handleAsk} disabled={typing} className="btn-press">
+            <Search className="w-4 h-4 mr-1" /> 提问
+          </Button>
+        </div>
+        {aiAnswer && (
+          <div className="mt-4 p-4 rounded-xl bg-muted/50 border border-border/50 animate-fade-up">
+            <div className="flex items-start gap-2">
+              <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+              <p className="text-sm leading-relaxed">{aiAnswer}<span className={typing ? 'typing-caret' : ''} /></p>
+            </div>
+          </div>
+        )}
+      </Card>
 
-        {/* 全年时间线 */}
-        <TabsContent value="timeline">
-          <Card>
-            <CardHeader><CardTitle className="text-base flex items-center gap-2"><Calendar className="w-4 h-4 text-primary" />全年考试时间线</CardTitle></CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {EXAM_TIMELINE.map((m, i) => (
-                  <div key={m.month} className="flex gap-4">
-                    <div className="w-14 shrink-0 text-right">
-                      <span className="text-sm font-bold text-primary">{m.month}</span>
-                    </div>
-                    <div className="relative pl-4 border-l-2 border-primary/20 pb-2">
-                      {i === 0 && <div className="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-primary" />}
-                      <div className="space-y-1">
-                        {m.events.map((ev, j) => (
-                          <div key={j} className="text-sm text-muted-foreground">{ev}</div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
+      {/* 6 类考试对比 */}
+      <div className="animate-fade-up delay-150">
+        <h2 className="text-lg font-bold mb-4">6 类公职考试对比</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {EXAM_TYPES.map((exam, i) => (
+            <Card key={exam.name} className={`p-4 card-hover animate-scale-in delay-${(i+1)*75}`}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className={`w-10 h-10 rounded-xl ${exam.color} flex items-center justify-center`}>
+                  <exam.icon className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">{exam.name}</h3>
+                  <p className="text-[10px] text-muted-foreground">{exam.desc}</p>
+                </div>
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="p-2 rounded-lg bg-muted/50">
+                  <span className="text-muted-foreground">薪资范围</span>
+                  <p className="font-semibold mt-0.5">{exam.salary}</p>
+                </div>
+                <div className="p-2 rounded-lg bg-muted/50">
+                  <span className="text-muted-foreground">竞争比</span>
+                  <p className="font-semibold mt-0.5">{exam.ratio}</p>
+                </div>
+                <div className="p-2 rounded-lg bg-muted/50">
+                  <span className="text-muted-foreground">难度</span>
+                  <p className="font-semibold mt-0.5">{exam.difficulty}</p>
+                </div>
+                <div className="p-2 rounded-lg bg-muted/50">
+                  <span className="text-muted-foreground">笔试时间</span>
+                  <p className="font-semibold mt-0.5">{exam.period}</p>
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
 
-        {/* 政审体检 */}
-        <TabsContent value="review">
-          <div className="space-y-4">
-            {!USER.isVip && (
-              <VipLock message="政审体检 AI 材料检查与风险预警为 VIP 专属" />
-            )}
-            {REVIEW_CHECKLIST.map((cat) => (
-              <Card key={cat.category}>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-primary" />
-                    {cat.category}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-1.5">
-                    {cat.items.map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-sm">
-                        {cat.category.includes('淘汰') ? (
-                          <AlertTriangle className="w-3.5 h-3.5 text-[var(--err)] shrink-0 mt-0.5" />
-                        ) : (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[var(--ok)] shrink-0 mt-0.5" />
-                        )}
-                        <span>{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            {USER.isVip && (
-              <Card className="border-primary/30 bg-primary/3">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                  <div>
-                    <div className="text-sm font-medium">AI 材料检查</div>
-                    <div className="text-xs text-muted-foreground">上传政审材料，AI 自动检查遗漏与风险点</div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </TabsContent>
-      </Tabs>
+      {/* 常见问题 FAQ */}
+      <div className="animate-fade-up delay-300">
+        <h2 className="text-lg font-bold mb-4">考公常见问题</h2>
+        <div className="space-y-2">
+          {FAQ.map((f, i) => (
+            <Card
+              key={i}
+              className={`overflow-hidden transition-all duration-300 cursor-pointer ${faqOpen === i ? 'ring-1 ring-primary/30' : ''}`}
+              onClick={() => setFaqOpen(faqOpen === i ? null : i)}
+            >
+              <div className="p-4 flex items-center gap-3">
+                <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">Q</span>
+                <span className="text-sm font-medium flex-1">{f.q}</span>
+                <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${faqOpen === i ? 'rotate-90' : ''}`} />
+              </div>
+              <div className={`overflow-hidden transition-all duration-300 ${faqOpen === i ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="px-4 pb-4 pl-13 text-sm text-muted-foreground leading-relaxed" style={{paddingLeft: '52px'}}>
+                  {f.a}
+                </div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

@@ -1,230 +1,171 @@
-'use client';
+'use client'
+import { useState } from 'react'
+import Link from 'next/link'
+import { PageHeader } from '@/components/common'
+import { Card } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { SHENLUN_TOPICS, SHENLUN_RESULT, SHENLUN_SAMPLES } from '@/lib/data'
+import { PenLine, Sparkles, Clock, FileText, ChevronDown, ChevronUp, Star, MessageCircle, Lightbulb } from 'lucide-react'
 
-import { useState } from 'react';
-import { SHENLUN_TYPES, SHENLUN_SAMPLES, SHENLUN_RESULT, ASHORE_CASES, USER } from '@/lib/data';
-import { PageHeader, VipLock, PriceTag } from '@/components/common';
-import { PenLine, Sparkles, User, ChevronRight, FileText } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+const scoreColor = (s: number) => s >= 80 ? 'text-[oklch(0.72_0.14_145)]' : s >= 60 ? 'text-[oklch(0.75_0.15_85)]' : 'text-[oklch(0.65_0.2_25)]'
 
 export default function ShenlunPage() {
-  const [selectedType, setSelectedType] = useState(SHENLUN_TYPES[0]?.id || '');
-  const [submitted, setSubmitted] = useState(false);
-  const [essay, setEssay] = useState('');
-  const [isVip] = useState(USER.isVip);
-  const currentType = SHENLUN_TYPES.find((t) => t.id === selectedType);
+  const [activeTopic, setActiveTopic] = useState(0)
+  const [showResult, setShowResult] = useState(false)
+  const [showSample, setShowSample] = useState(-1)
 
-  const handleReview = () => {
-    if (!essay.trim()) return;
-    setSubmitted(true);
-  };
-
-  const result = SHENLUN_RESULT;
+  const topic = SHENLUN_TOPICS[activeTopic]
+  const result = SHENLUN_RESULT
+  const pct = Math.round((result.score / result.fullScore) * 100)
 
   return (
-    <div className="p-4 lg:p-6 max-w-6xl mx-auto space-y-6">
-      <PageHeader title="申论 AI 批改" subtitle="五大维度逐句批改，精准提分" />
+    <div className="space-y-6 animate-fade-up">
+      <PageHeader title="申论 AI 批改" subtitle="AI 五维评分 + 逐句点评，快速提升申论写作能力" />
 
-      {/* 批改方式选择 */}
-      <div className="grid sm:grid-cols-3 gap-3">
-        <div className={`rounded-xl border p-4 cursor-pointer transition-colors ${!isVip ? 'border-[var(--primary)] bg-primary/5' : 'border hover:border-[var(--primary)]'}`}>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 text-[var(--primary)]" />
-            <span className="font-bold text-sm">AI 批改</span>
-            <PriceTag price={9.9} />
-          </div>
-          <p className="text-xs text-muted-foreground">五维评分+逐句点评+修改建议</p>
-        </div>
-        <div className={`rounded-xl border p-4 ${isVip ? 'border-[var(--primary)] bg-primary/5' : 'border opacity-60'}`}>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-4 h-4 vip-text" />
-            <span className="font-bold text-sm">VIP 无限批改</span>
-            <Badge className="text-[8px] vip-gradient vip-text">VIP</Badge>
-          </div>
-          <p className="text-xs text-muted-foreground">VIP 会员无限次 AI 批改</p>
-        </div>
-        <div className="rounded-xl border p-4 opacity-80">
-          <div className="flex items-center gap-2 mb-2">
-            <User className="w-4 h-4 text-muted-foreground" />
-            <span className="font-bold text-sm">真人批改</span>
-            <PriceTag price={199} />
-          </div>
-          <p className="text-xs text-muted-foreground">资深讲师 48h 内精批返回</p>
-        </div>
-      </div>
-
-      {/* 申论题型选择 */}
-      <div className="flex gap-2 flex-wrap">
-        {SHENLUN_TYPES.map((t) => (
+      {/* 题型切换 */}
+      <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+        {SHENLUN_TOPICS.map((t, i) => (
           <button
             key={t.id}
-            onClick={() => { setSelectedType(t.id); setSubmitted(false); }}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-              selectedType === t.id
-                ? 'bg-[var(--primary)] text-white border-[var(--primary)]'
-                : 'bg-card border hover:border-[var(--primary)]'
-            }`}
+            onClick={() => { setActiveTopic(i); setShowResult(false) }}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${i === activeTopic ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-card border hover:border-primary/30 hover:shadow-sm'}`}
           >
             {t.name}
           </button>
         ))}
       </div>
 
-      {/* 写作区域 */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="space-y-3">
-          <div className="rounded-xl border p-4">
-            <h3 className="font-bold text-sm mb-2 flex items-center gap-1">
-              <FileText className="w-4 h-4" />
-              {currentType?.name || '题目'} · 写作要求
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              {currentType?.method || '请根据给定材料完成作答'}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              建议字数：800-1000 字 · 建议用时：{currentType?.freq || '60 分钟'}
-            </p>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* 左侧 - 作答区 */}
+        <div className="lg:col-span-3 space-y-4">
+          <Card className="p-5 animate-fade-up">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{topic.name}</span>
+              <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> {topic.freq}</span>
+            </div>
+            <p className="text-sm leading-relaxed mb-4">{topic.method}</p>
 
-          <textarea
-            className="w-full rounded-xl border p-4 text-sm min-h-[300px] resize-y focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 bg-card"
-            placeholder="在此输入申论作答内容..."
-            value={essay}
-            onChange={(e) => setEssay(e.target.value)}
-          />
-
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">{essay.length} 字</span>
-            <Button
-              onClick={handleReview}
-              disabled={!essay.trim() || submitted}
-              className="bg-[var(--primary)] hover:bg-[var(--primary)]/90 text-white"
-            >
-              <Sparkles className="w-4 h-4 mr-1" />
-              {submitted ? '批改完成' : 'AI 批改'}
-            </Button>
-          </div>
-        </div>
-
-        {/* 批改结果 */}
-        <div className="space-y-3">
-          {submitted ? (
-            <>
-              <div className="rounded-xl border p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-bold text-sm">AI 批改结果</h3>
-                  <span className="text-2xl font-bold font-serif text-[var(--primary)]">
-                    {result.score}<span className="text-sm text-muted-foreground">/{result.fullScore}</span>
-                  </span>
+            {!showResult ? (
+              <div className="space-y-3">
+                <textarea
+                  className="w-full h-48 rounded-xl border bg-background p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  placeholder="在此作答..."
+                />
+                <div className="flex gap-3">
+                  <Button className="flex-1 gap-2 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all" onClick={() => setShowResult(true)}>
+                    <Sparkles className="w-4 h-4" /> AI 智能批改
+                  </Button>
+                  <Button variant="outline" className="gap-2">
+                    <FileText className="w-4 h-4" /> 查看范文
+                  </Button>
                 </div>
+              </div>
+            ) : (
+              <div className="space-y-4 animate-fade-up">
+                <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                  <Sparkles className="w-4 h-4 animate-pulse" /> AI 批改完成
+                </div>
+                <textarea
+                  className="w-full h-48 rounded-xl border bg-background p-4 text-sm leading-relaxed resize-none focus:outline-none"
+                  defaultValue={"近年来，我国城市化进程不断加快，但也带来了交通拥堵、环境污染、住房紧张等一系列城市病..."}
+                />
+              </div>
+            )}
+          </Card>
 
-                {/* 分数条 */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs w-16 shrink-0">内容要点</span>
-                    <div className="flex-1 h-2 rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-[var(--primary)]" style={{ width: `${(result.score / result.fullScore) * 100}%` }} />
-                    </div>
-                    <span className="text-xs w-8 text-right font-serif">{Math.round(result.score / result.fullScore * 100 * 0.3)}</span>
+          {/* 批改结果 */}
+          {showResult && (
+            <Card className="p-5 animate-fade-up">
+              <h3 className="font-medium mb-4 flex items-center gap-2">
+                <Star className="w-4 h-4 text-primary" /> 批改结果
+              </h3>
+
+              {/* 总分 */}
+              <div className="flex items-center gap-6 mb-5">
+                <div className="text-center">
+                  <div className={`text-4xl font-bold ${scoreColor(result.score)}`}>{result.score}</div>
+                  <div className="text-xs text-muted-foreground mt-1">/ {result.fullScore} 分</div>
+                </div>
+                <div className="flex-1">
+                  <div className="h-3 rounded-full bg-muted overflow-hidden">
+                    <div className="h-full rounded-full bg-gradient-to-r from-primary to-[oklch(0.72_0.14_85)] transition-all duration-1000" style={{ width: `${pct}%` }} />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs w-16 shrink-0">逻辑结构</span>
-                    <div className="flex-1 h-2 rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-[var(--ok)]" style={{ width: `${(result.score / result.fullScore) * 90}%` }} />
-                    </div>
-                    <span className="text-xs w-8 text-right font-serif">{Math.round(result.score / result.fullScore * 100 * 0.25)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs w-16 shrink-0">语言表达</span>
-                    <div className="flex-1 h-2 rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-[var(--warn)]" style={{ width: `${(result.score / result.fullScore) * 80}%` }} />
-                    </div>
-                    <span className="text-xs w-8 text-right font-serif">{Math.round(result.score / result.fullScore * 100 * 0.2)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs w-16 shrink-0">格式规范</span>
-                    <div className="flex-1 h-2 rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-[var(--primary)]" style={{ width: `${(result.score / result.fullScore) * 95}%` }} />
-                    </div>
-                    <span className="text-xs w-8 text-right font-serif">{Math.round(result.score / result.fullScore * 100 * 0.15)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs w-16 shrink-0">卷面书写</span>
-                    <div className="flex-1 h-2 rounded-full bg-muted">
-                      <div className="h-full rounded-full bg-[var(--ok)]" style={{ width: `${(result.score / result.fullScore) * 85}%` }} />
-                    </div>
-                    <span className="text-xs w-8 text-right font-serif">{Math.round(result.score / result.fullScore * 100 * 0.1)}</span>
+                  <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+                    <span>0</span><span>超越 {pct - 10}% 考生</span><span>{result.fullScore}</span>
                   </div>
                 </div>
+                <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium">{result.tag}</span>
               </div>
 
               {/* 亮点与待改进 */}
-              <div className="rounded-xl border p-4 space-y-2">
-                <h4 className="font-bold text-sm text-[var(--ok)]">亮点 & 待改进</h4>
-                {result.highlights.map((h: string, i: number) => (
-                  <div key={i} className="flex gap-2 text-xs">
-                    <ChevronRight className="w-3 h-3 mt-0.5 shrink-0 text-[var(--primary)]" />
-                    <span>{h}</span>
-                  </div>
-                ))}
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-[oklch(0.72_0.14_145)]/8 border border-[oklch(0.72_0.14_145)]/15">
+                  <div className="text-xs font-medium text-[oklch(0.72_0.14_145)] mb-2 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> 亮点</div>
+                  {result.highlights.map((h, i) => (
+                    <div key={i} className="text-xs text-muted-foreground leading-relaxed animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                      {h}
+                    </div>
+                  ))}
+                </div>
               </div>
-            </>
-          ) : (
-            <div className="rounded-xl border p-8 text-center text-muted-foreground text-sm">
-              <PenLine className="w-8 h-8 mx-auto mb-2 opacity-30" />
-              <p>输入申论作答后，点击「AI 批改」查看结果</p>
-            </div>
+            </Card>
           )}
         </div>
-      </div>
 
-      {/* 历史批改样本 */}
-      <div className="space-y-3">
-        <h3 className="font-bold text-sm">历史批改样本</h3>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {SHENLUN_SAMPLES.map((s) => (
-            <div key={s.id} className="rounded-xl border p-4 space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-sm truncate">{s.title}</span>
-                <Badge variant="outline" className="text-[10px] shrink-0">{s.tag}</Badge>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <span>{s.date}</span>
-                <span>·</span>
-                <span className="font-bold font-serif text-[var(--primary)]">{s.score}/{s.fullScore}</span>
-              </div>
+        {/* 右侧 - 写作指南 & 历史样本 */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* 写作方法论 */}
+          <Card className="p-5 animate-fade-up delay-100">
+            <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
+              <PenLine className="w-4 h-4 text-primary" /> {topic.name}写作方法
+            </h3>
+            <p className="text-sm leading-relaxed text-muted-foreground">{topic.method}</p>
+            <div className="mt-3 text-xs text-muted-foreground flex items-center gap-1">
+              <Clock className="w-3 h-3" /> 建议练习频率：{topic.freq}
             </div>
-          ))}
-        </div>
-      </div>
+          </Card>
 
-      {/* 上岸案例 */}
-      <div className="rounded-xl border bg-primary/5 p-4">
-        <h3 className="font-bold text-sm mb-3">AI 批改 · 上岸学员说</h3>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {ASHORE_CASES.slice(0, 2).map((c, i) => (
-            <div key={i} className="text-sm">
-              <div className="font-medium">{c.name} · {c.exam}</div>
-              <div className="text-xs text-muted-foreground">{c.post}</div>
-              <div className="text-xs mt-1 italic">&ldquo;{c.quote}&rdquo;</div>
+          {/* 历史批改样本 */}
+          <Card className="p-5 animate-fade-up delay-200">
+            <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
+              <MessageCircle className="w-4 h-4 text-primary" /> 历史批改样本
+            </h3>
+            <div className="space-y-2">
+              {SHENLUN_SAMPLES.map((s, i) => (
+                <div key={s.id}>
+                  <button
+                    onClick={() => setShowSample(showSample === i ? -1 : i)}
+                    className="w-full flex items-center justify-between p-3 rounded-lg border hover:border-primary/30 hover:shadow-sm transition-all text-left"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className={`text-sm font-bold ${scoreColor(s.score)}`}>{s.score}</span>
+                      <span className="text-xs text-muted-foreground">{s.title}</span>
+                    </div>
+                    {showSample === i ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                  </button>
+                  {showSample === i && (
+                    <div className="p-3 text-xs text-muted-foreground leading-relaxed border-x border-b rounded-b-lg animate-fade-up">
+                      <div className="mb-2 text-[10px] text-primary">{s.tag}</div>
+                      {s.highlights.map((h, j) => (
+                        <div key={j} className="mb-1">• {h}</div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-          ))}
+          </Card>
+
+          {/* VIP 入口 */}
+          <Card className="p-5 vip-gradient text-white animate-fade-up delay-300">
+            <h3 className="font-medium mb-2">VIP 无限批改</h3>
+            <p className="text-xs text-white/70 mb-3">AI 批改 ¥9.9/次，VIP 每日无限次批改</p>
+            <Link href="/vip">
+              <Button size="sm" variant="secondary" className="vip-text font-bold">开通 VIP</Button>
+            </Link>
+          </Card>
         </div>
       </div>
-
-      {/* CTA */}
-      {!isVip && (
-        <div className="rounded-xl vip-gradient p-4 flex items-center justify-between">
-          <div>
-            <div className="vip-text font-bold">开通 VIP · 申论无限次 AI 批改</div>
-            <div className="text-xs text-white/70 mt-1">月卡 ¥68 起，平均每篇不到 ¥1</div>
-          </div>
-          <Link href="/vip">
-            <Button size="sm" className="bg-white text-black hover:bg-white/90">立即开通</Button>
-          </Link>
-        </div>
-      )}
     </div>
-  );
+  )
 }
