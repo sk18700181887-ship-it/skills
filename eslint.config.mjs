@@ -45,6 +45,11 @@ const eslintConfig = defineConfig([
     // Build artifacts:
     'server.js',
     'dist/**',
+    // Static export copied to project root (served by python http.server):
+    '_next/**',
+    '**/index.txt',
+    '**/*.__PAGE__.txt',
+    '**/__next.*.txt',
     // Script files (CommonJS):
     'scripts/**/*.js',
   ]),

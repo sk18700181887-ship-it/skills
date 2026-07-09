@@ -46,11 +46,15 @@ AGENTS.md                    # 本文档
 ## 常用命令
 | 场景 | 命令 |
 | --- | --- |
-| 启动开发服务 | `coze dev`（主仓沙箱已常驻） |
-| 构建生产 | `coze build` |
-| 启动生产 | `coze start` |
+| 构建静态导出 | `pnpm build`（输出到 `out/`，随后 `cp -r out/* .` 覆盖根目录） |
+| 启动静态服务 | `python3 -m http.server 5000 --bind 0.0.0.0 --directory out`（或直接从根目录起） |
 | 类型检查 | `pnpm ts-check` |
 | Lint | `pnpm lint --quiet` |
+
+## 服务模式说明
+- 因沙箱 5000 端口存在「兜底 python http.server」的守护机制，Next.js custom server 会被反复替换。
+- 解决方案：Next.js 采用 **`output: 'export'`** 静态导出，`out/` 里的所有文件同时拷贝到项目根目录，让 sandbox 兜底的 python http.server 直接服务这套静态版本。
+- **修改代码后**：必须重新 `pnpm build` 并把 `out/*` 拷回根目录才能看到更新（无 HMR）。
 
 ## 修改指南
 - **改数据（岗位库 / 城市梯队 / 套餐价格 / 排行榜）**：直接改 `src/lib/data.ts` 中对应的常量导出，无需改渲染。价格调整需同步更新 `VIP_PLANS`、`AGREEMENT_PLAN` 以及页面里的一次性引用。
