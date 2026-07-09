@@ -36,7 +36,7 @@ src/
 ├── app/
 │   ├── layout.tsx           # RootLayout · 挂载 AppShell（侧边栏 + 主区）
 │   ├── globals.css          # Tailwind + Design Tokens + 自定义类
-│   ├── page.tsx             # / 学习中心 Dashboard（7 阶段全路径进度）
+│   ├── page.tsx             # / 学习中心 Dashboard（7 阶段全路径进度 + 情绪陪伴）
 │   ├── explore/page.tsx     # /explore 考公全景（6 类考试对比 + AI 百科）
 │   ├── match/page.tsx       # /match AI 岗位匹配（专业库 + 竞争预测）
 │   ├── apply/page.tsx       # /apply 报名决策（冲稳保 + 竞争比）
@@ -46,14 +46,16 @@ src/
 │   ├── gongji/page.tsx      # /gongji 公基 AI 图谱（6 模块 + AI 记忆助手）
 │   ├── mock/page.tsx        # /mock 模考中心（全国排名 + 成绩预测）
 │   ├── interview/page.tsx   # /interview AI 面试模拟（4 大题型 + 实时点评）
+│   ├── diary/page.tsx       # /diary 上岸日记（心情记录 + AI陪伴 + 情绪树洞 + 能量站）
 │   ├── rank/page.tsx        # /rank 排行榜 + 上岸榜
 │   └── vip/page.tsx         # /vip 会员套餐 & 协议班
 ├── components/
 │   ├── layout/app-shell.tsx # 全站侧边栏 + 7 阶段路径条 + Logo + 用户卡片
+│   ├── ai-companion.tsx     # AI 陪伴浮窗（全局右下角可唤起聊天）
 │   ├── common.tsx           # 通用 PageHeader / VipLock / PriceTag / Stat
 │   └── ui/                  # shadcn/ui 组件（Radix）
 ├── lib/
-│   ├── data.ts              # 全站 Mock 数据
+│   ├── data.ts              # 全站 Mock 数据（含情绪陪伴数据）
 │   └── utils.ts             # cn() 等工具
 DESIGN.md                    # 商业版设计规范
 AGENTS.md                    # 本文档

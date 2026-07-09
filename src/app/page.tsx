@@ -5,12 +5,14 @@ import Link from 'next/link';
 import {
   Compass, Target, ClipboardList, CalendarDays, BookOpen,
   PenTool, Timer, Mic, Trophy, Crown, ArrowRight, Zap,
-  Flame, TrendingUp, Users, Star
+  Flame, TrendingUp, Users, Star, Heart, Sparkles,
+  MessageCircle, Quote, ChevronRight, CheckCircle2,
+  BookHeart, TreePine
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { USER, RANK_SUCCESS } from '@/lib/data';
+import { USER, RANK_SUCCESS, MOOD_OPTIONS, AI_ENCOURAGEMENTS, ENERGY_QUOTES, CHECKIN_MILESTONES } from '@/lib/data';
 
 const STAGES = [
   { icon: Compass, label: '了解考公', href: '/explore', color: 'text-amber-600', bg: 'bg-amber-50', desc: '6 类考试对比 + AI 百科' },
@@ -23,7 +25,7 @@ const STAGES = [
   { icon: Mic, label: '面试模拟', href: '/interview', color: 'text-pink-600', bg: 'bg-pink-50', desc: 'AI 面试 + 实时点评' },
 ];
 
-const KPI = [
+const KPI_DATA = [
   { label: '距国考', value: '168', unit: '天', icon: Flame, color: 'text-rose-500' },
   { label: '累计做题', value: '2,847', unit: '题', icon: Zap, color: 'text-amber-500' },
   { label: '正确率', value: '72.3', unit: '%', icon: TrendingUp, color: 'text-emerald-500' },
@@ -39,34 +41,160 @@ const AI_TASKS = [
 
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
+  const [selectedMood, setSelectedMood] = useState<string | null>(null);
+  const [encouragement, setEncouragement] = useState<string>('');
+  const [checkedIn, setCheckedIn] = useState(false);
+  const [showEncourage, setShowEncourage] = useState(false);
+  const [dailyQuote] = useState(() => ENERGY_QUOTES[0]);
+
   useEffect(() => setMounted(true), []);
+
+  const handleMoodSelect = (moodId: string) => {
+    setSelectedMood(moodId);
+    const msgs = AI_ENCOURAGEMENTS[moodId] || AI_ENCOURAGEMENTS['normal'];
+    setEncouragement(msgs[0]);
+    setShowEncourage(true);
+  };
+
+  const handleCheckIn = () => {
+    setCheckedIn(true);
+  };
+
   if (!mounted) return null;
+
+  const currentMood = MOOD_OPTIONS.find(m => m.id === selectedMood);
+  const streakDays = 25;
+  const nextMilestone = CHECKIN_MILESTONES.find(m => m.days > streakDays);
 
   return (
     <div className="space-y-6 max-w-6xl">
-      {/* 顶部 Hero */}
+      {/* 顶部 Hero + 心情 */}
       <div className="relative overflow-hidden rounded-2xl brand-gradient p-8 text-white animate-fade-up">
         <div className="absolute inset-0 animate-gradient" style={{background:'linear-gradient(135deg,rgba(243,160,76,0.9),rgba(229,133,34,0.95),rgba(200,100,20,0.9))',backgroundSize:'200% 200%'}} />
-        <div className="relative z-10 flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold mb-2">欢迎回来，{USER.nickname}</h1>
-            <p className="text-white/80 text-sm">当前阶段：<span className="font-semibold text-white">四·笔试训练</span> — 坚持每天刷题，上岸在望</p>
-          </div>
-          <div className="hidden md:flex items-center gap-3">
-            <div className="text-right">
-              <div className="text-3xl font-bold font-serif">168<span className="text-base font-normal ml-1">天</span></div>
-              <div className="text-white/70 text-xs">距 2027 国考笔试</div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">欢迎回来，{USER.nickname}</h1>
+              <p className="text-white/80 text-sm">当前阶段：<span className="font-semibold text-white">四·笔试训练</span> — 坚持每天刷题，上岸在望</p>
+            </div>
+            <div className="hidden md:flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-3xl font-bold font-serif">168<span className="text-base font-normal ml-1">天</span></div>
+                <div className="text-white/70 text-xs">距 2027 国考笔试</div>
+              </div>
             </div>
           </div>
+          {/* 心情选择 */}
+          <div className="bg-white/15 backdrop-blur-sm rounded-xl p-4 mt-2">
+            <p className="text-white/90 text-sm mb-3">今天心情怎么样？</p>
+            <div className="flex items-center gap-3 flex-wrap">
+              {MOOD_OPTIONS.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => handleMoodSelect(m.id)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all duration-200 ${
+                    selectedMood === m.id
+                      ? 'bg-white/30 ring-2 ring-white scale-105'
+                      : 'bg-white/10 hover:bg-white/20'
+                  }`}
+                >
+                  <span className="text-lg">{m.emoji}</span>
+                  <span className="text-white/90 text-xs">{m.label}</span>
+                </button>
+              ))}
+            </div>
+            {showEncourage && encouragement && (
+              <div className="mt-3 p-3 bg-white/10 rounded-lg animate-fade-up">
+                <div className="flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-white/80 shrink-0 mt-0.5" />
+                  <p className="text-sm text-white/95 leading-relaxed">{encouragement}</p>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        {/* 装饰圆 */}
         <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-white/10 animate-float" />
         <div className="absolute -right-2 bottom-0 w-20 h-20 rounded-full bg-white/5" />
       </div>
 
+      {/* 打卡 + 能量金句 */}
+      <div className="grid md:grid-cols-2 gap-4">
+        {/* 连续打卡 */}
+        <Card className="p-5 card-hover animate-fade-up delay-100">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-orange-50 flex items-center justify-center">
+                <Flame className="w-4 h-4 text-orange-500" />
+              </div>
+              <h3 className="font-semibold text-sm">今日打卡</h3>
+            </div>
+            <span className="text-xs text-muted-foreground">已连续 {streakDays} 天</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <div className="flex items-center gap-1 mb-2">
+                {Array.from({ length: 7 }).map((_, i) => (
+                  <div key={i} className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
+                    i < 5 ? 'bg-primary/15 text-primary' : i === 5 ? (checkedIn ? 'bg-primary/15 text-primary' : 'bg-muted text-muted-foreground') : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {i < 5 || (i === 5 && checkedIn) ? '✓' : ''}
+                  </div>
+                ))}
+                <span className="text-[10px] text-muted-foreground ml-1">本周</span>
+              </div>
+              {nextMilestone && (
+                <div className="text-xs text-muted-foreground">
+                  距「<span className="text-primary font-medium">{nextMilestone.title}</span>」还需打卡 <span className="font-medium">{nextMilestone.days - streakDays}</span> 天
+                  <span className="ml-1">{nextMilestone.icon}</span>
+                </div>
+              )}
+            </div>
+            <Button
+              onClick={handleCheckIn}
+              disabled={checkedIn}
+              className={`btn-press shrink-0 ${checkedIn ? 'bg-emerald-500 hover:bg-emerald-500' : ''}`}
+              size="sm"
+            >
+              {checkedIn ? (
+                <><CheckCircle2 className="w-4 h-4 mr-1" />已打卡</>
+              ) : (
+                <><Flame className="w-4 h-4 mr-1" />立即打卡</>
+              )}
+            </Button>
+          </div>
+          {checkedIn && (
+            <div className="mt-3 p-2 bg-emerald-50 rounded-lg text-xs text-emerald-700 text-center animate-scale-in">
+              打卡成功！坚持就是胜利，你已经连续 {streakDays + 1} 天了
+            </div>
+          )}
+        </Card>
+
+        {/* 能量金句 */}
+        <Card className="p-5 card-hover animate-fade-up delay-200 relative overflow-hidden">
+          <div className="absolute top-3 right-3 opacity-5">
+            <Quote className="w-16 h-16" />
+          </div>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
+              <Star className="w-4 h-4 text-amber-500" />
+            </div>
+            <h3 className="font-semibold text-sm">每日能量</h3>
+          </div>
+          <blockquote className="relative">
+            <p className="text-base font-serif leading-relaxed text-foreground/90 mb-3">
+              「{dailyQuote.text}」
+            </p>
+            <footer className="text-xs text-muted-foreground">—— {dailyQuote.author}</footer>
+          </blockquote>
+          <Link href="/diary" className="mt-3 inline-flex items-center gap-1 text-xs text-primary hover:underline">
+            <BookHeart className="w-3.5 h-3.5" /> 写日记记录今天
+          </Link>
+        </Card>
+      </div>
+
       {/* KPI 四宫格 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {KPI.map((k, i) => (
+        {KPI_DATA.map((k, i) => (
           <Card key={k.label} className={`p-4 card-hover animate-fade-up delay-${(i+1)*100}`}>
             <div className="flex items-center gap-2 mb-2">
               <k.icon className={`w-4 h-4 ${k.color}`} />
@@ -100,7 +228,6 @@ export default function Dashboard() {
 
       {/* AI 智能任务 + 上岸榜样 */}
       <div className="grid md:grid-cols-2 gap-6">
-        {/* AI 智能任务 */}
         <Card className="p-5 animate-fade-up delay-300">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center animate-pulse-glow">
@@ -121,7 +248,6 @@ export default function Dashboard() {
           </div>
         </Card>
 
-        {/* 上岸榜样 */}
         <Card className="p-5 animate-fade-up delay-400">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center">
@@ -156,29 +282,65 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* 学习进度总览 */}
-      <Card className="p-5 animate-fade-up delay-500">
-        <h3 className="font-semibold mb-4">五大模块正确率</h3>
-        <div className="grid grid-cols-5 gap-4">
-          {[
-            { name: '资料分析', rate: 88, color: 'bg-emerald-500' },
-            { name: '判断推理', rate: 82, color: 'bg-sky-500' },
-            { name: '言语理解', rate: 76, color: 'bg-amber-500' },
-            { name: '数量关系', rate: 65, color: 'bg-orange-500' },
-            { name: '常识判断', rate: 58, color: 'bg-rose-500' },
-          ].map((m) => (
-            <div key={m.name}>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-muted-foreground">{m.name}</span>
-                <span className="font-semibold">{m.rate}%</span>
+      {/* 学习进度 + 情绪树洞 */}
+      <div className="grid md:grid-cols-3 gap-6">
+        {/* 五大模块 */}
+        <Card className="p-5 md:col-span-2 animate-fade-up delay-500">
+          <h3 className="font-semibold mb-4">五大模块正确率</h3>
+          <div className="grid grid-cols-5 gap-4">
+            {[
+              { name: '资料分析', rate: 88, color: 'bg-emerald-500' },
+              { name: '判断推理', rate: 82, color: 'bg-sky-500' },
+              { name: '言语理解', rate: 76, color: 'bg-amber-500' },
+              { name: '数量关系', rate: 65, color: 'bg-orange-500' },
+              { name: '常识判断', rate: 58, color: 'bg-rose-500' },
+            ].map((m) => (
+              <div key={m.name}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">{m.name}</span>
+                  <span className="font-semibold">{m.rate}%</span>
+                </div>
+                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                  <div className={`h-full rounded-full ${m.color} animate-progress`} style={{ width: `${m.rate}%` }} />
+                </div>
               </div>
-              <div className="h-2 rounded-full bg-muted overflow-hidden">
-                <div className={`h-full rounded-full ${m.color} animate-progress`} style={{ width: `${m.rate}%` }} />
-              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* 情绪树洞入口 */}
+        <Card className="p-5 animate-fade-up delay-500 relative overflow-hidden">
+          <div className="absolute -bottom-4 -right-4 opacity-5">
+            <TreePine className="w-24 h-24" />
+          </div>
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center">
+              <Heart className="w-4 h-4 text-emerald-500" />
             </div>
-          ))}
-        </div>
-      </Card>
+            <h3 className="font-semibold text-sm">情绪树洞</h3>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed mb-4">
+            备考路上，有压力、有迷茫、有孤独。这里可以倾诉，也可以看看别人的故事。
+          </p>
+          <div className="space-y-2 mb-4">
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <MessageCircle className="w-3 h-3 text-primary" />
+              <span className="truncate">考公 vs 秋招，怎么选？</span>
+              <span className="text-muted-foreground shrink-0">238 回复</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-foreground/70">
+              <MessageCircle className="w-3 h-3 text-primary" />
+              <span className="truncate">一个人备考太孤独了</span>
+              <span className="text-muted-foreground shrink-0">112 回复</span>
+            </div>
+          </div>
+          <Link href="/diary">
+            <Button variant="outline" size="sm" className="w-full text-xs btn-press">
+              进入树洞 <ChevronRight className="w-3 h-3 ml-1" />
+            </Button>
+          </Link>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -76,5 +76,12 @@
 ## 设计禁忌
 - 不使用彩色渐变按钮（除 VIP 深墨 + 烫金）
 - 不使用玻璃拟态、Neumorphism、粒子背景
-- 不用 Emoji 作为主要图形（Lucide icons 优先）
+- 不用 Emoji 作为主要图形（Lucide icons 优先；情绪陪伴模块中 Emoji 仅作为心情选择器辅助标识，不作为主视觉）
 - 不加入场动画、滚动视差
+
+## 情绪陪伴视觉规范
+- 心情选择器使用 Emoji + 文字标签组合，圆角药片按钮，选中态朱砂橘底+ring
+- AI 陪伴回复区：`bg-primary/5` + 细描边 `border-primary/10`，Sparkles 图标标识
+- 打卡徽章：圆角 Chip，已解锁 `bg-primary/10 text-primary`，未解锁 `bg-muted text-muted-foreground`
+- 情绪树洞：翡翠绿 `emerald` 为主色调（与主色朱砂橘互补，表达"安全倾诉"）
+- AI 陪伴浮窗：圆角2xl + shadow-2xl，固定右下角 z-50
