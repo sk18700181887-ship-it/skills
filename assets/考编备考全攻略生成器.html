@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>考编备考全攻略生成器 · 增强版 v2.0</title>
+<meta name="description" content="考生填写基本信息，自动生成专属岗位分析、城市策略、学习计划和完整备考攻略">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --P:#F3A04C;--A:#E58522;--OK:#40B43E;--WA:#EBA400;--ER:#E65C53;--PF:#fff;
+  --BG:#F2F2F4;--CA:#fff;--PA:#FEFDFC;
+  --T1:rgba(0,0,0,.82);--T2:rgba(0,0,0,.52);--T3:rgba(0,0,0,.36);
+  --B1:rgba(0,0,0,.09);--S3:rgba(0,0,0,.03);--S4:rgba(0,0,0,.04);
+  --S6:rgba(0,0,0,.06);--S8:rgba(0,0,0,.08);--S12:rgba(0,0,0,.12);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",sans-serif;
+  font-size:14px;color:var(--T1);background:var(--BG)
+}
+html,body{min-height:100vh}
+/* ── Layout ── */
+.page{display:grid;grid-template-columns:308px 1fr;min-height:100vh}
+.lpanel{background:var(--CA);border-right:.5px solid var(--B1);padding:20px 16px;overflow-y:auto;position:sticky;top:0;height:100vh}
+.rmain{background:var(--BG);overflow:hidden}
+/* ── Panel ── */
+.p-logo{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.p-logo .icon{width:34px;height:34px;border-radius:10px;background:var(--P);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.p-logo .info h1{font-size:15px;font-weight:600;line-height:1.2}
+.p-logo .info p{font-size:11px;color:var(--T2);margin-top:2px}
+.sec{margin-top:14px;padding-top:14px;border-top:.5px solid var(--B1)}
+.sec-label{font-size:10px;font-weight:600;color:var(--T3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+label.lab{display:block;font-size:12px;color:var(--T2);margin-bottom:4px}
+.inp,.sel{width:100%;height:34px;border:.5px solid var(--B1);border-radius:8px;background:var(--S4);color:var(--T1);padding:0 10px;font-size:13px;outline:none;font-family:inherit;transition:border-color .15s,background .15s}
+.inp:focus,.sel:focus{border-color:var(--P);background:var(--CA)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.g8{height:8px}.g12{height:12px}
+/* range */
+.range-wrap{display:flex;align-items:center;gap:8px}
+.range-wrap input[type=range]{flex:1;accent-color:var(--P);height:4px}
+.range-val{font-size:12px;font-weight:600;min-width:44px;text-align:right;color:var(--T1)}
+/* chips */
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chip{display:flex;align-items:center;gap:7px;min-height:32px;padding:6px 10px;border:.5px solid var(--B1);border-radius:8px;background:var(--S4);font-size:12px;cursor:pointer;transition:background .12s,border-color .12s}
+.chip:hover{background:var(--S8)}
+.chip input{accent-color:var(--P);margin:0;flex-shrink:0}
+/* buttons */
+.btn-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn{height:34px;padding:0 14px;border:0;border-radius:8px;background:var(--P);color:var(--PF);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:background .15s;white-space:nowrap}
+.btn:hover{background:var(--A)}
+.btn2{height:34px;padding:0 12px;border:.5px solid var(--B1);border-radius:8px;background:var(--S6);color:var(--T1);font-size:12px;cursor:pointer;font-family:inherit;transition:background .12s;white-space:nowrap}
+.btn2:hover{background:var(--S12)}
+/* ── Hero ── */
+.hero{padding:18px 20px 16px;background:var(--CA);border-bottom:.5px solid var(--B1)}
+.hero-title{font-size:17px;font-weight:600;margin-bottom:4px}
+.hero-sub{font-size:12px;color:var(--T2);margin-bottom:14px;line-height:1.5}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.kpi{background:var(--S4);border-radius:10px;padding:12px 14px}
+.kpi-val{font-size:22px;font-weight:600;line-height:1;color:var(--T1)}
+.kpi-lbl{font-size:11px;color:var(--T2);margin-top:5px}
+/* ── Tabs ── */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;background:var(--CA);border-bottom:.5px solid var(--B1);position:sticky;top:0;z-index:10}
+.tab{height:28px;padding:0 10px;border:.5px solid var(--B1);border-radius:999px;background:var(--S4);color:var(--T2);font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s}
+.tab:hover{background:var(--S8)}
+.tab.on{background:color-mix(in srgb,var(--A) 14%,transparent);border-color:color-mix(in srgb,var(--A) 30%,transparent);color:var(--A);font-weight:500}
+/* ── Content ── */
+.content{padding:16px}
+.view{display:block}.hide{display:none}
+/* ── Cards ── */
+.card{border:.5px solid var(--B1);border-radius:12px;background:var(--CA);padding:14px;margin-bottom:12px}
+.card-t{font-size:14px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+/* ── List ── */
+.list{display:grid}
+.li{display:grid;grid-template-columns:88px 1fr;gap:10px;padding:8px 0;border-bottom:.5px solid var(--S8)}
+.li:last-child{border-bottom:0}
+.li-k{font-size:12px;font-weight:600;color:var(--T1)}
+.li-v{font-size:12px;color:var(--T2);line-height:1.6}
+/* ── Table ── */
+.tbl{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+.tbl th{font-weight:500;color:var(--T2);border-bottom:.5px solid var(--B1);padding:8px 6px;text-align:left}
+.tbl td{border-bottom:.5px solid var(--S8);padding:8px 6px;vertical-align:top;color:var(--T1);line-height:1.5}
+.tbl tr:last-child td{border-bottom:0}
+/* ── Tags ── */
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{height:22px;display:inline-flex;align-items:center;padding:0 8px;border:.5px solid var(--B1);border-radius:999px;background:var(--S4);font-size:11px;color:var(--T2)}
+.tok{color:var(--OK);background:color-mix(in srgb,var(--OK) 14%,transparent);border-color:color-mix(in srgb,var(--OK) 26%,transparent)}
+.twa{color:var(--WA);background:color-mix(in srgb,var(--WA) 14%,transparent);border-color:color-mix(in srgb,var(--WA) 26%,transparent)}
+.ter{color:var(--ER);background:color-mix(in srgb,var(--ER) 12%,transparent);border-color:color-mix(in srgb,var(--ER) 26%,transparent)}
+/* ── Matrix ── */
+.matrix{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mini{border:.5px solid var(--B1);border-radius:10px;padding:12px;background:var(--S3)}
+.mini b{font-size:13px;display:block;margin-bottom:5px}
+.mini p{font-size:12px;color:var(--T2);line-height:1.55;margin:0}
+/* ── Bar ── */
+.bar-row{margin-bottom:12px}
+.bar-hd{display:flex;justify-content:space-between;margin-bottom:5px}
+.bar-hd span{font-size:13px;font-weight:600}
+.bar-hd small{font-size:11px;color:var(--T2)}
+.bar{height:8px;border-radius:999px;background:var(--S8);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--P),var(--A))}
+/* ── Note ── */
+.note{font-size:12px;line-height:1.65;color:var(--T2);padding:10px 12px;background:var(--S4);border-radius:10px;margin-top:10px}
+.note.wn{border-left:3px solid var(--WA)}
+/* ── Timeline ── */
+.tl{display:grid;gap:10px}
+.tl-row{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:start}
+.tl-dt{font-size:12px;font-weight:600;color:var(--A);padding-top:3px}
+.tl-box{border:.5px solid var(--B1);border-radius:10px;padding:10px 12px;background:var(--CA)}
+.tl-box b{font-size:13px;display:block;margin-bottom:5px}
+.tl-box p{font-size:12px;color:var(--T2);line-height:1.55;margin:0}
+.tl-hint{font-size:11px;color:var(--T3);margin-top:6px;line-height:1.5}
+/* ── Mono ── */
+.mono{white-space:pre-wrap;font-size:12px;line-height:1.7;color:var(--T1);border:.5px solid var(--B1);border-radius:10px;background:var(--S3);padding:14px;max-height:520px;overflow:auto;font-family:inherit}
+/* ── Print ── */
+@media print{
+  .lpanel,.tabs,.btn-row{display:none!important}
+  .page{grid-template-columns:1fr!important}
+  .rmain{background:#fff}
+  .content{padding:0}
+  .view.hide{display:block!important}
+  .card{break-inside:avoid;margin-bottom:16px}
+  .hero{background:#fff}
+}
+/* ── Responsive ── */
+@media(max-width:820px){
+  .page{grid-template-columns:1fr}
+  .lpanel{height:auto;position:static;border-right:0;border-bottom:.5px solid var(--B1)}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+  .matrix{grid-template-columns:1fr}
+  .li,.tl-row{grid-template-columns:1fr;gap:4px}
+  .row2{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══ LEFT PANEL ═══ -->
+<aside class="lpanel">
+  <div class="p-logo">
+    <div class="icon">🏛</div>
+    <div class="info">
+      <h1>考编备考全攻略</h1>
+      <p>生成器 · 增强版 v2.0</p>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">基本信息</div>
+    <label class="lab">学校名称</label>
+    <input id="school" class="inp" value="齐鲁工业大学">
+    <div class="g8"></div>
+    <label class="lab">专业方向</label>
+    <input id="major" class="inp" value="计算机科学与技术（物联网方向）">
+    <div class="g8"></div>
+    <div class="row2">
+      <div>
+        <label class="lab">毕业年月</label>
+        <input id="grad" class="inp" value="2027-07" placeholder="YYYY-MM">
+      </div>
+      <div>
+        <label class="lab">备考起点</label>
+        <input id="start" class="inp" value="2026-06" placeholder="YYYY-MM">
+      </div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">地区策略</div>
+    <div class="row2">
+      <div>
+        <label class="lab">目标省份</label>
+        <select id="province" class="sel">
+          <option>山东省</option>
+          <option>江苏省</option>
+          <option>浙江省</option>
+          <option>广东省</option>
+          <option>全国国考</option>
+        </select>
+      </div>
+      <div>
+        <label class="lab">城市策略</label>
+        <select id="mode" class="sel">
+          <option value="balanced">冲稳保</option>
+          <option value="safe">求稳优先</option>
+          <option value="top">核心城市冲刺</option>
+        </select>
+      </div>
+    </div>
+    <div class="g8"></div>
+    <label class="lab">意向城市（可多个）</label>
+    <input id="cities" class="inp" value="济南、青岛、烟台、潍坊、淄博">
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">个人信息</div>
+    <div class="row2">
+      <div>
+        <label class="lab">政治面貌</label>
+        <select id="pol" class="sel">
+          <option>群众</option>
+          <option>共青团员</option>
+          <option>预备党员</option>
+          <option>中共党员</option>
+        </select>
+      </div>
+      <div>
+        <label class="lab">学生干部</label>
+        <select id="cadre" class="sel">
+          <option>否</option>
+          <option>班级干部</option>
+          <option>院级干部</option>
+          <option>校级干部</option>
+        </select>
+      </div>
+    </div>
+    <div class="g12"></div>
+    <label class="lab">每日学习时间</label>
+    <div class="range-wrap">
+      <input id="hours" type="range" min="3" max="12" step="1" value="8">
+      <span id="hoursText" class="range-val">8 小时</span>
+    </div>
+    <div class="g12"></div>
+    <label class="lab">当前基础水平</label>
+    <select id="base" class="sel">
+      <option value="zero">零基础 / 刚开始</option>
+      <option value="some">学过部分模块</option>
+      <option value="mock">做过完整套卷</option>
+    </select>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">准备考试类型（可多选）</div>
+    <div class="chips">
+      <label class="chip"><input class="exam" type="checkbox" value="国考" checked><span>国考</span></label>
+      <label class="chip"><input class="exam" type="checkbox" value="省考" checked><span>省考</span></label>
+      <label class="chip"><input class="exam" type="checkbox" value="事业单位" checked><span>事业单位</span></label>
+      <label class="chip"><input class="exam" type="checkbox" value="选调生"><span>选调生</span></label>
+      <label class="chip"><input class="exam" type="checkbox" value="三支一扶" checked><span>三支一扶</span></label>
+      <label class="chip"><input class="exam" type="checkbox" value="军队文职"><span>军队文职</span></label>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button id="reset" class="btn2">↺ 恢复示例</button>
+    <button id="printBtn" class="btn2">🖨 打印</button>
+    <button id="reportBtn" class="btn">📄 生成报告</button>
+  </div>
+</aside>
+
+<!-- ═══ RIGHT MAIN ═══ -->
+<main class="rmain">
+  <div class="hero">
+    <div class="hero-title" id="head">考编备考全攻略生成器 · 增强版</div>
+    <div class="hero-sub" id="desc">齐鲁工业大学 · 计算机科学与技术（物联网方向） · 2027-07 毕业</div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-val" id="mNum">14</div><div class="kpi-lbl">备考月数</div></div>
+      <div class="kpi"><div class="kpi-val" id="eNum">4</div><div class="kpi-lbl">考试通道</div></div>
+      <div class="kpi"><div class="kpi-val" id="pNum">18+</div><div class="kpi-lbl">匹配岗位</div></div>
+      <div class="kpi"><div class="kpi-val" id="target">75+</div><div class="kpi-lbl">行测目标</div></div>
+    </div>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab on" data-tab="match">📋 匹配</button>
+    <button class="tab" data-tab="city">📍 城市</button>
+    <button class="tab" data-tab="month">📅 月计划</button>
+    <button class="tab" data-tab="week">📆 周课表</button>
+    <button class="tab" data-tab="xingce">📊 行测专项</button>
+    <button class="tab" data-tab="shenlun">📝 申论专项</button>
+    <button class="tab" data-tab="gongji">📚 公基专项</button>
+    <button class="tab" data-tab="countdown">⏳ 倒排计划</button>
+    <button class="tab" data-tab="report">📄 完整报告</button>
+  </nav>
+
+  <div class="content">
+    <div id="match" class="view"></div>
+    <div id="city" class="view hide"></div>
+    <div id="month" class="view hide"></div>
+    <div id="week" class="view hide"></div>
+    <div id="xingce" class="view hide"></div>
+    <div id="shenlun" class="view hide"></div>
+    <div id="gongji" class="view hide"></div>
+    <div id="countdown" class="view hide"></div>
+    <div id="report" class="view hide"></div>
+  </div>
+</main>
+</div>
+
+<script>
+var TODAY = new Date('2026-06-23T00:00:00');
+var active = 'match';
+
+function q(id){return document.getElementById(id)}
+function v(id){return q(id).value.trim()}
+function checked(){return Array.from(document.querySelectorAll('.exam:checked')).map(function(x){return x.value})}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function ymToDate(s){var p=s.split('-');return new Date(Number(p[0])||2026,(Number(p[1])||1)-1,1)}
+function months(){
+  var a=ymToDate(v('start')),b=ymToDate(v('grad'));
+  return Math.max(1,(b.getFullYear()-a.getFullYear())*12+(b.getMonth()-a.getMonth())+1)
+}
+
+/* ── DATA: Professional Library ── */
+var LIBS=[
+  {name:'计算机信息类',icon:'💻',keys:['计算机','软件','网络','物联网','数据','信息','人工智能','通信','电子'],posts:[
+    ['信息化管理','大数据局/政府办/行政审批局','数字政府、数据治理、系统建设','中等'],
+    ['网络安全','公安网安/网信部门','安全监管、技术侦察、系统安全','较高'],
+    ['税务信息化','税务局信息中心','系统运维、数据分析','中等'],
+    ['统计信息化','统计局/调查队','数据处理、平台维护','中低'],
+    ['事业技术岗','信息中心/高校/医院信息科','运维、开发、信息化服务','较低'],
+    ['司法信息化','法院/检察院','智慧法院、电子卷宗、技术保障','中等']
+  ]},
+  {name:'财会经管类',icon:'💹',keys:['会计','财务','金融','经济','管理','工商','审计'],posts:[
+    ['财务管理','财政局/审计局/机关财务','预算、核算、审计监督','中等'],
+    ['税务征管','税务局','税收征管、纳税服务','中等'],
+    ['经济管理','发改/商务/市场监管','产业、项目、市场监管','中等'],
+    ['事业财务岗','高校/医院/中心站所','财务核算、资产管理','中低']
+  ]},
+  {name:'法学类',icon:'⚖️',keys:['法学','法律','知识产权','政治学'],posts:[
+    ['行政执法','市场监管/司法/城管','执法办案、法制审核','中等'],
+    ['司法行政','司法局/法院/检察院','法治宣传、案件辅助','较高'],
+    ['纪检监察辅助','纪检/审计相关单位','监督检查、材料整理','中等']
+  ]},
+  {name:'中文新闻类',icon:'📰',keys:['汉语言','新闻','传播','秘书','中文','文秘'],posts:[
+    ['文字综合','办公室/宣传部','公文、调研、综合材料','中等'],
+    ['宣传文化','宣传/文旅/融媒体','宣传策划、内容生产','中等'],
+    ['基层综合岗','街道/乡镇','材料、协调、群众工作','中低']
+  ]},
+  {name:'理工科通用类',icon:'🔬',keys:['建筑','土木','化工','生物','物理','数学','机械','电气'],posts:[
+    ['工程技术岗','住建/水利/交通/自然资源','工程管理、技术保障','中等'],
+    ['检验检测','质量监管/市场监管','技术检验、标准执行','中低'],
+    ['事业专业岗','研究机构/事业单位','专业研究、技术服务','中低']
+  ]},
+  {name:'通用综合类',icon:'📋',keys:[],posts:[
+    ['综合管理','各级机关事业单位','综合事务、协调执行','中等'],
+    ['公共服务','街道/基层单位','窗口服务、基层治理','中低'],
+    ['事业综合岗','学校/医院/中心站所','行政管理、项目执行','较低']
+  ]}
+];
+
+/* ── DATA: City Tiers ── */
+var PROVINCES={
+  '山东省':{top:['济南','青岛'],stable:['烟台','潍坊','临沂','淄博','济宁','威海'],safe:['泰安','德州','聊城','菏泽','枣庄','滨州','东营','日照']},
+  '江苏省':{top:['南京','苏州'],stable:['无锡','常州','南通','扬州','镇江'],safe:['盐城','淮安','宿迁','连云港','泰州']},
+  '浙江省':{top:['杭州','宁波'],stable:['温州','嘉兴','绍兴','金华'],safe:['湖州','台州','衢州','丽水','舟山']},
+  '广东省':{top:['广州','深圳'],stable:['佛山','东莞','珠海','惠州','中山'],safe:['江门','肇庆','清远','韶关','湛江']},
+  '全国国考':{top:['中央部委','省会派驻'],stable:['税务系统','海关系统','统计调查队'],safe:['基层税务所','铁路公安','海事局基层']}
+};
+
+/* ── DATA: Exam Events ── */
+var EVENTS=[
+  ['国考','2026-10-15','报名期','核心节点，重点看限制应届+限制专业岗位，报名第一天先观望竞争比。'],
+  ['国考','2026-11-29','笔试','行测+申论，考前7天只看错题本和热点素材，不做新题。'],
+  ['省考','2026-11-15','报名期','本省主战场，城市梯队分层配置，每个考试报不同城市组合。'],
+  ['省考','2026-12-20','笔试','申论和资料分析是最大提分空间，冲刺阶段重点强化。'],
+  ['选调生','2026-12-25','笔试/资格','先核验党员/学生干部/学校范围，三者缺一可能直接失去资格。'],
+  ['事业单位','2027-02-15','报名/笔试','公基+综合写作，不能只用行测申论替代，需单独补法律政治公文。'],
+  ['军队文职','2027-03-15','报名/笔试','计算机专业重点看专业技术岗，需了解体检政审的具体要求。'],
+  ['三支一扶','2027-04-15','报名期','低竞争保底通道，服务期满后有政策优势，可同期参加其他公考。']
+];
+
+/* ── Helpers ── */
+function cat(){
+  var m=v('major');
+  for(var i=0;i<LIBS.length-1;i++){
+    for(var j=0;j<LIBS[i].keys.length;j++){
+      if(m.indexOf(LIBS[i].keys[j])>-1) return LIBS[i]
+    }
+  }
+  return LIBS[LIBS.length-1]
+}
+function intensity(){
+  var h=Number(v('hours'));
+  return h>=9?'冲刺型（高强度）':h>=6?'标准型（均衡节奏）':'压缩型（时间有限）'
+}
+function baseHint(){
+  var b=v('base');
+  return b==='zero'?'先建立题型框架和方法体系，学方法优先于刷题量，理论:做题=4:6':
+         b==='some'?'重点做弱项诊断和限时训练，真题优先，理论:做题=3:7':
+         '以稳定发挥和申论提分为核心，套卷限时+速度管理+复盘，理论:做题=2:8'
+}
+function daysTo(s){return Math.ceil((new Date(s+'T00:00:00')-TODAY)/86400000)}
+
+/* ══════════════════════════════════════════
+   RENDER FUNCTIONS
+══════════════════════════════════════════ */
+
+function renderMatch(){
+  var c=cat(),ex=checked();
+  var canXd=/党员/.test(v('pol'))||v('cadre')!=='否';
+  var html='';
+  /* Card 1: 专业匹配 */
+  html+='<div class="card"><div class="card-t">'+c.icon+' 专业库匹配 — '+esc(c.name)+'</div>';
+  html+='<div class="list">';
+  html+='<div class="li"><div class="li-k">专业分类</div><div class="li-v">'+esc(c.name)+'。系统通过专业关键词自动匹配，优先推荐限制专业、限制应届、需求稳定的岗位方向。</div></div>';
+  html+='<div class="li"><div class="li-k">毕业身份</div><div class="li-v">'+esc(v('grad'))+'毕业，按应届身份规划。选岗优先看"限应届+限专业+招录≥2人"的组合，竞争比可降低50%-80%。</div></div>';
+  html+='<div class="li"><div class="li-k">选调资格</div><div class="li-v">'+(canXd?'<span style="color:var(--OK);font-weight:600">✓ 具备基础资格</span>，建议同步关注当年公告对学校的要求。':'<span style="color:var(--WA);font-weight:600">⚠ 资格存在短板</span>，若有意向需尽早争取党员发展或学生干部经历。')+'</div></div>';
+  html+='<div class="li"><div class="li-k">备考类型</div><div class="li-v">'+esc(intensity())+'。'+esc(baseHint())+'。</div></div>';
+  html+='</div>';
+  html+='<div class="tags"><span class="tag tok">自动专业匹配</span><span class="tag tok">应届优先策略</span><span class="tag twa">最终以当年公告为准</span></div>';
+  html+='</div>';
+  /* Card 2: 岗位列表 */
+  html+='<div class="card"><div class="card-t">推荐岗位方向</div>';
+  html+='<table class="tbl"><thead><tr><th style="width:18%">方向</th><th style="width:28%">典型单位</th><th>工作内容</th><th style="width:12%">竞争</th></tr></thead><tbody>';
+  c.posts.forEach(function(r){html+='<tr><td style="font-weight:600">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'});
+  html+='</tbody></table></div>';
+  /* Card 3: 考试通道 */
+  if(ex.length){
+    var tips={
+      '国考':'平台最高，岗位表最大。10月报名是关键，适合冲税务、海关、统计、公安技术类。',
+      '省考':'本省主战场。城市梯队分层报考，限制条件多的岗位竞争比更低。',
+      '事业单位':'竞争相对温和，技术岗和综合岗都适合，需单独备考公共基础知识。',
+      '选调生':'高价值通道，资格门槛需提前核验，党员+学生干部+学校范围三者缺一不可。',
+      '三支一扶':'低竞争保底通道，服务期满后有政策优势，可同期参加其他考试。',
+      '军队文职':'专业技术岗需求多，待遇稳定，需单独了解报名条件和体检政审要求。'
+    };
+    html+='<div class="card"><div class="card-t">考试通道分析</div><div class="list">';
+    ex.forEach(function(e){html+='<div class="li"><div class="li-k">'+e+'</div><div class="li-v">'+(tips[e]||'')+'</div></div>'});
+    html+='</div></div>'
+  }
+  q('match').innerHTML=html
+}
+
+function renderCity(){
+  var p=PROVINCES[v('province')]||PROVINCES['山东省'];
+  var mode=v('mode');
+  var advice=mode==='top'?'你选择了核心城市冲刺策略。平台高竞争也强，建议至少保留1-2个稳定梯队岗位，避免全部押注核心城市而一次落空。':
+             mode==='safe'?'你选择了求稳优先策略。重点关注稳定/保底梯队城市的事业单位和限制专业岗位，一次上岸概率最高。':
+             '你选择了冲稳保组合策略（推荐）。国考/省考冲核心城市，事业单位选稳定梯队，三支一扶作为最终保底，分散风险。';
+  var html='<div class="card"><div class="card-t">省份/城市竞争梯队库 — '+esc(v('province'))+'</div>';
+  html+='<p style="font-size:13px;line-height:1.65;color:var(--T2);margin-bottom:12px">'+esc(advice)+'</p>';
+  html+='<div class="matrix">';
+  html+='<div class="mini"><b>🚀 冲刺梯队</b><p>'+p.top.join('、')+'<br><br>平台高或待遇好，竞争也最激烈。国考/省考可重点尝试。</p></div>';
+  html+='<div class="mini"><b>⚖️ 稳定梯队</b><p>'+p.stable.join('、')+'<br><br>岗位数量和竞争强度均衡，性价比高，上岸概率较优。</p></div>';
+  html+='<div class="mini"><b>🛡 保底梯队</b><p>'+p.safe.join('、')+'<br><br>竞争低，适合事业单位、基层项目和限制专业岗位。</p></div>';
+  html+='<div class="mini"><b>📌 选岗黄金规则</b><p>限制越多越有利：<br>限应届 + 限专业 + 限学历 + 招录人数多<br>→ 竞争比通常降低 50%–80%</p></div>';
+  html+='</div></div>';
+  html+='<div class="card"><div class="card-t">你的意向城市规划</div>';
+  html+='<p style="font-size:13px;line-height:1.7;color:var(--T1)">意向城市：<strong>'+esc(v('cities'))+'</strong></p>';
+  html+='<p style="font-size:12px;line-height:1.65;color:var(--T2);margin-top:8px">配置建议：每次报名至少分配 <strong>1个冲刺岗 + 2个稳定岗 + 1个保底岗</strong>。不同考试尽量报不同城市，避免同一批次被统一拉下。</p>';
+  html+='<div class="note">广撒网不是盲目报，而是在不同梯队的城市中选择最符合限制条件和专业匹配度的岗位，用数量提高上岸概率。</div>';
+  html+='</div>';
+  q('city').innerHTML=html
+}
+
+function renderMonth(){
+  var start=ymToDate(v('start')),n=months();
+  var phases=[
+    {name:'第一轮 · 夯实基础',color:'#40B43E',task:'系统学习行测五大模块，申论建立归纳概括、综合分析、提出对策框架。每天做题60道以上，学方法优先于刷量。'},
+    {name:'第二轮 · 强化提升',color:'#EBA400',task:'专项突破弱项，大量真题训练，建立错题本和限时节奏。行测冲70+，申论每周至少2套小题练习。'},
+    {name:'第三轮 · 冲刺模考',color:'#E58522',task:'全真套卷限时模考、申论大作文定期修改、时政热点积累、岗位表精研、考前查漏补缺。'},
+    {name:'第四轮 · 面试毕业',color:'#58B2DC',task:'结构化面试训练（综合分析/计划组织/人际沟通/应急应变），同步推进体检政审材料准备和毕业论文。'}
+  ];
+  var html='<div class="card"><div class="card-t">月度学习计划 — 共 '+n+' 个月（自动生成）</div><div class="tl">';
+  for(var i=0;i<Math.min(n,18);i++){
+    var d=new Date(start.getFullYear(),start.getMonth()+i,1);
+    var pct=i/n;
+    var ph=pct<0.35?phases[0]:pct<0.60?phases[1]:pct<0.82?phases[2]:phases[3];
+    var mn=d.getFullYear()+'年'+(d.getMonth()+1)+'月';
+    html+='<div class="tl-row"><div class="tl-dt">'+mn+'</div><div class="tl-box"><b style="color:'+ph.color+'">'+ph.name+'</b><p>'+ph.task+'</p></div></div>'
+  }
+  if(n>18) html+='<div class="tl-row"><div class="tl-dt">…</div><div class="tl-box"><b>后续月份</b><p>持续按第三、四轮节奏推进，密切关注每次考试公告发布节点。</p></div></div>';
+  html+='</div><div class="note">已按备考起点（'+esc(v('start'))+'）到毕业（'+esc(v('grad'))+'）自动切分阶段。周期越短，基础阶段占比越小，真题和冲刺越提前启动。</div></div>';
+  q('month').innerHTML=html
+}
+
+function renderWeek(){
+  var h=Number(v('hours'));
+  var tip=h<6?'当前时间偏少。建议减少多线并行，优先刷真题和复盘，以资料分析、判断推理和申论小题为核心。':
+           h<9?'标准节奏。按课表执行，每周保证1套行测+1套申论全真限时练习，周末复盘大于刷新题。':
+           '高强度节奏。可增加到每周2套行测+2套申论，同步加入公基专项训练和面试热点积累。';
+  var rows=[
+    ['周一','言语理解：逻辑填空30题+片段阅读20题','申论：归纳概括题限时精练（2套）','错题复盘 + 常识积累20个知识点'],
+    ['周二','判断推理：图形推理+定义判断各15题','数量关系：工程/行程/利润各5题','行测专项限时练习60题'],
+    ['周三','资料分析：20题限时25分钟','申论：综合分析题限时精练（2套）','申论素材摘抄 + 每天练字10分钟'],
+    ['周四','判断推理：逻辑判断+类比推理各15题','言语理解：语句表达+下文推断20题','错题三遍法：二刷本周错题'],
+    ['周五','数量关系：排列组合/最值/容斥问题','公基：法律/政治/经济专题（事业单位方向）','本周最薄弱模块专项补充'],
+    ['周六','⭐ 行测全真模考（严格限时120分钟）','全面复盘：模考错题逐题归因分析','常识积累 + 时政热点整理'],
+    ['周日','⭐ 申论限时模考（严格限时180分钟）','大作文修改/公基写作训练','半天适度休整 + 下周计划制定']
+  ];
+  var html='<div class="card"><div class="card-t">每周标准课表（自动生成）</div>';
+  html+='<table class="tbl"><thead><tr><th style="width:50px">星期</th><th>上午 / 主学习时段</th><th>下午 / 副学习时段</th><th>晚上 / 复盘时段</th></tr></thead><tbody>';
+  rows.forEach(function(r){html+='<tr><td style="font-weight:600;white-space:nowrap">'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td></tr>'});
+  html+='</tbody></table><div class="note wn">当前每日可学习 <strong>'+h+' 小时</strong>。'+tip+'</div></div>';
+  q('week').innerHTML=html
+}
+
+function renderXingce(){
+  var mods=[
+    {name:'资料分析',pct:90,desc:'增长率/比重/倍数/平均数/速算技巧（截位法、错位加减、特征数字法）',tip:'每天20题限时25分钟，这是理科生最大得分点，目标满分区。'},
+    {name:'判断推理',pct:85,desc:'图形推理（位置/样式/数量规律）、定义判断、类比推理、逻辑判断',tip:'计算机/理科生强项，建立题型模板，逻辑判断冲满分区。'},
+    {name:'言语理解',pct:80,desc:'逻辑填空（成语+实词）、片段阅读（主旨/意图/细节）、语句表达',tip:'每天30-40题，积累高频成语500个，熟记转折/因果/递进标志词。'},
+    {name:'数量关系',pct:70,desc:'工程问题、行程问题、利润问题、排列组合、容斥原理、最值问题',tip:'考场后置策略：先做有把握的5-6道，剩余时间不够则蒙同一选项，不恋战。'},
+    {name:'常识判断',pct:60,desc:'法律（宪法/民法/刑法/行政法）、政治、科技常识、经济、人文历史',tip:'碎片化积累，利用通勤/午休/碎片时间，重点看时政热点和法律高频条文。'}
+  ];
+  var html='<div class="card"><div class="card-t">行测五大模块目标正确率</div>';
+  mods.forEach(function(m){
+    html+='<div class="bar-row"><div class="bar-hd"><span>'+m.name+'</span><small>目标正确率 '+m.pct+'%</small></div><div class="bar"><i style="width:'+m.pct+'%"></i></div></div>'
+  });
+  html+='<div class="note">考场做题顺序推荐：<strong>常识(10min) → 资料分析(25min) → 判断推理(35min) → 言语理解(35min) → 数量关系(15min)</strong>。放弃"最后做完所有题"的执念，优先保证高正确率。</div>';
+  html+='</div>';
+  mods.forEach(function(m){
+    html+='<div class="card"><div class="card-t">'+m.name+' · 目标 '+m.pct+'%</div>';
+    html+='<div class="list">';
+    html+='<div class="li"><div class="li-k">考点范围</div><div class="li-v">'+m.desc+'</div></div>';
+    html+='<div class="li"><div class="li-k">训练策略</div><div class="li-v">'+m.tip+'</div></div>';
+    html+='</div></div>'
+  });
+  q('xingce').innerHTML=html
+}
+
+function renderShenlun(){
+  var types=[
+    ['📋 归纳概括','要点化、序号化，尽量使用材料原词，"问什么答什么"，字数控制在要求范围内。'],
+    ['🔍 综合分析','解释观点 → 分析原因 → 谈影响 → 提对策 → 总结升华，避免空泛描述，要有材料依据。'],
+    ['💡 提出对策','问题导向，主体明确（谁来做），措施具体可执行，条目清晰有层次感。'],
+    ['📝 贯彻执行','讲话稿、倡议书、简报、调研报告，背格式、练短文、注意机关语言表达规范。'],
+    ['✍️ 大作文','五段三分式结构：引题+分论点1+分论点2+分论点3+收尾，积累20个标题套路和分论点模板。'],
+    ['🖊 卷面表达','每天练字10-20分钟，控制字距行距，保持整洁，人工阅卷卷面印象分影响显著。']
+  ];
+  var html='<div class="card"><div class="card-t">申论专项计划 — 六大题型</div>';
+  html+='<div class="matrix">';
+  types.forEach(function(t){html+='<div class="mini"><b>'+t[0]+'</b><p>'+t[1]+'</p></div>'});
+  html+='</div>';
+  html+='<div class="note wn">申论占总分 50% 权重，不要等冲刺才开始！建议从备考第一周起每周做 2 套小题限时练习、每 2 周写 1 篇大作文并找人批改。材料阅读和复盘的效果远高于背模板。</div>';
+  html+='</div>';
+  html+='<div class="card"><div class="card-t">申论每周训练计划</div>';
+  html+='<div class="list">';
+  html+='<div class="li"><div class="li-k">每周必做</div><div class="li-v">2套归纳概括/综合分析小题（限时精练）+ 1套贯彻执行题</div></div>';
+  html+='<div class="li"><div class="li-k">每两周必做</div><div class="li-v">1篇大作文限时写作（60分钟内完成）并寻找反馈和批改</div></div>';
+  html+='<div class="li"><div class="li-k">素材积累</div><div class="li-v">每天阅读人民日报评论/半月谈，摘录金句、数据、案例各1条</div></div>';
+  html+='<div class="li"><div class="li-k">卷面练字</div><div class="li-v">每天10-20分钟楷书练习，重点练习标题字和正文字的规范度</div></div>';
+  html+='</div></div>';
+  q('shenlun').innerHTML=html
+}
+
+function renderGongji(){
+  var mods=[
+    ['法律','宪法、民法典、刑法、行政法、行政诉讼法基础','先建框架后刷题，错题按法条归类，重点记忆条文数字和概念','高'],
+    ['政治','马克思主义原理、毛中特、习近平新时代思想、时政','结合时政材料记忆，整理重要会议、关键词和核心论断','高'],
+    ['经济','宏观/微观经济学、市场经济基础、货币财政政策','理解基本概念和规律，配合选择题巩固，不死记硬背','中'],
+    ['科技','前沿科技（AI/航天/医疗）、计算机常识、生活科技','计算机类考生有先天优势，热点结合时政一起学','中'],
+    ['人文历史','历史纪年、地理常识、文学常识、文化艺术常识','碎片化积累为主，不投入过多整块时间，多刷选择题','中低'],
+    ['公文写作','通知、请示、报告、函、调研报告、简报等文种','背格式要点、练短文写作、注意机关语言的规范性','高']
+  ];
+  var html='<div class="card"><div class="card-t">公基 / 事业单位 / 三支一扶 专项计划</div>';
+  html+='<table class="tbl"><thead><tr><th style="width:60px">模块</th><th>重点内容</th><th>学习方式</th><th style="width:55px">优先级</th></tr></thead><tbody>';
+  mods.forEach(function(a){
+    var c=a[3]==='高'?'var(--ER)':a[3]==='中'?'var(--WA)':'var(--T2)';
+    html+='<tr><td style="font-weight:600">'+a[0]+'</td><td>'+a[1]+'</td><td>'+a[2]+'</td><td style="color:'+c+';font-weight:600">'+a[3]+'</td></tr>'
+  });
+  html+='</tbody></table>';
+  html+='<div class="note wn">参加事业单位和三支一扶考试，不能只用公考行测申论替代！需要专门备考公共基础知识（法律+政治+公文写作优先级最高），以及综合写作专项训练。</div>';
+  html+='</div>';
+  q('gongji').innerHTML=html
+}
+
+function renderCountdown(){
+  var ex=checked();
+  var html='<div class="card"><div class="card-t">考试节点倒排计划</div><div class="tl">';
+  var shown=0;
+  EVENTS.forEach(function(e){
+    if(ex.indexOf(e[0])<0) return;
+    var dd=daysTo(e[1]);
+    var cls=dd<0?'tag':dd<60?'tag ter':dd<120?'tag twa':'tag tok';
+    var lbl=dd<0?'已过期':'剩余'+dd+'天';
+    html+='<div class="tl-row">';
+    html+='<div class="tl-dt">'+e[1]+'</div>';
+    html+='<div class="tl-box">';
+    html+='<b>'+esc(e[0])+' · '+esc(e[2])+' &nbsp;<span class="'+cls+'">'+lbl+'</span></b>';
+    html+='<p>'+esc(e[3])+'</p>';
+    html+='<p class="tl-hint">倒排节奏：前60%时间 → 方法学习+专项训练，中30% → 真题套卷+复盘，后10% → 只看错题本+热点素材</p>';
+    html+='</div></div>';
+    shown++
+  });
+  if(!shown) html+='<div style="padding:20px;text-align:center;color:var(--T3);font-size:13px">请在左侧勾选至少一种考试类型</div>';
+  html+='</div><div class="note wn">日期以 2026-06-23 为基准计算剩余天数。实际使用时请结合当年公告的正式日期调整备考节奏。</div></div>';
+  q('countdown').innerHTML=html
+}
+
+function reportText(){
+  var c=cat();
+  var lines=[
+    '# 考编备考全攻略','',
+    '生成时间：2026-06-23　生成器版本：v2.0 增强版','',
+    '═══════════════════════════════',
+    '一、个人画像',
+    '═══════════════════════════════',
+    '学校：'+v('school'),
+    '专业：'+v('major')+'（'+c.name+'）',
+    '毕业时间：'+v('grad'),
+    '备考起点：'+v('start')+'（备考周期约 '+months()+' 个月）',
+    '政治面貌：'+v('pol')+'　学生干部：'+v('cadre'),
+    '每日学习：'+v('hours')+' 小时，'+intensity(),
+    '基础水平：'+baseHint(),'',
+    '═══════════════════════════════',
+    '二、报考策略',
+    '═══════════════════════════════',
+    '目标省份：'+v('province'),
+    '意向城市：'+v('cities'),
+    '城市策略：'+({'balanced':'冲稳保组合','safe':'求稳优先','top':'核心城市冲刺'}[v('mode')]||'冲稳保组合'),
+    '参加考试：'+checked().join('、'),'',
+    '选调资格判断：'+(/党员/.test(v('pol'))||v('cadre')!=='否'?'具备基础资格，需核验当年公告的学校范围等具体要求。':'政治面貌和干部经历可能不满足选调生资格，如有意向需尽早争取。'),'',
+    '═══════════════════════════════',
+    '三、岗位分析',
+    '═══════════════════════════════',
+    '推荐方向：'+c.posts.map(function(x){return x[0]}).join('、'),
+    '典型单位：'+c.posts.map(function(x){return x[1]}).join(' / '),
+    '',
+    '选岗黄金规则：',
+    '  限制应届 + 限制专业 + 限制学历 + 招录人数多 = 竞争比最低组合',
+    '  报名首日先观望竞争比，最后1-2天再确认提交','',
+    '═══════════════════════════════',
+    '四、行测学习规划',
+    '═══════════════════════════════',
+    '资料分析  目标90%：增长率/比重/速算，每天20题限时25分钟，争取满分区。',
+    '判断推理  目标85%：图形/逻辑，建立题型模板，理科生重点冲高分。',
+    '言语理解  目标80%：积累成语和标志词，每天30-40题。',
+    '数量关系  目标70%：后置策略，挑会做的先做，不恋战。',
+    '常识判断  目标60%：碎片积累，重点时政和法律高频点。',
+    '',
+    '考场顺序：常识(10min) → 资料(25min) → 判断(35min) → 言语(35min) → 数量(15min)','',
+    '═══════════════════════════════',
+    '五、申论学习规划',
+    '═══════════════════════════════',
+    '归纳概括：要点化序号化，用材料原词，问什么答什么。',
+    '综合分析：解释→分析→对策→升华，避免空泛评论。',
+    '提出对策：问题导向，主体明确，措施具体可执行。',
+    '贯彻执行：背文种格式（讲话稿/简报/倡议书），注意机关表达。',
+    '大作文：五段三分式，积累标题和分论点素材，每2周写1篇并批改。',
+    '每周计划：2套小题限时练习 + 1套贯彻执行 + 每天练字10分钟','',
+    '═══════════════════════════════',
+    '六、面试规划',
+    '═══════════════════════════════',
+    '笔试结束后立即进入结构化面试准备，不要等成绩出来再开始。',
+    '四大题型：综合分析 / 计划组织 / 人际沟通 / 应急应变',
+    '每天练习：对镜子或录音练3道题，每周2次全真模拟。',
+    '面试技巧：眼神交流，控制节奏，结合岗位工作内容作答。','',
+    '═══════════════════════════════',
+    '七、重要注意事项',
+    '═══════════════════════════════',
+    '① 保护应届身份：不随便签劳动合同或三方协议，避免失去应届生资格。',
+    '② 广撒网策略：每次报名配置冲刺+稳定+保底岗位，不全押同一城市。',
+    '③ 错题管理：建立错题本，三遍法（当天→3天→7天），搞透1000道错题胜过刷10000道新题。',
+    '④ 申论不能忽视：占总分50%权重，从第一天备考就要有计划练习。',
+    '⑤ 面试早准备：笔试结束后立即启动，不等成绩出来再开始。',
+    '⑥ 信息来源：国家公务员局(bm.scs.gov.cn) / 省人事考试网 / 学校就业办 是最权威信息来源。',
+    '⑦ 考场当天：多打2份准考证备用，2B铅笔×3+签字笔×3，提前踩点考场路线。','',
+    '═══════════════════════════════',
+    '加油！广撒网 + 精准选岗 + 坚持复盘 = 上岸',
+    '═══════════════════════════════'
+  ];
+  return lines.join('\n')
+}
+
+function renderReport(){
+  var html='<div class="card">';
+  html+='<div class="card-t">完整备考攻略报告 <button id="copyBtn" class="btn2" style="margin:0;height:28px;font-size:11px">📋 复制全文</button></div>';
+  html+='<div class="mono" id="repText">'+esc(reportText())+'</div>';
+  html+='</div>';
+  q('report').innerHTML=html;
+  var btn=q('copyBtn');
+  if(btn){
+    btn.addEventListener('click',function(){
+      var txt=reportText();
+      function done(){btn.textContent='✅ 已复制';setTimeout(function(){btn.textContent='📋 复制全文'},2000)}
+      if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done).catch(function(){fallback(txt,done)})}
+      else{fallback(txt,done)}
+    })
+  }
+  function fallback(txt,cb){
+    var ta=document.createElement('textarea');
+    ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');cb()}catch(e){}
+    document.body.removeChild(ta)
+  }
+}
+
+/* ── Main Render ── */
+function render(){
+  q('hoursText').textContent=v('hours')+' 小时';
+  q('head').textContent='考编备考全攻略生成器 · 增强版';
+  q('desc').textContent=v('school')+' · '+v('major')+' · '+v('grad')+' 毕业';
+  q('mNum').textContent=months();
+  q('eNum').textContent=checked().length;
+  q('pNum').textContent=cat().posts.length*3+'+';
+  q('target').textContent=Number(v('hours'))>=8?'75+':'70+';
+  renderMatch();renderCity();renderMonth();renderWeek();
+  renderXingce();renderShenlun();renderGongji();renderCountdown();renderReport();
+  document.querySelectorAll('.view').forEach(function(x){x.classList.add('hide')});
+  q(active).classList.remove('hide');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.getAttribute('data-tab')===active)})
+}
+
+/* ── Events ── */
+document.querySelectorAll('input,select').forEach(function(x){x.addEventListener('input',render);x.addEventListener('change',render)});
+document.querySelectorAll('.exam').forEach(function(x){x.addEventListener('change',render)});
+document.querySelectorAll('.tab').forEach(function(t){t.addEventListener('click',function(){active=t.getAttribute('data-tab');render()})});
+
+q('reset').addEventListener('click',function(){
+  q('school').value='齐鲁工业大学';q('major').value='计算机科学与技术（物联网方向）';
+  q('grad').value='2027-07';q('start').value='2026-06';
+  q('province').value='山东省';q('cities').value='济南、青岛、烟台、潍坊、淄博';
+  q('mode').value='balanced';q('pol').value='群众';q('cadre').value='否';
+  q('hours').value=8;q('base').value='zero';
+  document.querySelectorAll('.exam').forEach(function(e){e.checked=['国考','省考','事业单位','三支一扶'].indexOf(e.value)>-1});
+  render()
+});
+q('printBtn').addEventListener('click',function(){window.print()});
+q('reportBtn').addEventListener('click',function(){active='report';render()});
+
+render();
+</script>
+</body>
+</html>
