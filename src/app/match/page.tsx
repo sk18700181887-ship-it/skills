@@ -1,354 +1,159 @@
 'use client';
-
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import {
-  Sparkles,
-  Lock,
-  MapPin,
-  Briefcase,
-  TrendingUp,
-  ShieldCheck,
-  Crown,
-  ArrowRight,
-  Loader2,
-} from 'lucide-react';
-import { AppShell } from '@/components/layout/app-shell';
-import { PageHeader, PriceTag } from '@/components/common';
+import { JOB_CATEGORIES, matchCategory, AI_PREDICTION, CITY_TIERS, USER } from '@/lib/data';
+import { PageHeader, VipLock, PriceTag } from '@/components/common';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from '@/components/ui/select';
-import { matchCategory, USER } from '@/lib/data';
+import { Button } from '@/components/ui/button';
+import { Sparkles, TrendingUp, AlertTriangle, CheckCircle2, Crown, MapPin, Users, BarChart3, Lock } from 'lucide-react';
 
 export default function MatchPage() {
-  const [major, setMajor] = useState(USER.major);
-  const [province, setProvince] = useState(USER.province);
-  const [degree, setDegree] = useState('本科');
-  const [role, setRole] = useState('应届');
-  const [analyzing, setAnalyzing] = useState(false);
-  const [reportOpen, setReportOpen] = useState(false);
-
-  const category = useMemo(() => matchCategory(major || ''), [major]);
-  const previewCount = 3;
-
-  const runMatch = () => {
-    setAnalyzing(true);
-    window.setTimeout(() => {
-      setAnalyzing(false);
-      setReportOpen(true);
-    }, 900);
-  };
+  const [major, setMajor] = useState('计算机科学与技术');
+  const [province, setProvince] = useState('山东省');
+  const matched = matchCategory(major);
+  const tiers = CITY_TIERS.find((c) => c.province === province) || CITY_TIERS[0];
 
   return (
-    <AppShell>
-      <PageHeader
-        title="AI 岗位智能匹配"
-        subtitle="基于 260 万条历史招录数据，2 分钟找到最适合你的岗位方向"
-        action={
-          <Badge
-            variant="outline"
-            className="hidden sm:inline-flex text-[11px]"
-          >
-            <Sparkles className="size-3 mr-1 text-primary" />
-            v3.2 · 匹配精度 92.7%
-          </Badge>
-        }
-      />
+    <div className="p-4 lg:p-6 max-w-6xl mx-auto space-y-6">
+      <PageHeader title="AI 岗位匹配" subtitle="输入专业和省份，AI 智能推荐最适合你的岗位方向" />
 
-      {/* 输入表单 */}
+      {/* Input form */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base font-semibold">
-            填写基础信息
-          </CardTitle>
-          <p className="text-xs text-muted-foreground">
-            越准确的信息，匹配质量越高。所有信息仅用于本次匹配，不做保存。
-          </p>
-        </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label className="text-xs">专业方向</Label>
-            <Input
-              className="mt-1.5 h-9"
-              value={major}
-              placeholder="例如：计算机科学与技术、法学、汉语言文学"
-              onChange={(e) => setMajor(e.target.value)}
-            />
-          </div>
-          <div>
-            <Label className="text-xs">目标省份</Label>
-            <Select value={province} onValueChange={setProvince}>
-              <SelectTrigger className="mt-1.5 h-9 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {['山东省', '江苏省', '浙江省', '广东省', '全国国考'].map(
-                  (p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs">最高学历</Label>
-            <Select value={degree} onValueChange={setDegree}>
-              <SelectTrigger className="mt-1.5 h-9 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {['专科', '本科', '硕士', '博士'].map((p) => (
-                  <SelectItem key={p} value={p}>
-                    {p}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div>
-            <Label className="text-xs">身份</Label>
-            <Select value={role} onValueChange={setRole}>
-              <SelectTrigger className="mt-1.5 h-9 w-full">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {['应届', '往届（2 年内）', '往届（2 年以上）', '在职'].map(
-                  (p) => (
-                    <SelectItem key={p} value={p}>
-                      {p}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="md:col-span-2 flex flex-col sm:flex-row items-start sm:items-center gap-3 pt-2">
-            <Button
-              onClick={runMatch}
-              disabled={!major || analyzing}
-              className="h-9 w-full sm:w-auto"
-            >
-              {analyzing ? (
-                <>
-                  <Loader2 className="size-4 mr-1.5 animate-spin" />
-                  AI 正在分析…
-                </>
-              ) : (
-                <>
-                  <Sparkles className="size-4 mr-1.5" />
-                  开始智能匹配（免费）
-                </>
-              )}
-            </Button>
-            <p className="text-[11px] text-muted-foreground">
-              已服务 <span className="tabular-nums font-medium">218,462</span>{' '}
-              位考生 · 上岸率提升 34%
-            </p>
+        <CardContent className="p-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs text-muted-foreground font-medium">专业方向</label>
+              <input value={major} onChange={(e) => setMajor(e.target.value)}
+                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30" placeholder="输入你的专业" />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground font-medium">目标省份</label>
+              <select value={province} onChange={(e) => setProvince(e.target.value)}
+                className="mt-1 w-full rounded-lg border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 bg-white">
+                {CITY_TIERS.map((c) => <option key={c.province}>{c.province}</option>)}
+              </select>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 匹配结果 */}
-      {reportOpen && (
-        <>
-          <div className="mt-6 flex items-baseline justify-between">
-            <h2 className="font-serif text-lg font-semibold">
-              匹配结果 · {category.name}
-            </h2>
-            <span className="text-xs text-muted-foreground">
-              命中关键词：
-              {category.keys.slice(0, 3).join(' / ') || '兜底通用类'}
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
-            {category.posts.slice(0, previewCount).map((p, i) => (
-              <PostCard key={p.name} post={p} rank={i + 1} />
-            ))}
-          </div>
-
-          {/* 付费深度报告 */}
-          <Card className="mt-4 overflow-hidden">
-            <div className="relative bg-gradient-to-br from-primary/10 via-background to-background p-5 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <Lock className="size-4 text-primary" />
-                    <span className="text-xs font-medium text-primary">
-                      深度岗位报告（余{' '}
-                      {category.posts.length - previewCount} 个方向）
-                    </span>
+      <div className="grid lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2 space-y-6">
+          {/* Matched Category */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                匹配结果：{matched.name}
+                <Badge variant="secondary" className="text-[10px]">{matched.posts.length} 个岗位方向</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {matched.posts.map((p) => (
+                  <div key={p.name} className="rounded-lg border p-3 flex flex-col sm:flex-row sm:items-center gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm font-medium">{p.name}</div>
+                      <div className="text-[11px] text-muted-foreground">{p.unit} · {p.content}</div>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <Badge variant="outline" className="text-[10px]">
+                        <Users className="w-3 h-3 mr-1" />{p.ratio}
+                      </Badge>
+                      <Badge variant={p.competition === '较低' ? 'secondary' : p.competition === '中等' ? 'outline' : 'destructive'} className="text-[10px]">
+                        {p.competition}
+                      </Badge>
+                    </div>
                   </div>
-                  <h3 className="font-serif text-lg font-semibold">
-                    解锁完整《{category.name}·上岸策略报告》
-                  </h3>
-                  <ul className="mt-2 text-xs text-muted-foreground space-y-1">
-                    <li>
-                      · 全部{' '}
-                      <span className="text-foreground font-medium">
-                        {category.posts.length}
-                      </span>{' '}
-                      个岗位方向 + 近 3 年招录人数 / 分数线
-                    </li>
-                    <li>
-                      · {province} 报考限制 · 学历专业硬门槛 · 政审要求
-                    </li>
-                    <li>
-                      · AI 生成的《冲稳保 3-2-1 报考清单》 + 排期建议
-                    </li>
-                  </ul>
-                </div>
-                <div className="shrink-0 flex flex-col items-end gap-2">
-                  <PriceTag price={29.9} origin={49} size="md" />
-                  <Button className="h-9" size="sm">
-                    单次购买
-                    <ArrowRight className="size-3.5 ml-1" />
-                  </Button>
-                  <Button
-                    asChild
-                    variant="link"
-                    size="sm"
-                    className="h-auto p-0 text-xs vip-text"
-                  >
-                    <Link href="/vip">
-                      <Crown className="size-3 mr-0.5" />
-                      VIP 免费查看
-                    </Link>
-                  </Button>
-                </div>
+                ))}
               </div>
-            </div>
+            </CardContent>
           </Card>
 
-          {/* 冲稳保 */}
-          <div className="mt-5 grid grid-cols-1 md:grid-cols-3 gap-3">
-            {[
-              {
-                tier: '冲刺梯队',
-                cities: '济南 / 青岛',
-                ratio: '55 : 1',
-                tone: 'text-rose-600 bg-rose-50 dark:bg-rose-950/40',
-              },
-              {
-                tier: '稳定梯队',
-                cities: '烟台 / 潍坊 / 临沂 / 淄博',
-                ratio: '32 : 1',
-                tone: 'text-amber-600 bg-amber-50 dark:bg-amber-950/40',
-              },
-              {
-                tier: '保底梯队',
-                cities: '德州 / 聊城 / 菏泽 / 枣庄',
-                ratio: '18 : 1',
-                tone: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40',
-              },
-            ].map((t) => (
-              <Card key={t.tier} className="p-4">
-                <div
-                  className={`inline-flex items-center gap-1.5 text-xs px-2 py-0.5 rounded ${t.tone}`}
-                >
-                  <MapPin className="size-3" />
-                  {t.tier}
-                </div>
-                <div className="mt-2 text-sm font-medium">{t.cities}</div>
-                <div className="mt-1 text-[11px] text-muted-foreground">
-                  近 3 年平均竞争比{' '}
-                  <span className="font-serif tabular-nums text-foreground">
-                    {t.ratio}
-                  </span>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </>
-      )}
+          {/* City Tiers */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-primary" />
+                {province} 城市梯队
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid sm:grid-cols-3 gap-3">
+                {[
+                  { label: '冲刺', cities: tiers.sprint, color: 'var(--err)' },
+                  { label: '稳定', cities: tiers.stable, color: 'var(--warn)' },
+                  { label: '保底', cities: tiers.safety, color: 'var(--ok)' },
+                ].map((tier) => (
+                  <div key={tier.label} className="rounded-lg border p-3">
+                    <div className="text-xs font-bold mb-2" style={{ color: tier.color }}>{tier.label}</div>
+                    <div className="space-y-1">
+                      {tier.cities.map((c) => (
+                        <div key={c} className="text-sm text-muted-foreground">{c}</div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* 未跑匹配时的空态引导 */}
-      {!reportOpen && !analyzing && (
-        <div className="mt-6 rounded-xl border border-dashed p-8 lg:p-10 text-center bg-secondary/30">
-          <Sparkles className="size-6 mx-auto text-primary mb-3" />
-          <div className="font-medium text-sm">
-            填写左侧信息，点击「开始智能匹配」
-          </div>
-          <div className="text-xs text-muted-foreground mt-1">
-            AI 将从 6 大专业分类 · 5 省城市梯队 · 260 万条历史数据中，为你定位
-            3 个最优岗位方向
-          </div>
-        </div>
-      )}
-    </AppShell>
-  );
-}
+        {/* Right: AI Prediction (Paid) */}
+        <div className="space-y-4">
+          <Card className="border-primary/30 bg-primary/3">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-primary" />
+                AI 竞争预测
+                <Badge className="text-[9px] bg-primary/15 text-primary">AI</Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {!USER.isVip && <VipLock message="开通 VIP 查看 AI 竞争预测与上岸概率" />}
+              {USER.isVip && (
+                <>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold font-serif text-primary">{AI_PREDICTION['上岸概率']}</div>
+                    <div className="text-xs text-muted-foreground">综合上岸概率</div>
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-[var(--ok)] flex items-center gap-1"><CheckCircle2 className="w-3 h-3" />优势</div>
+                    <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+                      {AI_PREDICTION.strengths.map((s, i) => <li key={i}>· {s}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-[var(--err)] flex items-center gap-1"><AlertTriangle className="w-3 h-3" />风险</div>
+                    <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+                      {AI_PREDICTION.risks.map((r, i) => <li key={i}>· {r}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="text-xs font-medium text-primary flex items-center gap-1"><TrendingUp className="w-3 h-3" />建议</div>
+                    <ul className="mt-1 space-y-1 text-xs text-muted-foreground">
+                      {AI_PREDICTION.suggestions.map((s, i) => <li key={i}>· {s}</li>)}
+                    </ul>
+                  </div>
+                </>
+              )}
+            </CardContent>
+          </Card>
 
-function PostCard({
-  post,
-  rank,
-}: {
-  post: {
-    name: string;
-    unit: string;
-    content: string;
-    competition: string;
-    salary: string;
-    ratio: string;
-  };
-  rank: number;
-}) {
-  const tone =
-    post.competition === '较高'
-      ? 'text-rose-600'
-      : post.competition === '中等'
-        ? 'text-amber-600'
-        : 'text-emerald-600';
-  return (
-    <Card className="p-4">
-      <div className="flex items-start justify-between">
-        <div className="min-w-0">
-          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            <span className="stamp px-1.5 py-0 text-[10px] rounded font-serif">
-              TOP {rank}
-            </span>
-            <ShieldCheck className="size-3" />
-            AI 推荐
-          </div>
-          <h4 className="font-serif text-base font-semibold mt-1.5">
-            {post.name}
-          </h4>
-        </div>
-        <span className={`text-xs font-medium ${tone}`}>
-          {post.competition}
-        </span>
-      </div>
-      <div className="mt-3 space-y-1.5 text-xs text-muted-foreground">
-        <div className="flex items-center gap-1.5">
-          <Briefcase className="size-3" />
-          {post.unit}
-        </div>
-        <div>{post.content}</div>
-      </div>
-      <div className="mt-3 pt-3 border-t flex items-center justify-between">
-        <div>
-          <div className="text-[10px] text-muted-foreground">薪资参考</div>
-          <div className="font-serif text-sm font-semibold">{post.salary}</div>
-        </div>
-        <div className="text-right">
-          <div className="text-[10px] text-muted-foreground">近 3 年竞争</div>
-          <div className="font-serif text-sm font-semibold tabular-nums flex items-center gap-1">
-            <TrendingUp className="size-3 text-muted-foreground" />
-            {post.ratio}
-          </div>
+          {/* Deep report CTA */}
+          <Card>
+            <CardContent className="p-4 text-center">
+              <div className="text-sm font-medium">深度岗位分析报告</div>
+              <div className="text-xs text-muted-foreground mt-1">个性化岗位推荐 + 竞争分析 + 薪资预估</div>
+              <div className="mt-2"><PriceTag price={29.9} /></div>
+              <Link href="/vip">
+                <Button className="mt-3 w-full" size="sm">购买报告</Button>
+              </Link>
+            </CardContent>
+          </Card>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }

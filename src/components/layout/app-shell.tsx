@@ -1,201 +1,153 @@
 'use client';
-
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import {
-  LayoutDashboard,
-  Sparkles,
-  BookOpenText,
-  Timer,
-  PenLine,
-  Trophy,
-  Crown,
-  GraduationCap,
-  Menu,
-  X,
-  Flame,
-} from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { BRAND, USER, NEXT_EXAM } from '@/lib/data';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { USER, BRAND, NEXT_EXAM, ANNOUNCEMENTS, JOURNEY_PHASES } from '@/lib/data';
+import {
+  Compass, Sparkles, ClipboardCheck, BookOpen, Timer, Mic, ShieldCheck,
+  Home, Trophy, Crown, ChevronRight, Bell, Flame,
+} from 'lucide-react';
+import { useState } from 'react';
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Compass, Sparkles, ClipboardCheck, BookOpen, Timer, Mic, ShieldCheck,
+};
 
 const NAV = [
-  { href: '/', label: '学习中心', icon: LayoutDashboard, tag: '' },
-  { href: '/match', label: 'AI 岗位匹配', icon: Sparkles, tag: '免费' },
-  { href: '/practice', label: '智能题库', icon: BookOpenText, tag: '' },
-  { href: '/mock', label: '模考中心', icon: Timer, tag: '排名' },
-  { href: '/shenlun', label: '申论 AI 批改', icon: PenLine, tag: '¥9.9' },
-  { href: '/rank', label: '排行榜 & 上岸榜', icon: Trophy, tag: '' },
-  { href: '/vip', label: '会员 & 协议班', icon: Crown, tag: '限时' },
+  { group: '考公全路径', items: JOURNEY_PHASES },
+  { group: '更多', items: [
+    { id: 'rank', label: '排行榜', icon: 'Home', href: '/rank', desc: '学习排名 + 上岸榜', aiFeature: '', free: true },
+    { id: 'vip', label: '会员中心', icon: 'Home', href: '/vip', desc: 'VIP 套餐 + 协议班', aiFeature: '', free: true },
+  ]},
 ];
+
+// Replace generic 'Home' icons in "更多" section
+const MORE_ICON_FIX: Record<string, React.ElementType> = { rank: Trophy, vip: Crown };
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const isActive = (href: string) =>
-    href === '/' ? pathname === '/' : pathname.startsWith(href);
+  const daysLeft = NEXT_EXAM.daysLeft;
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Mobile Top Bar */}
-      <header className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 h-14 bg-card border-b">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="stamp size-8 grid place-items-center text-sm">
-            {BRAND.logo}
-          </div>
-          <span className="font-semibold tracking-wide">{BRAND.name}</span>
-        </Link>
-        <button
-          aria-label="切换菜单"
-          className="p-2 -mr-2"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? <X className="size-5" /> : <Menu className="size-5" />}
-        </button>
-      </header>
+    <div className="flex h-screen overflow-hidden bg-[var(--background)]">
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex flex-col w-[228px] shrink-0 border-r bg-card overflow-y-auto">
+        <SidebarContent pathname={pathname} />
+      </aside>
 
-      <div className="lg:flex">
-        {/* Sidebar */}
-        <aside
-          className={cn(
-            'lg:sticky lg:top-0 lg:h-screen lg:w-[236px] shrink-0 border-r bg-card',
-            'lg:block',
-            open ? 'block' : 'hidden'
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="absolute inset-0 bg-black/30" onClick={() => setMobileOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-[280px] bg-card shadow-xl overflow-y-auto">
+            <SidebarContent pathname={pathname} onNav={() => setMobileOpen(false)} />
+          </aside>
+        </div>
+      )}
+
+      {/* Main area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Top bar */}
+        <header className="h-14 shrink-0 flex items-center gap-3 border-b px-4 lg:px-6 bg-card">
+          <button className="lg:hidden p-1.5 -ml-1.5 rounded-md hover:bg-muted" onClick={() => setMobileOpen(true)}>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+          </button>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Bell className="w-3.5 h-3.5" />
+            <span className="truncate max-w-[260px] lg:max-w-[480px]">{ANNOUNCEMENTS[0]?.title}</span>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            <span className="text-xs text-muted-foreground hidden sm:inline">距{NEXT_EXAM.name} <b className="text-[var(--primary)]">{daysLeft}</b> 天</span>
+          </div>
+        </header>
+        <main className="flex-1 overflow-y-auto">{children}</main>
+      </div>
+    </div>
+  );
+}
+
+function SidebarContent({ pathname, onNav }: { pathname: string; onNav?: () => void }) {
+  return (
+    <div className="flex flex-col h-full">
+      {/* Brand */}
+      <div className="px-5 py-4 border-b">
+        <div className="flex items-center gap-2.5">
+          <span className="stamp text-base">{BRAND.logo}</span>
+          <div>
+            <div className="font-serif font-bold text-base leading-tight">{BRAND.name}</div>
+            <div className="text-[10px] text-muted-foreground mt-0.5">{BRAND.slogan}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* User card */}
+      <div className="mx-3 mt-3 p-3 rounded-xl border bg-[var(--background)]">
+        <div className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+            {USER.nickname.slice(-1)}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-medium truncate">{USER.nickname}</div>
+            <div className="flex items-center gap-1 mt-0.5">
+              <Flame className="w-3 h-3 text-orange-500" />
+              <span className="text-[11px] text-muted-foreground">连续 {USER.streakDays} 天</span>
+            </div>
+          </div>
+          {!USER.isVip && (
+            <Link href="/vip" onClick={onNav} className="vip-gradient px-2 py-0.5 rounded text-[10px] font-bold vip-text">
+              开通VIP
+            </Link>
           )}
-        >
-          <div className="hidden lg:flex items-center gap-2 px-5 h-16 border-b">
-            <div className="stamp size-9 grid place-items-center text-sm">
-              {BRAND.logo}
-            </div>
-            <div>
-              <div className="font-semibold leading-tight">{BRAND.name}</div>
-              <div className="text-[11px] text-muted-foreground leading-tight">
-                {BRAND.slogan}
-              </div>
-            </div>
-          </div>
+          {USER.isVip && (
+            <span className="vip-gradient px-2 py-0.5 rounded text-[10px] font-bold vip-text">VIP</span>
+          )}
+        </div>
+      </div>
 
-          {/* User Card */}
-          <div className="mx-3 mt-3 rounded-xl border bg-secondary/60 p-3">
-            <div className="flex items-center gap-2.5">
-              <div className="size-9 rounded-full brand-gradient text-white grid place-items-center font-semibold shrink-0">
-                {USER.nickname.slice(0, 1)}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="text-sm font-medium truncate">
-                  {USER.nickname}
-                </div>
-                <div className="text-[11px] text-muted-foreground truncate">
-                  {USER.school} · {USER.major.split('（')[0]}
-                </div>
-              </div>
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto mt-2 pb-4">
+        {NAV.map((section) => (
+          <div key={section.group} className="mt-2">
+            <div className="px-5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              {section.group}
             </div>
-            <div className="mt-2.5 flex items-center gap-1.5">
-              {USER.isVip ? (
-                <Badge className="vip-gradient border-0 h-5 px-2 text-[10px]">
-                  <span className="vip-text">VIP 会员</span>
-                </Badge>
-              ) : (
-                <Badge
-                  variant="outline"
-                  className="h-5 px-2 text-[10px] font-normal"
-                >
-                  免费用户
-                </Badge>
-              )}
-              <Badge
-                variant="outline"
-                className="h-5 px-2 text-[10px] font-normal border-primary/30 text-primary"
-              >
-                <Flame className="size-2.5 mr-0.5" /> {USER.streakDays} 天连击
-              </Badge>
-            </div>
-          </div>
-
-          {/* Nav */}
-          <nav className="mt-3 px-2 pb-4">
-            {NAV.map((item) => {
-              const Icon = item.icon;
-              const active = isActive(item.href);
+            {section.items.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+              const Icon = MORE_ICON_FIX[item.id] || ICON_MAP[item.icon] || Compass;
               return (
                 <Link
-                  key={item.href}
+                  key={item.id}
                   href={item.href}
-                  onClick={() => setOpen(false)}
+                  onClick={onNav}
                   className={cn(
-                    'flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors',
-                    active
-                      ? 'bg-primary/12 text-primary font-medium'
-                      : 'text-foreground/78 hover:bg-secondary'
+                    'mx-2 flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition-colors',
+                    isActive ? 'bg-primary/8 text-primary font-medium' : 'text-foreground/75 hover:bg-muted',
                   )}
                 >
-                  <Icon
-                    className={cn(
-                      'size-4 shrink-0',
-                      active ? 'text-primary' : 'text-muted-foreground'
-                    )}
-                  />
+                  <Icon className="w-4 h-4 shrink-0" />
                   <span className="flex-1 truncate">{item.label}</span>
-                  {item.tag && (
-                    <span
-                      className={cn(
-                        'text-[10px] px-1.5 py-0.5 rounded font-normal',
-                        item.tag === '免费'
-                          ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300'
-                          : item.tag === '限时'
-                            ? 'bg-primary/15 text-primary'
-                            : item.tag.startsWith('¥')
-                              ? 'bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300'
-                              : 'bg-muted text-muted-foreground'
-                      )}
-                    >
-                      {item.tag}
-                    </span>
+                  {item.aiFeature && (
+                    <span className="shrink-0 text-[9px] px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">AI</span>
+                  )}
+                  {!item.free && !USER.isVip && (
+                    <Crown className="w-3 h-3 text-amber-500 shrink-0" />
                   )}
                 </Link>
               );
             })}
-          </nav>
-
-          {/* Sidebar Bottom · Next Exam */}
-          <div className="mx-3 mb-4 rounded-xl border p-3 bg-gradient-to-br from-primary/6 to-transparent">
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <GraduationCap className="size-3.5" />
-              距离最近考试
-            </div>
-            <div className="mt-1 font-serif text-2xl font-semibold tabular-nums">
-              {NEXT_EXAM.daysLeft}
-              <span className="text-xs font-normal text-muted-foreground ml-1">
-                天
-              </span>
-            </div>
-            <div className="text-[11px] text-muted-foreground mt-0.5">
-              {NEXT_EXAM.name} · {NEXT_EXAM.date}
-            </div>
-            {!USER.isVip && (
-              <Button
-                asChild
-                size="sm"
-                className="w-full mt-2.5 h-8 vip-gradient hover:opacity-90 border-0"
-              >
-                <Link href="/vip">
-                  <Crown className="size-3.5 mr-1" />
-                  <span className="vip-text font-medium">开通 VIP</span>
-                </Link>
-              </Button>
-            )}
           </div>
-        </aside>
+        ))}
+      </nav>
 
-        {/* Main */}
-        <main className="flex-1 min-w-0">
-          <div className="mx-auto max-w-6xl px-4 lg:px-8 py-6 lg:py-8">
-            {children}
-          </div>
-        </main>
+      {/* Countdown */}
+      <div className="mx-3 mb-3 p-3 rounded-xl border bg-[var(--background)]">
+        <div className="text-[10px] text-muted-foreground">距{NEXT_EXAM.name}</div>
+        <div className="mt-1 font-serif text-2xl font-bold text-primary tabular-nums">{NEXT_EXAM.daysLeft} <span className="text-sm font-normal">天</span></div>
+        <div className="mt-1.5 h-1.5 rounded-full bg-muted overflow-hidden">
+          <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${Math.max(8, 100 - NEXT_EXAM.daysLeft / 3)}%` }} />
+        </div>
       </div>
     </div>
   );
