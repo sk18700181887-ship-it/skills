@@ -1,60 +1,65 @@
-# AGENTS.md · 考编备考全攻略生成器
+# 项目上下文
 
-## 项目概览
-纯前端「单页 HTML」应用。用户填写学校/专业/毕业时间/备考起点/目标省份/考试类型等基本信息，页面右侧多 Tab 实时渲染专业匹配、城市梯队、月度计划、周课表、行测/申论/公基专项、考试倒排和完整报告。
+### 版本技术栈
 
-- 技术栈：原生 HTML + CSS + Vanilla JS（无构建、无依赖、无网络字体）。
-- 模板：`native-static`，通过 `python -m http.server` 提供静态服务。
-- 端口：从环境变量 `DEPLOY_RUN_PORT` 读取（默认 5000）。
+- **Framework**: Next.js 16 (App Router)
+- **Core**: React 19
+- **Language**: TypeScript 5
+- **UI 组件**: shadcn/ui (基于 Radix UI)
+- **Styling**: Tailwind CSS 4
 
 ## 目录结构
+
 ```
-.
-├── index.html          # 全部页面、样式与脚本都在这一份文件（单文件应用）
-├── DESIGN.md           # 视觉与交互设计规范
-├── AGENTS.md           # 本文档
-├── assets/             # 原始产品文档与原型（参考用，不参与运行）
-│   ├── 考编备考全攻略生成器.html
-│   └── 考编备考全攻略生成器_产品文档.md
-└── .coze               # 构建与运行配置（native-static，勿改）
+├── public/                 # 静态资源
+├── scripts/                # 构建与启动脚本
+│   ├── build.sh            # 构建脚本
+│   ├── dev.sh              # 开发环境启动脚本
+│   ├── prepare.sh          # 预处理脚本
+│   └── start.sh            # 生产环境启动脚本
+├── src/
+│   ├── app/                # 页面路由与布局
+│   ├── components/ui/      # Shadcn UI 组件库
+│   ├── hooks/              # 自定义 Hooks
+│   ├── lib/                # 工具库
+│   │   └── utils.ts        # 通用工具函数 (cn)
+│   └── server.ts           # 自定义服务端入口
+├── next.config.ts          # Next.js 配置
+├── package.json            # 项目依赖管理
+└── tsconfig.json           # TypeScript 配置
 ```
 
-## 常用命令
-| 场景 | 命令 |
-| --- | --- |
-| 启动开发预览 | `coze dev`（主仓沙箱已常驻，无需手动启动） |
-| 构建生产版本 | `coze build` |
-| 启动生产版本 | `coze start` |
+- 项目文件（如 app 目录、pages 目录、components 等）默认初始化到 `src/` 目录下。
 
-## index.html 代码地图
-| 区块 | 起始特征 | 说明 |
-| --- | --- | --- |
-| CSS 变量与 Tokens | `:root{` | 色彩、字体、圆角等 Design Tokens，参见 `DESIGN.md` |
-| 布局样式 | `.page{`、`.lpanel{`、`.rmain{` | 左栏 308px + 右栏自适应 |
-| 打印样式 | `@media print{` | 打印时隐藏左栏、Tabs 与按钮，所有 Tab 内容一起展开 |
-| 左栏表单 | `<aside class="lpanel">` | 输入字段与 checkbox |
-| 右栏 Hero + KPI | `<div class="hero">` | 顶部标题与 4 个关键数字 |
-| Tab 导航 | `<nav class="tabs">` | 9 个 Tab 切换按钮 |
-| 数据常量 | `LIBS` / `PROVINCES` / `EVENTS` | 专业库 / 城市梯队 / 考试节点 |
-| 渲染函数 | `renderMatch/renderCity/renderMonth/renderWeek/renderXingce/renderShenlun/renderGongji/renderCountdown/renderReport` | 每个 Tab 一个 render 函数 |
-| 事件与主渲染 | `render()`、末尾 `document.querySelectorAll('input,select')` | `input/change` 立即触发 `render()` |
+## 包管理规范
 
-## 修改指南
-- **改数据（专业库/省份城市/考试节点）**：定位 `LIBS`、`PROVINCES`、`EVENTS` 数组，保持格式一致即可，无需改渲染逻辑。
-- **改视觉 Token**：先读 `DESIGN.md`，再改 `:root` 中的 CSS 变量。禁止引入外部字体或彩色渐变按钮。
-- **加新 Tab**：
-  1. `<nav class="tabs">` 内加 `<button class="tab" data-tab="xxx">`；
-  2. `<div class="content">` 内加 `<div id="xxx" class="view hide"></div>`；
-  3. 新增 `renderXxx()` 函数并在 `render()` 里调用。
-- **参考基准日期**：脚本内 `TODAY = new Date('2026-06-23T00:00:00')` 与 `EVENTS` 中的日期配套，如需切换基准日期请同步调整。
+**仅允许使用 pnpm** 作为包管理器，**严禁使用 npm 或 yarn**。
+**常用命令**：
+- 安装依赖：`pnpm add <package>`
+- 安装开发依赖：`pnpm add -D <package>`
+- 安装所有依赖：`pnpm install`
+- 移除依赖：`pnpm remove <package>`
 
-## 交付前检查
-- 静态服务器可访问：`curl -I -s --max-time 3 http://localhost:${DEPLOY_RUN_PORT}` 应返回 200。
-- 页面在桌面 / 移动端断点（820px）下布局正确。
-- 无外部依赖：`index.html` 不引入任何 CDN、字体、JS 库。
-- 打印预览：仅右栏内容随打印铺满，所有 Tab 内容一起展开。
+## 开发规范
 
-## 已知约束
-- 产品文档明确要求「独立 HTML，无外部依赖」，禁止改为多文件工程或引入 npm 依赖。
-- 备考基准日期为 2026-06-23（与考试节点年份配套），不接入实时 `new Date()`。
-- 输入均为客户端表单，无后端接口，无接口冒烟测试项。
+### 编码规范
+
+- 默认按 TypeScript `strict` 心智写代码；优先复用当前作用域已声明的变量、函数、类型和导入，禁止引用未声明标识符或拼错变量名。
+- 禁止隐式 `any` 和 `as any`；函数参数、返回值、解构项、事件对象、`catch` 错误在使用前应有明确类型或先完成类型收窄，并清理未使用的变量和导入。
+
+### next.config 配置规范
+
+- 配置的路径不要写死绝对路径，必须使用 path.resolve(__dirname, ...)、import.meta.dirname 或 process.cwd() 动态拼接。
+
+### Hydration 问题防范
+
+1. 严禁在 JSX 渲染逻辑中直接使用 typeof window、Date.now()、Math.random() 等动态数据。**必须使用 'use client' 并配合 useEffect + useState 确保动态内容仅在客户端挂载后渲染**；同时严禁非法 HTML 嵌套（如 <p> 嵌套 <div>）。
+2. **禁止使用 head 标签**，优先使用 metadata，详见文档：https://nextjs.org/docs/app/api-reference/functions/generate-metadata
+   1. 三方 CSS、字体等资源可在 `globals.css` 中顶部通过 `@import` 引入或使用 next/font
+   2. preload, preconnect, dns-prefetch 通过 ReactDOM 的 preload、preconnect、dns-prefetch 方法引入
+   3. json-ld 可阅读 https://nextjs.org/docs/app/guides/json-ld
+
+## UI 设计与组件规范 (UI & Styling Standards)
+
+- 模板默认预装核心组件库 `shadcn/ui`，位于`src/components/ui/`目录下
+- Next.js 项目**必须默认**采用 shadcn/ui 组件、风格和规范，**除非用户指定用其他的组件和规范。**
