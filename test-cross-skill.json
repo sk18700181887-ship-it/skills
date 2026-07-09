@@ -1,0 +1,64 @@
+{
+  "test_cases": [
+    {
+      "id": "cross-01",
+      "prompt": "材料原文：'以前村里办红白喜事大操大办，比阔气讲排场，有的家庭为此负债好几万。现在村里成立了红白理事会，制定了村规民约，规定酒席桌数和礼金上限，风气好了很多。' 请把这段材料翻译成规范表达。",
+      "expected_skill": "sanmoshi-fanyi",
+      "should_not_trigger": [
+        "wenti-celue-yinghe",
+        "xinhao-ci-fanyi",
+        "fen-weidu-moban",
+        "kua-lingyu-zuhe"
+      ],
+      "notes": "纯翻译任务：现象→术语（大操大办→移风易俗）。材料是单段口语化描述，无多领域交叉、无候选词选择、无维度检查需求。虽然'红白理事会'可作为信号词，但用户明确要求'翻译'而非'快速联想'"
+    },
+    {
+      "id": "cross-02",
+      "prompt": "材料描述'看病难'问题，我觉得'远程医疗''分级诊疗''优质资源下沉'三个词都能用，帮我分析下在'通过5G平台进行跨省远程手术指导'这个具体场景里该选哪个。",
+      "expected_skill": "wenti-celue-yinghe",
+      "should_not_trigger": [
+        "sanmoshi-fanyi",
+        "xinhao-ci-fanyi",
+        "fen-weidu-moban",
+        "kua-lingyu-zuhe"
+      ],
+      "notes": "典型的近义规范词精准选择场景。用户已有三个候选词，需要定义+场景双重校验。不涉及翻译（词已给出）、不涉及信号词快速匹配、不涉及维度检查、不涉及跨领域"
+    },
+    {
+      "id": "cross-03",
+      "prompt": "我在做申论真题，材料中反复出现'自治委员会''积分排名''红黑榜'这些表述，帮我快速列出它们分别对应的规范词，我需要提速。",
+      "expected_skill": "xinhao-ci-fanyi",
+      "should_not_trigger": [
+        "sanmoshi-fanyi",
+        "wenti-celue-yinghe",
+        "fen-weidu-moban",
+        "kua-lingyu-zuhe"
+      ],
+      "notes": "典型的信号词快速匹配场景。用户明确要求'提速'、给出了具体关键词要求快速联想。不涉及翻译推理（不需要从头分析）、不涉及近义区分（信号词与规范词是一一对应的）、不涉及维度检查、不涉及跨领域"
+    },
+    {
+      "id": "cross-04",
+      "prompt": "我答了一道'提出T村葡萄产业发展建议'的题，写了'统一生产标准'和'提升品牌知名度'两个要点。帮我看看按产业类对策的维度框架，我还遗漏了什么维度？",
+      "expected_skill": "fen-weidu-moban",
+      "should_not_trigger": [
+        "sanmoshi-fanyi",
+        "wenti-celue-yinghe",
+        "xinhao-ci-fanyi",
+        "kua-lingyu-zuhe"
+      ],
+      "notes": "典型的维度检查场景。用户已有规范词（统一标准、品牌化），关心的是维度覆盖完整性。产业模板是'标准-渠道-品牌'三步，用户遗漏了'销售渠道拓宽'维度。不涉及翻译、不涉及选词精度、不涉及跨领域"
+    },
+    {
+      "id": "cross-05",
+      "prompt": "材料描述某村荒山绿化后发展林下核桃种植实现增收，同时村里还依托红色旧址搞起了研学旅游。这道'概括经验'题的答案涉及哪些方面？我总觉得只写生态方面不够全面。",
+      "expected_skill": "kua-lingyu-zuhe",
+      "should_not_trigger": [
+        "sanmoshi-fanyi",
+        "wenti-celue-yinghe",
+        "xinhao-ci-fanyi",
+        "fen-weidu-moban"
+      ],
+      "notes": "典型的跨领域组合场景：生态（荒山绿化+林下经济）+文化（红色旧址+研学）+产业（核桃种植+旅游增收）。用户已经感觉需要跨领域覆盖，需要确定主/次领域和逻辑链。不是单条翻译、不是选词、不是信号词、不是单领域维度检查"
+    }
+  ]
+}
