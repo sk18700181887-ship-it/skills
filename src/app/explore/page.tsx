@@ -42,10 +42,10 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <div className="hero-reveal space-y-8 max-w-6xl">
       {/* 页面头部 */}
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Compass className="w-6 h-6 text-[#b4ff39]" /> 了解考公
         </h1>
         <p className="text-sm text-zinc-500 mt-2">6 类公职考试全景对比 + AI 考公百科，帮你找到最适合的路</p>
@@ -68,7 +68,7 @@ export default function ExplorePage() {
             onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
             className="flex-1 bg-[var(--surface-1)] border-[rgba(255,255,255,0.06)] text-white placeholder:text-zinc-600"
           />
-          <Button onClick={handleAsk} disabled={typing} className="bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium">
+          <Button className="btn-press bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium" disabled={typing}>
             <Search className="w-4 h-4 mr-1" /> 提问
           </Button>
         </div>
@@ -123,7 +123,7 @@ export default function ExplorePage() {
       {/* 常见问题 FAQ */}
       <div className="animate-fade-up delay-300">
         <h2 className="text-lg font-bold mb-5">考公常见问题</h2>
-        <div className="space-y-2">
+        <div className="hero-reveal space-y-2">
           {FAQ.map((f, i) => (
             <div
               key={i}

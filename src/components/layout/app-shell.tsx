@@ -7,7 +7,7 @@ import {
   Compass, Sparkles, ClipboardCheck, BookOpen, Timer, Mic, ShieldCheck,
   Home, Trophy, Crown, ChevronRight, Bell, Flame, BookHeart, MapPin,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AICompanion } from '@/components/ai-companion';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -25,6 +25,24 @@ const NAV = [
 ];
 
 const MORE_ICON_FIX: Record<string, React.ElementType> = { rank: Trophy, vip: Crown, diary: BookHeart, map: MapPin };
+
+function MouseGlow() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const parent = el.parentElement;
+    if (!parent) return;
+    const onMove = (e: MouseEvent) => {
+      const rect = parent.getBoundingClientRect();
+      el.style.left = (e.clientX - rect.left) + 'px';
+      el.style.top = (e.clientY - rect.top) + 'px';
+    };
+    parent.addEventListener('mousemove', onMove);
+    return () => parent.removeEventListener('mousemove', onMove);
+  }, []);
+  return <div ref={ref} className="mouse-glow" />;
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -64,7 +82,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <span className="text-xs text-zinc-500 hidden sm:inline">距{NEXT_EXAM.name} <b className="text-[#b4ff39]">{daysLeft}</b> 天</span>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto thin-scroll">{children}</main>
+        <main className="flex-1 overflow-y-auto thin-scroll relative">
+            <MouseGlow />
+            <div className="grid-bg absolute inset-0 pointer-events-none" />
+            <div className="relative z-10">{children}</div>
+          </main>
       </div>
       <AICompanion />
     </div>

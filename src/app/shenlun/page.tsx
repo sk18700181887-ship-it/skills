@@ -19,7 +19,7 @@ export default function ShenlunPage() {
   const pct = Math.round((result.score / result.fullScore) * 100)
 
   return (
-    <div className="space-y-6 animate-fade-up">
+    <div className="hero-reveal space-y-6 animate-fade-up">
       <PageHeader title="申论 AI 批改" subtitle="AI 五维评分 + 逐句点评，快速提升申论写作能力" />
 
       {/* 题型切换 */}
@@ -46,7 +46,7 @@ export default function ShenlunPage() {
             <p className="text-sm leading-relaxed mb-4">{topic.method}</p>
 
             {!showResult ? (
-              <div className="space-y-3">
+              <div className="hero-reveal space-y-3">
                 <textarea
                   className="w-full h-48 rounded-xl border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/20 transition-all"
                   placeholder="在此作答..."
@@ -55,13 +55,13 @@ export default function ShenlunPage() {
                   <Button className="flex-1 gap-2 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all" onClick={() => setShowResult(true)}>
                     <Sparkles className="w-4 h-4" /> AI 智能批改
                   </Button>
-                  <Button variant="outline" className="gap-2">
+                  <Button className="btn-press gap-2" variant="outline">
                     <FileText className="w-4 h-4" /> 查看范文
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4 animate-fade-up">
+              <div className="hero-reveal space-y-4 animate-fade-up">
                 <div className="flex items-center gap-2 text-sm text-[#b4ff39] font-medium">
                   <Sparkles className="w-4 h-4 animate-pulse" /> AI 批改完成
                 </div>
@@ -129,7 +129,7 @@ export default function ShenlunPage() {
               </div>
 
               {/* 亮点与待改进 */}
-              <div className="space-y-3">
+              <div className="hero-reveal space-y-3">
                 <div className="p-3 rounded-lg bg-[oklch(0.72_0.14_145)]/8 border border-[oklch(0.72_0.14_145)]/15">
                   <div className="text-xs font-medium text-[oklch(0.72_0.14_145)] mb-2 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> 亮点</div>
                   {result.highlights.map((h, i) => (
@@ -161,7 +161,7 @@ export default function ShenlunPage() {
             <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
               <MessageCircle className="w-4 h-4 text-[#b4ff39]" /> 历史批改样本
             </h3>
-            <div className="space-y-2">
+            <div className="hero-reveal space-y-2">
               {SHENLUN_SAMPLES.map((s, i) => (
                 <div key={s.id}>
                   <button
@@ -192,7 +192,7 @@ export default function ShenlunPage() {
             <h3 className="font-medium mb-2">VIP 无限批改</h3>
             <p className="text-xs text-white/70 mb-3">AI 批改 ¥9.9/次，VIP 每日无限次批改</p>
             <Link href="/vip">
-              <Button size="sm" variant="secondary" className="vip-text font-bold">开通 VIP</Button>
+              <Button className="btn-press vip-text font-bold" variant="secondary">开通 VIP</Button>
             </Link>
           </div>
         </div>

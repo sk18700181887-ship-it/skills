@@ -47,7 +47,7 @@ export default function MapPage() {
   ];
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       {/* 页头 */}
       <div className="animate-fade-up">
         <div className="flex items-center gap-2 mb-1">
@@ -77,7 +77,7 @@ export default function MapPage() {
 
       {/* 全国概览 - 省份热力图 */}
       {activeView === 'province' && (
-        <div className="space-y-5 animate-fade-up">
+        <div className="hero-reveal space-y-5 animate-fade-up">
           {/* 图例 */}
           <div className="topo-card p-4">
             <div className="flex items-center gap-2 mb-3">
@@ -220,7 +220,7 @@ export default function MapPage() {
               <TrendingUp className="w-4 h-4 text-[#b4ff39]" />
               <h3 className="font-semibold">各省竞争比排行</h3>
             </div>
-            <div className="space-y-2">
+            <div className="hero-reveal space-y-2">
               {[...PROVINCE_DATA].sort((a, b) => b.avgRatio - a.avgRatio).slice(0, 10).map((p, i) => (
                 <div key={p.id} className="flex items-center gap-3">
                   <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
@@ -246,7 +246,7 @@ export default function MapPage() {
 
       {/* 地市详情 - 以山东为例 */}
       {activeView === 'city' && (
-        <div className="space-y-5 animate-fade-up">
+        <div className="hero-reveal space-y-5 animate-fade-up">
           <div className="topo-card p-5">
             <div className="flex items-center gap-2 mb-2">
               <Building2 className="w-4 h-4 text-[#b4ff39]" />
@@ -307,14 +307,14 @@ export default function MapPage() {
 
       {/* 岗位分布 */}
       {activeView === 'posts' && (
-        <div className="space-y-5 animate-fade-up">
+        <div className="hero-reveal space-y-5 animate-fade-up">
           {/* 岗位类型分布 - 横向条形图 */}
           <div className="topo-card p-5">
             <div className="flex items-center gap-2 mb-4">
               <BarChart3 className="w-4 h-4 text-[#b4ff39]" />
               <h3 className="font-semibold">全国岗位类型分布</h3>
             </div>
-            <div className="space-y-3">
+            <div className="hero-reveal space-y-3">
               {POST_DISTRIBUTION.map((p, i) => (
                 <div key={p.type} className="animate-slide-right" style={{ animationDelay: `${i * 60}ms` }}>
                   <div className="flex items-center justify-between mb-1">
@@ -372,7 +372,7 @@ export default function MapPage() {
                   <span className="text-[10px] text-zinc-500">总岗位数</span>
                 </div>
               </div>
-              <div className="space-y-1.5">
+              <div className="hero-reveal space-y-1.5">
                 {POST_DISTRIBUTION.slice(0, 5).map(p => (
                   <div key={p.type} className="flex items-center gap-2 text-xs">
                     <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ backgroundColor: p.color }} />
@@ -393,14 +393,14 @@ export default function MapPage() {
 
       {/* 国考系统 */}
       {activeView === 'guokao' && (
-        <div className="space-y-5 animate-fade-up">
+        <div className="hero-reveal space-y-5 animate-fade-up">
           <div className="topo-card p-5">
             <div className="flex items-center gap-2 mb-4">
               <Layers className="w-4 h-4 text-[#b4ff39]" />
               <h3 className="font-semibold">国考热门系统竞争分析</h3>
             </div>
 
-            <div className="space-y-3">
+            <div className="hero-reveal space-y-3">
               {[...GUOKAO_SYSTEMS].sort((a, b) => b.ratio - a.ratio).map((s, i) => (
                 <div key={s.name} className="p-4 rounded-xl border border-[rgba(255,255,255,0.06)]/50 card-hover animate-slide-right" style={{ animationDelay: `${i * 50}ms` }}>
                   <div className="flex items-center justify-between mb-2">

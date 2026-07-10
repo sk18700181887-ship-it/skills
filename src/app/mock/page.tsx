@@ -10,9 +10,9 @@ export default function MockPage() {
   const [selectedExam, setSelectedExam] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Timer className="w-6 h-6 text-[#b4ff39]" /> 模考中心
         </h1>
         <p className="text-sm text-zinc-500 mt-1">全国模考 + 成绩预测 + 上岸概率分析</p>
@@ -55,7 +55,7 @@ export default function MockPage() {
 
       {/* 历史成绩 */}
       {tab === 'results' && (
-        <div className="space-y-5 animate-fade-up delay-100">
+        <div className="hero-reveal space-y-5 animate-fade-up delay-100">
           {/* 成绩趋势折线图 */}
           <div className="topo-card p-5">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
@@ -130,7 +130,7 @@ export default function MockPage() {
 
       {/* AI 预测 */}
       {tab === 'predict' && (
-        <div className="space-y-5 animate-fade-up delay-100">
+        <div className="hero-reveal space-y-5 animate-fade-up delay-100">
           <div className="grid md:grid-cols-3 gap-4">
             {[
               { icon: BarChart3, label: '预测行测分', value: '72.5', color: 'text-[#b4ff39]', sub: '基于模考趋势推算' },
@@ -162,7 +162,7 @@ export default function MockPage() {
                   <span className="text-[10px] text-zinc-500">上岸概率</span>
                 </div>
               </div>
-              <div className="space-y-3">
+              <div className="hero-reveal space-y-3">
                 {[
                   { label: '行测能力', value: 72, color: 'bg-primary' },
                   { label: '申论能力', value: 65, color: 'bg-amber-400/100' },

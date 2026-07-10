@@ -12,9 +12,9 @@ export default function GongjiPage() {
   const knowledge = GONGJI_KNOWLEDGE.filter(k => k.module === mod.name);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Globe className="w-6 h-6 text-[#b4ff39]" /> 公基 AI 图谱
         </h1>
         <p className="text-sm text-zinc-500 mt-1">6 大模块知识图谱 + AI 记忆助手，公基不再靠死记</p>
@@ -69,7 +69,7 @@ export default function GongjiPage() {
               <span className="text-[9px] text-zinc-500">总覆盖率</span>
             </div>
           </div>
-          <div className="space-y-1.5">
+          <div className="hero-reveal space-y-1.5">
             {GONGJI_MODULES.map((m, i) => {
               const colors = ['bg-amber-400/100', 'bg-blue-400/100', 'bg-emerald-400/100', 'bg-violet-400/100', 'bg-rose-400/100', 'bg-cyan-400/100'];
               return (
@@ -114,7 +114,7 @@ export default function GongjiPage() {
         )}
 
         {/* 知识点列表 */}
-        <div className="space-y-3">
+        <div className="hero-reveal space-y-3">
           {knowledge.map((k, i) => (
             <div key={i} className="p-3 rounded-lg border bg-transparent card-hover animate-slide-up" style={{animationDelay: `${i*0.05}s`}}>
               <div className="flex items-start gap-2">

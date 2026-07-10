@@ -9,9 +9,9 @@ export default function VipPage() {
   const [selected, setSelected] = useState(1);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Crown className="w-6 h-6 text-[#b4ff39]" /> 会员中心
         </h1>
         <p className="text-sm text-zinc-500 mt-1">开通 VIP，解锁全部 AI 能力</p>
@@ -49,7 +49,7 @@ export default function VipPage() {
       {/* 权益对比 */}
       <div className="topo-card p-5 animate-fade-up delay-100">
         <h3 className="font-semibold text-sm mb-4 flex items-center gap-2"><Sparkles className="w-4 h-4 text-[#b4ff39]" /> 权益对比</h3>
-        <div className="space-y-2">
+        <div className="hero-reveal space-y-2">
           {VIP_BENEFITS.map((b, i) => (
             <div key={i} className="grid grid-cols-12 gap-2 items-center py-2 border-b last:border-0 text-xs">
               <div className="col-span-4 font-medium">{b.name}</div>
@@ -110,7 +110,7 @@ export default function VipPage() {
             <h3 className="font-semibold text-sm">老带新双向返现</h3>
             <p className="text-xs text-zinc-500 mt-1">邀请好友开通 VIP，双方各得 ¥20 返现 · 上不封顶</p>
           </div>
-          <Button size="sm" className="ml-auto shrink-0 btn-press">立即邀请</Button>
+          <Button className="btn-press ml-auto shrink-0 btn-press" size="sm">立即邀请</Button>
         </div>
       </div>
     </div>

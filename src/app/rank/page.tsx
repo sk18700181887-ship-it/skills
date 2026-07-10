@@ -8,9 +8,9 @@ export default function RankPage() {
   const [tab, setTab] = useState<'study' | 'success'>('study');
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Trophy className="w-6 h-6 text-[#b4ff39]" /> 排行榜 & 上岸榜
         </h1>
         <p className="text-sm text-zinc-500 mt-1">学习排名激励 + 上岸数据背书</p>

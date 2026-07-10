@@ -15,9 +15,9 @@ const WEEKLY = [
 
 export default function PlanPage() {
   return (
-    <div className="space-y-8 max-w-6xl">
+    <div className="hero-reveal space-y-8 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <CalendarDays className="w-6 h-6 text-[#b4ff39]" /> AI 备考规划
         </h1>
         <p className="text-sm text-zinc-500 mt-2">智能四阶段规划 + 周课表 + 动态调整，备考节奏一目了然</p>

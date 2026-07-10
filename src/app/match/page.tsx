@@ -22,9 +22,9 @@ export default function MatchPage() {
   const tierData = CITY_TIERS.find(t => t.province === province) || CITY_TIERS[0];
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <div className="hero-reveal space-y-8 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Target className="w-6 h-6 text-[#b4ff39]" /> AI 岗位匹配
         </h1>
         <p className="text-sm text-zinc-500 mt-2">输入专业方向，AI 自动匹配最优岗位 + 竞争预测 + 上岸概率</p>
@@ -51,7 +51,7 @@ export default function MatchPage() {
             </div>
           </div>
           <div className="flex items-end">
-            <Button onClick={handleMatch} disabled={animating} className="w-full md:w-auto bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium">
+            <Button className="btn-press w-full md:w-auto bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium" disabled={animating}>
               <Search className="w-4 h-4 mr-1" /> {animating ? '匹配中...' : '开始匹配'}
             </Button>
           </div>
@@ -75,7 +75,7 @@ export default function MatchPage() {
 
       {/* 匹配结果 */}
       {matched && !animating && (
-        <div className="space-y-6 animate-fade-up">
+        <div className="hero-reveal space-y-6 animate-fade-up">
           {/* 专业分类结果 */}
           <div className="topo-card p-5 border-[#b4ff39]/20 bg-[#b4ff39]/5">
             <div className="flex items-center gap-3 mb-4">

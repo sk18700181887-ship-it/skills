@@ -491,3 +491,171 @@ body {
   background: linear-gradient(90deg, #b4ff39, transparent);
   box-shadow: 0 0 12px rgba(180, 255, 57, 0.3);
 }
+
+/* ============ 全局动态效果 ============ */
+
+/* 鼠标跟随光晕 */
+.mouse-glow {
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(180,255,57,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  transition: left 0.3s ease-out, top 0.3s ease-out;
+}
+
+/* 渐变网格背景 */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 数字滚动动画 */
+@keyframes num-roll {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.num-roll {
+  display: inline-block;
+  animation: num-roll 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 光束扫过 */
+@keyframes beam {
+  0% { left: -100px; opacity: 0; }
+  10%, 90% { opacity: 1; }
+  100% { left: calc(100% + 100px); opacity: 0; }
+}
+.beam-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.beam-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100px;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(180,255,57,0.08), transparent);
+  animation: beam 4s ease-in-out infinite;
+}
+
+/* 卡片入场 - 从下方弹入 */
+@keyframes card-pop {
+  0% { opacity: 0; transform: translateY(32px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.card-pop {
+  animation: card-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 卡片入场 - 从缩放弹入 */
+@keyframes card-zoom {
+  0% { opacity: 0; transform: scale(0.88); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.card-zoom {
+  animation: card-zoom 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 文字逐字出现 */
+@keyframes char-appear {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 标签页切换 */
+@keyframes tab-slide {
+  from { opacity: 0; transform: translateX(12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.tab-slide {
+  animation: tab-slide 0.3s ease-out both;
+}
+
+/* 脉冲圆点 - 强版 */
+@keyframes pulse-dot {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0.4); }
+  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(180,255,57,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0); }
+}
+.pulse-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+/* 波纹扩散 */
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* 悬浮光环 */
+@keyframes orbit {
+  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+/* 仪表盘指针转动 */
+@keyframes gauge-swing {
+  0% { transform: rotate(-90deg); }
+  100% { transform: rotate(var(--gauge-angle, 0deg)); }
+}
+.gauge-swing {
+  animation: gauge-swing 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* 柱状图逐条升起 */
+.bar-stagger > * {
+  animation: bar-rise 0.5s ease-out both;
+}
+.bar-stagger > *:nth-child(1) { animation-delay: 0s; }
+.bar-stagger > *:nth-child(2) { animation-delay: 0.08s; }
+.bar-stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.bar-stagger > *:nth-child(4) { animation-delay: 0.24s; }
+.bar-stagger > *:nth-child(5) { animation-delay: 0.32s; }
+.bar-stagger > *:nth-child(6) { animation-delay: 0.40s; }
+.bar-stagger > *:nth-child(7) { animation-delay: 0.48s; }
+.bar-stagger > *:nth-child(8) { animation-delay: 0.56s; }
+
+/* 交错入场 */
+.stagger > * {
+  animation: card-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 80ms; }
+.stagger > *:nth-child(3) { animation-delay: 160ms; }
+.stagger > *:nth-child(4) { animation-delay: 240ms; }
+.stagger > *:nth-child(5) { animation-delay: 320ms; }
+.stagger > *:nth-child(6) { animation-delay: 400ms; }
+.stagger > *:nth-child(7) { animation-delay: 480ms; }
+.stagger > *:nth-child(8) { animation-delay: 560ms; }
+
+/* Hero 大标题入场 */
+@keyframes hero-reveal {
+  0% { opacity: 0; transform: translateY(40px); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.hero-reveal {
+  animation: hero-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* 扫描线 */
+@keyframes scanline {
+  0% { top: -2px; }
+  100% { top: 100%; }
+}
+.scanline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(180,255,57,0.15), transparent);
+  animation: scanline 8s linear infinite;
+}

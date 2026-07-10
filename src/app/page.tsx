@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import {
   Compass, Target, ClipboardList, CalendarDays, BookOpen,
@@ -26,10 +26,10 @@ const STAGES = [
 ];
 
 const KPI_DATA = [
-  { label: '距国考', value: '168', unit: '天', icon: Flame },
-  { label: '累计做题', value: '2,847', unit: '题', icon: Zap },
-  { label: '正确率', value: '72.3', unit: '%', icon: TrendingUp },
-  { label: '全国排名', value: '3,421', unit: '名', icon: Users },
+  { label: '距国考', value: 168, unit: '天', icon: Flame },
+  { label: '累计做题', value: 2847, unit: '题', icon: Zap },
+  { label: '正确率', value: 72.3, unit: '%', icon: TrendingUp, decimal: true },
+  { label: '全国排名', value: 3421, unit: '名', icon: Users },
 ];
 
 const AI_TASKS = [
@@ -39,6 +39,50 @@ const AI_TASKS = [
   { text: '本周模考成绩上升 5.2%，资料分析正确率达 88%', tag: '成绩分析' },
 ];
 
+/* 数字滚动 Hook */
+function useCountUp(target: number, duration = 1200, decimal = false) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const startTime = Date.now();
+    const step = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = start + (target - start) * eased;
+      setValue(decimal ? parseFloat(current.toFixed(1)) : Math.round(current));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration, decimal]);
+  return decimal ? value.toFixed(1) : value.toLocaleString();
+}
+
+function CountUpKPI({ kpi, delay }: { kpi: typeof KPI_DATA[0]; delay: number }) {
+  const [visible, setVisible] = useState(false);
+  const countVal = useCountUp(kpi.value, 1400, !!kpi.decimal);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), delay);
+    return () => clearTimeout(t);
+  }, [delay]);
+
+  if (!visible) return <div className="topo-card p-4 h-[88px]" />;
+
+  return (
+    <div className="topo-card p-4 card-pop" style={{ animationDelay: `${delay}ms` }}>
+      <div className="flex items-center gap-2 mb-2">
+        <kpi.icon className="w-4 h-4 text-zinc-500" />
+        <span className="text-xs text-zinc-500">{kpi.label}</span>
+      </div>
+      <div className="flex items-baseline gap-1">
+        <span className="stat-value num-roll" key={String(countVal)}>{countVal}</span>
+        <span className="text-xs text-zinc-500">{kpi.unit}</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const [mounted, setMounted] = useState(false);
   const [selectedMood, setSelectedMood] = useState<string | null>(null);
@@ -46,6 +90,7 @@ export default function Dashboard() {
   const [checkedIn, setCheckedIn] = useState(false);
   const [showEncourage, setShowEncourage] = useState(false);
   const [dailyQuote] = useState(() => ENERGY_QUOTES[0]);
+  const [hoveredStage, setHoveredStage] = useState<string | null>(null);
 
   useEffect(() => setMounted(true), []);
 
@@ -69,20 +114,25 @@ export default function Dashboard() {
   return (
     <div className="space-y-8 max-w-6xl px-4 lg:px-8 py-6">
       {/* Hero section */}
-      <div className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[rgba(255,255,255,0.06)] p-8 animate-fade-up">
-        <div className="absolute inset-0 dot-grid opacity-40" />
+      <div className="relative overflow-hidden rounded-2xl bg-[var(--surface-1)] border border-[rgba(255,255,255,0.06)] p-8 hero-reveal">
+        <div className="absolute inset-0 dot-grid opacity-30" />
+        {/* 扫描线 */}
+        <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none scanline" />
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-6">
             <div>
               <div className="section-number">Dashboard</div>
               <h1 className="heading-xl">
                 欢迎回来<br/>
-                <span className="text-[#b4ff39]">{USER.nickname}</span>
+                <span className="text-[#b4ff39] animate-gradient inline-block" style={{backgroundSize:'200% 200%',background:'linear-gradient(90deg,#b4ff39,#22d3ee,#b4ff39)',WebkitBackgroundClip:'text',backgroundClip:'text',color:'transparent',animation:'gradient-flow 4s ease infinite'}}>{USER.nickname}</span>
               </h1>
               <p className="text-zinc-400 text-sm mt-2">当前阶段：<span className="text-zinc-200 font-medium">四·笔试训练</span></p>
             </div>
             <div className="hidden md:block text-right">
-              <div className="font-mono text-5xl font-bold text-[#b4ff39] tabular-nums">168</div>
+              <div className="relative">
+                <div className="font-mono text-5xl font-bold text-[#b4ff39] tabular-nums animate-count-up">{168}</div>
+                <div className="absolute -top-1 -right-3 w-2 h-2 rounded-full bg-[#b4ff39] pulse-dot" />
+              </div>
               <div className="text-zinc-500 text-xs uppercase tracking-wider mt-1">Days to 2027 国考</div>
             </div>
           </div>
@@ -97,7 +147,7 @@ export default function Dashboard() {
                 <button
                   key={m.id}
                   onClick={() => handleMoodSelect(m.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm transition-all duration-200 ${
+                  className={`mood-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm ${
                     selectedMood === m.id
                       ? 'bg-[#b4ff39]/15 ring-1 ring-[#b4ff39]/40 text-[#b4ff39]'
                       : 'bg-white/5 text-zinc-400 hover:bg-white/8 hover:text-zinc-300'
@@ -109,25 +159,27 @@ export default function Dashboard() {
               ))}
             </div>
             {showEncourage && encouragement && (
-              <div className="mt-3 p-3 bg-[#b4ff39]/5 border border-[#b4ff39]/10 rounded-lg animate-fade-up">
+              <div className="mt-3 p-3 bg-[#b4ff39]/5 border border-[#b4ff39]/10 rounded-lg card-pop">
                 <div className="flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-[#b4ff39] shrink-0 mt-0.5" />
+                  <Sparkles className="w-4 h-4 text-[#b4ff39] shrink-0 mt-0.5 animate-sparkle" />
                   <p className="text-sm text-zinc-300 leading-relaxed">{encouragement}</p>
                 </div>
               </div>
             )}
           </div>
         </div>
-        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-[#b4ff39]/3" />
+        {/* 装饰性浮动光斑 */}
+        <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full bg-[#b4ff39]/3 animate-float" />
+        <div className="absolute -left-4 bottom-0 w-20 h-20 rounded-full bg-[#22d3ee]/3 animate-float" style={{ animationDelay: '1.5s' }} />
       </div>
 
       {/* 打卡 + 能量金句 */}
       <div className="grid md:grid-cols-2 gap-4">
         {/* 连续打卡 */}
-        <div className="topo-card p-5 animate-fade-up delay-100">
+        <div className="topo-card p-5 card-pop" style={{ animationDelay: '100ms' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center animate-pulse-glow">
                 <Flame className="w-4 h-4 text-[#b4ff39]" />
               </div>
               <h3 className="font-semibold text-sm text-zinc-200">今日打卡</h3>
@@ -138,9 +190,9 @@ export default function Dashboard() {
             <div className="flex-1">
               <div className="flex items-center gap-1 mb-2">
                 {Array.from({ length: 7 }).map((_, i) => (
-                  <div key={i} className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold ${
-                    i < 5 ? 'bg-[#b4ff39]/10 text-[#b4ff39]' : i === 5 ? (checkedIn ? 'bg-[#b4ff39]/10 text-[#b4ff39]' : 'bg-zinc-800 text-zinc-600') : 'bg-zinc-800 text-zinc-600'
-                  }`}>
+                  <div key={i} className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-all duration-300 ${
+                    i < 5 ? 'bg-[#b4ff39]/10 text-[#b4ff39] scale-in' : i === 5 ? (checkedIn ? 'bg-[#b4ff39]/10 text-[#b4ff39] card-zoom' : 'bg-zinc-800 text-zinc-600') : 'bg-zinc-800 text-zinc-600'
+                  }`} style={{ animationDelay: `${i * 80}ms` }}>
                     {i < 5 || (i === 5 && checkedIn) ? '✓' : ''}
                   </div>
                 ))}
@@ -156,7 +208,7 @@ export default function Dashboard() {
             <Button
               onClick={handleCheckIn}
               disabled={checkedIn}
-              className={`btn-press shrink-0 ${checkedIn ? 'bg-[#b4ff39]/20 text-[#b4ff39] hover:bg-[#b4ff39]/20' : 'bg-[#b4ff39] text-zinc-900 hover:bg-[#b4ff39]/90'}`}
+              className={`btn-press shrink-0 ${checkedIn ? 'bg-[#b4ff39]/20 text-[#b4ff39] hover:bg-[#b4ff39]/20' : 'bg-[#b4ff39] text-zinc-900 hover:bg-[#b4ff39]/90 animate-pulse-glow'}`}
               size="sm"
             >
               {checkedIn ? (
@@ -167,14 +219,14 @@ export default function Dashboard() {
             </Button>
           </div>
           {checkedIn && (
-            <div className="mt-3 p-2 bg-[#b4ff39]/5 border border-[#b4ff39]/10 rounded-lg text-xs text-[#b4ff39] text-center animate-scale-in">
+            <div className="mt-3 p-2 bg-[#b4ff39]/5 border border-[#b4ff39]/10 rounded-lg text-xs text-[#b4ff39] text-center card-pop">
               打卡成功！坚持就是胜利，你已经连续 {streakDays + 1} 天了
             </div>
           )}
         </div>
 
         {/* 能量金句 */}
-        <div className="topo-card p-5 animate-fade-up delay-200 relative overflow-hidden">
+        <div className="topo-card p-5 card-pop beam-sweep relative overflow-hidden" style={{ animationDelay: '200ms' }}>
           <div className="absolute top-3 right-3 opacity-5">
             <Quote className="w-16 h-16 text-white" />
           </div>
@@ -196,34 +248,34 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* KPI 四宫格 */}
+      {/* KPI 四宫格 - 数字滚动 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {KPI_DATA.map((k, i) => (
-          <div key={k.label} className="topo-card p-4 card-hover animate-fade-up" style={{ animationDelay: `${(i + 1) * 100}ms` }}>
-            <div className="flex items-center gap-2 mb-2">
-              <k.icon className="w-4 h-4 text-zinc-500" />
-              <span className="text-xs text-zinc-500">{k.label}</span>
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="stat-value">{k.value}</span>
-              <span className="text-xs text-zinc-500">{k.unit}</span>
-            </div>
-          </div>
+          <CountUpKPI key={k.label} kpi={k} delay={(i + 1) * 150} />
         ))}
       </div>
 
       {/* 7 阶段全路径 */}
       <div>
-        <div className="section-number">Journey</div>
-        <h2 className="heading-lg mb-5 animate-fade-up">考公全路径</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="section-number card-pop">Journey</div>
+        <h2 className="heading-lg mb-5 card-pop" style={{ animationDelay: '100ms' }}>考公全路径</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 stagger">
           {STAGES.map((s, i) => (
             <Link key={s.href} href={s.href}>
-              <div className="topo-card p-4 card-hover cursor-pointer group animate-scale-in" style={{ animationDelay: `${(i + 1) * 75}ms` }}>
-                <div className="text-[10px] font-mono text-[#b4ff39]/50 mb-3">{s.num}</div>
-                <s.icon className="w-5 h-5 text-zinc-400 mb-3 group-hover:text-[#b4ff39] transition-colors" />
-                <h3 className="font-semibold text-sm text-zinc-200 mb-1">{s.label}</h3>
-                <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+              <div
+                className={`topo-card p-4 card-hover cursor-pointer group relative overflow-hidden transition-all duration-300 ${hoveredStage === s.href ? 'ring-1 ring-[#b4ff39]/30' : ''}`}
+                onMouseEnter={() => setHoveredStage(s.href)}
+                onMouseLeave={() => setHoveredStage(null)}
+              >
+                {/* hover 时的光晕 */}
+                <div className={`absolute inset-0 bg-gradient-to-br from-[#b4ff39]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className="relative z-10">
+                  <div className="text-[10px] font-mono text-[#b4ff39]/50 mb-3">{s.num}</div>
+                  <s.icon className="w-5 h-5 text-zinc-400 mb-3 group-hover:text-[#b4ff39] group-hover:scale-110 transition-all duration-300" />
+                  <h3 className="font-semibold text-sm text-zinc-200 mb-1 group-hover:text-white transition-colors">{s.label}</h3>
+                  <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+                  <ArrowRight className="w-3 h-3 text-zinc-600 mt-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-200" />
+                </div>
               </div>
             </Link>
           ))}
@@ -232,7 +284,7 @@ export default function Dashboard() {
 
       {/* AI 智能任务 + 上岸榜样 */}
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="topo-card p-5 animate-fade-up delay-300">
+        <div className="topo-card p-5 card-pop" style={{ animationDelay: '300ms' }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center animate-pulse-glow">
               <Zap className="w-4 h-4 text-[#b4ff39]" />
@@ -242,17 +294,17 @@ export default function Dashboard() {
           </div>
           <div className="space-y-3">
             {AI_TASKS.map((t, i) => (
-              <div key={i} className="p-3 rounded-xl bg-[var(--surface-2)] border border-[rgba(255,255,255,0.04)] card-hover animate-slide-right" style={{ animationDelay: `${(i + 1) * 100}ms` }}>
+              <div key={i} className="p-3 rounded-xl bg-[var(--surface-2)] border border-[rgba(255,255,255,0.04)] card-hover animate-slide-right group/item" style={{ animationDelay: `${(i + 1) * 100 + 300}ms` }}>
                 <div className="flex items-start gap-3">
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/8 text-[#b4ff39] font-medium shrink-0">{t.tag}</span>
-                  <p className="text-xs text-zinc-400 leading-relaxed">{t.text}</p>
+                  <p className="text-xs text-zinc-400 leading-relaxed group-hover/item:text-zinc-300 transition-colors">{t.text}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
 
-        <div className="topo-card p-5 animate-fade-up delay-400">
+        <div className="topo-card p-5 card-pop" style={{ animationDelay: '400ms' }}>
           <div className="flex items-center gap-2 mb-4">
             <div className="w-8 h-8 rounded-lg bg-amber-400/10 flex items-center justify-center">
               <Trophy className="w-4 h-4 text-amber-400" />
@@ -261,25 +313,25 @@ export default function Dashboard() {
           </div>
           <div className="space-y-3">
             {RANK_SUCCESS.slice(0, 4).map((s, i) => (
-              <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.03] transition-colors">
-                <div className="w-8 h-8 rounded-full bg-[#b4ff39]/10 flex items-center justify-center text-xs font-bold text-[#b4ff39]">
+              <div key={i} className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/[0.03] transition-all duration-200 group/s">
+                <div className="w-8 h-8 rounded-full bg-[#b4ff39]/10 flex items-center justify-center text-xs font-bold text-[#b4ff39] group-hover/s:scale-110 transition-transform">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-zinc-200 truncate">{s.name}</span>
+                    <span className="text-sm font-medium text-zinc-200 truncate group-hover/s:text-white transition-colors">{s.name}</span>
                     {s.isVip && <Crown className="w-3 h-3 text-amber-400" />}
                   </div>
                   <span className="text-[10px] text-zinc-500">{s.unit}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-semibold text-[#b4ff39]">已上岸</div>
+                  <div className="text-xs font-semibold text-[#b4ff39] animate-breathe">已上岸</div>
                 </div>
               </div>
             ))}
           </div>
           <Link href="/rank">
-            <Button variant="ghost" size="sm" className="w-full mt-3 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/5">
+            <Button variant="ghost" size="sm" className="w-full mt-3 text-xs text-zinc-400 hover:text-zinc-200 hover:bg-white/5 btn-press">
               查看完整榜单 <ArrowRight className="w-3 h-3 ml-1" />
             </Button>
           </Link>
@@ -289,7 +341,7 @@ export default function Dashboard() {
       {/* 学习雷达图 + 五大模块 + 情绪树洞 */}
       <div className="grid md:grid-cols-3 gap-6">
         {/* 能力雷达图 */}
-        <div className="topo-card p-5 animate-fade-up delay-500">
+        <div className="topo-card p-5 card-pop" style={{ animationDelay: '500ms' }}>
           <h3 className="font-semibold text-sm text-zinc-200 mb-4">能力雷达图</h3>
           <div className="relative w-full aspect-square max-w-[220px] mx-auto">
             <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -318,6 +370,21 @@ export default function Dashboard() {
                     fill="rgba(180,255,57,0.08)" stroke="rgba(180,255,57,0.6)" strokeWidth="1.5"
                     className="animate-scale-in" />
                 );
+              })()}
+              {/* 数据点 - 带脉冲 */}
+              {(() => {
+                const values = [0.88, 0.82, 0.76, 0.65, 0.58];
+                const positions = [
+                  [100, 100 - 80 * values[0]], [100 + 76 * values[1], 100 - 25 * values[1]],
+                  [100 + 47 * values[2], 100 + 65 * values[2]], [100 - 47 * values[3], 100 + 65 * values[3]],
+                  [100 - 76 * values[4], 100 - 25 * values[4]],
+                ];
+                return positions.map((p, i) => (
+                  <g key={i}>
+                    <circle cx={p[0]} cy={p[1]} r="4" fill="#b4ff39" opacity="0.6" />
+                    <circle cx={p[0]} cy={p[1]} r="4" fill="#b4ff39" opacity="0.3" className="animate-ping-slow" />
+                  </g>
+                ));
               })()}
               {/* 标签 */}
               {[
@@ -351,14 +418,14 @@ export default function Dashboard() {
         </div>
 
         {/* 五大模块 + 全国入口 */}
-        <div className="topo-card p-5 animate-fade-up delay-500">
+        <div className="topo-card p-5 card-pop" style={{ animationDelay: '550ms' }}>
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-sm text-zinc-200">五大模块正确率</h3>
-            <Link href="/map" className="flex items-center gap-1 text-xs text-[#b4ff39] hover:underline">
+            <Link href="/map" className="flex items-center gap-1 text-xs text-[#b4ff39] hover:underline btn-press">
               <MapPin className="w-3 h-3" /> 全国可视化
             </Link>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-3 bar-stagger">
             {[
               { name: '资料分析', rate: 88, color: '#b4ff39' },
               { name: '判断推理', rate: 82, color: '#22d3ee' },
@@ -396,7 +463,7 @@ export default function Dashboard() {
                 { name: '浙江', diff: '中高', color: 'bg-amber-500/10 text-amber-400' },
                 { name: '四川', diff: '中等', color: 'bg-[#b4ff39]/10 text-[#b4ff39]' },
               ].map(p => (
-                <span key={p.name} className={`text-[10px] px-2 py-0.5 rounded-full ${p.color} font-medium`}>
+                <span key={p.name} className={`text-[10px] px-2 py-0.5 rounded-full ${p.color} font-medium btn-press`}>
                   {p.name}·{p.diff}
                 </span>
               ))}
@@ -405,12 +472,12 @@ export default function Dashboard() {
         </div>
 
         {/* 情绪树洞入口 */}
-        <div className="topo-card p-5 animate-fade-up delay-500 relative overflow-hidden">
+        <div className="topo-card p-5 card-pop relative overflow-hidden" style={{ animationDelay: '600ms' }}>
           <div className="absolute -bottom-4 -right-4 opacity-5">
-            <TreePine className="w-24 h-24 text-white" />
+            <TreePine className="w-24 h-24 text-white animate-gentle-bounce" />
           </div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center animate-heart-beat">
               <Heart className="w-4 h-4 text-[#b4ff39]" />
             </div>
             <h3 className="font-semibold text-sm text-zinc-200">情绪树洞</h3>
@@ -419,16 +486,16 @@ export default function Dashboard() {
             备考路上，有压力、有迷茫、有孤独。这里可以倾诉，也可以看看别人的故事。
           </p>
           <div className="space-y-2 mb-4">
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
-              <MessageCircle className="w-3 h-3 text-[#b4ff39]" />
-              <span className="truncate">考公 vs 秋招，怎么选？</span>
-              <span className="text-zinc-600 shrink-0">238</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
-              <MessageCircle className="w-3 h-3 text-[#b4ff39]" />
-              <span className="truncate">一个人备考太孤独了</span>
-              <span className="text-zinc-600 shrink-0">112</span>
-            </div>
+            {[
+              { text: '考公 vs 秋招，怎么选？', count: 238 },
+              { text: '一个人备考太孤独了', count: 112 },
+            ].map((t, i) => (
+              <div key={i} className="flex items-center gap-2 text-xs text-zinc-400 group/st hover:text-zinc-300 transition-colors">
+                <MessageCircle className="w-3 h-3 text-[#b4ff39] group-hover/st:scale-110 transition-transform" />
+                <span className="truncate">{t.text}</span>
+                <span className="text-zinc-600 shrink-0">{t.count}</span>
+              </div>
+            ))}
           </div>
           <Link href="/diary">
             <Button variant="outline" size="sm" className="w-full text-xs btn-press border-zinc-700 text-zinc-300 hover:bg-white/5 hover:text-zinc-100">

@@ -15,9 +15,9 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-6xl">
+    <div className="hero-reveal space-y-8 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <ClipboardList className="w-6 h-6 text-[#b4ff39]" /> 报名决策
         </h1>
         <p className="text-sm text-zinc-500 mt-2">AI 冲稳保组合推荐 + 竞争比预测，帮你科学填报</p>
@@ -75,14 +75,14 @@ export default function ApplyPage() {
           ))}
           {selected.length === 0 && <span className="text-sm text-zinc-600">请先选择策略组合</span>}
         </div>
-        <Button onClick={() => setShowResult(true)} disabled={selected.length === 0} className="bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium">
+        <Button className="btn-press bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium" disabled={selected.length === 0}>
           <Sparkles className="w-4 h-4 mr-1" /> 生成报名方案
         </Button>
       </div>
 
       {/* 推荐结果 */}
       {showResult && (
-        <div className="space-y-3 animate-fade-up">
+        <div className="hero-reveal space-y-3 animate-fade-up">
           <h3 className="font-semibold">推荐岗位组合</h3>
           {[
             { type: '冲', name: '省发改委综合管理', ratio: '68:1', city: '济南', tip: '专业对口但竞争激烈' },

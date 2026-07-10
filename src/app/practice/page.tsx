@@ -36,9 +36,9 @@ export default function PracticePage() {
   const progress = Math.round((doneSet.size / QUESTIONS.length) * 100);
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <BookOpen className="w-6 h-6 text-[#b4ff39]" /> 智能题库
         </h1>
         <p className="text-sm text-zinc-500 mt-1">AI 推题 · 弱项诊断 · 错题归因</p>
@@ -82,7 +82,7 @@ export default function PracticePage() {
         </div>
         <h2 className="text-base font-semibold mb-6 leading-relaxed">{q.stem}</h2>
 
-        <div className="space-y-3">
+        <div className="hero-reveal space-y-3">
           {q.options.map((opt) => {
             const isSelected = selected === opt;
             const isAns = opt === q.answer.toString();
@@ -124,7 +124,7 @@ export default function PracticePage() {
 
       {/* 操作按钮 */}
       <div className="flex items-center justify-between animate-fade-up delay-150">
-        <Button variant="outline" onClick={reset}>
+        <Button className="btn-press" variant="outline" onClick={reset}>
           <RotateCcw className="w-4 h-4 mr-1" /> 重新开始
         </Button>
         <div className="flex items-center gap-3 text-sm text-zinc-500">
@@ -132,7 +132,7 @@ export default function PracticePage() {
           <span>·</span>
           <span>错误 {wrongSet.size}</span>
         </div>
-        <Button onClick={next} disabled={idx >= QUESTIONS.length - 1} className="btn-press">
+        <Button className="btn-press btn-press" disabled={idx >= QUESTIONS.length - 1}>
           下一题 <ChevronRight className="w-4 h-4" />
         </Button>
       </div>

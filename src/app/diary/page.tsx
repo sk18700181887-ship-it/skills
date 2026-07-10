@@ -42,7 +42,7 @@ export default function DiaryPage() {
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="hero-reveal space-y-6 max-w-4xl">
       {/* 页头 */}
       <div className="animate-fade-up">
         <div className="flex items-center gap-2 mb-1">
@@ -74,7 +74,7 @@ export default function DiaryPage() {
 
       {/* 日记列表 */}
       {activeTab === 'diary' && (
-        <div className="space-y-4 animate-fade-up">
+        <div className="hero-reveal space-y-4 animate-fade-up">
           {/* 打卡里程碑进度 */}
           <div className="topo-card p-4">
             <div className="flex items-center gap-2 mb-3">
@@ -157,7 +157,7 @@ export default function DiaryPage() {
 
       {/* 写日记 */}
       {activeTab === 'write' && (
-        <div className="space-y-4 animate-fade-up">
+        <div className="hero-reveal space-y-4 animate-fade-up">
           <div className="topo-card p-5">
             <h3 className="font-semibold mb-4">今天想写点什么？</h3>
 
@@ -238,7 +238,7 @@ export default function DiaryPage() {
 
       {/* 情绪树洞 */}
       {activeTab === 'treehole' && (
-        <div className="space-y-4 animate-fade-up">
+        <div className="hero-reveal space-y-4 animate-fade-up">
           <div className="topo-card p-5 relative overflow-hidden">
             <div className="absolute -top-6 -right-6 opacity-5">
               <TreePine className="w-32 h-32" />
@@ -252,7 +252,7 @@ export default function DiaryPage() {
             </p>
           </div>
 
-          <div className="space-y-3">
+          <div className="hero-reveal space-y-3">
             {TREE_HOLE_TOPICS.map(topic => (
               <div key={topic.id} className="topo-card p-4 card-hover cursor-pointer group">
                 <div className="flex items-center justify-between">
@@ -281,7 +281,7 @@ export default function DiaryPage() {
             <div className="text-center">
               <Plus className="w-8 h-8 text-zinc-500/40 mx-auto mb-2" />
               <p className="text-sm text-zinc-500 mb-3">有话想说？匿名发布你的心事</p>
-              <Button variant="outline" size="sm" className="btn-press">
+              <Button className="btn-press btn-press" size="sm">
                 <Plus className="w-4 h-4 mr-1" /> 发布话题
               </Button>
             </div>
@@ -291,14 +291,14 @@ export default function DiaryPage() {
 
       {/* 能量站 */}
       {activeTab === 'energy' && (
-        <div className="space-y-4 animate-fade-up">
+        <div className="hero-reveal space-y-4 animate-fade-up">
           {/* 前辈寄语 */}
           <div className="topo-card p-5">
             <div className="flex items-center gap-2 mb-4">
               <Star className="w-5 h-5 text-amber-500" />
               <h3 className="font-semibold">前辈寄语</h3>
             </div>
-            <div className="space-y-4">
+            <div className="hero-reveal space-y-4">
               {ENERGY_QUOTES.slice(0, 4).map((q, i) => (
                 <div key={i} className="flex gap-3 p-3 rounded-xl bg-muted/30 hover:bg-white/[0.03] transition-colors">
                   <Quote className="w-4 h-4 text-[#b4ff39]/40 shrink-0 mt-0.5" />
@@ -317,7 +317,7 @@ export default function DiaryPage() {
               <Flame className="w-5 h-5 text-orange-500" />
               <h3 className="font-semibold">上岸故事</h3>
             </div>
-            <div className="space-y-3">
+            <div className="hero-reveal space-y-3">
               {[
                 { name: '张同学', from: '行测 58 → 78', story: '从迷茫到上岸，我用了 168 天。最难的不是做题，是每天对自己说"再坚持一天"。', days: 168 },
                 { name: '刘同学', from: '申论 28 → 42', story: '申论 AI 批改帮我找到了"假大空"的问题，从 28 分到 42 分，每一篇批改都是一次蜕变。', days: 232 },
@@ -360,10 +360,10 @@ export default function DiaryPage() {
               <p className="text-xs text-zinc-500">—— 上岸学员·王同学</p>
             </div>
             <div className="flex justify-center gap-2 mt-2">
-              <Button variant="outline" size="sm" className="text-xs btn-press">
+              <Button className="btn-press text-xs btn-press" size="sm">
                 <Heart className="w-3 h-3 mr-1" /> 收藏
               </Button>
-              <Button variant="outline" size="sm" className="text-xs btn-press">
+              <Button className="btn-press text-xs btn-press" size="sm">
                 换一句
               </Button>
             </div>

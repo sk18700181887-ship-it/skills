@@ -29,9 +29,9 @@ export default function InterviewPage() {
   const reset = () => { setPhase('ready'); setAnswer(''); setTimer(0); setRecording(false); };
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
           <Mic className="w-6 h-6 text-[#b4ff39]" /> AI 面试模拟
         </h1>
         <p className="text-sm text-zinc-500 mt-1">4 大题型实战 + 实时点评 + 高分技巧</p>
@@ -67,7 +67,7 @@ export default function InterviewPage() {
             <div className="topo-card p-5 text-center animate-fade-up delay-150">
               <Mic className="w-12 h-12 text-[#b4ff39] mx-auto mb-3 animate-pulse-glow" />
               <p className="text-sm text-zinc-500 mb-4">点击开始作答，AI 将实时记录你的回答</p>
-              <Button onClick={startAnswering} className="btn-press"><Mic className="w-4 h-4 mr-2" /> 开始作答</Button>
+              <Button className="btn-press"><Mic className="w-4 h-4 mr-2" /> 开始作答</Button>
             </div>
           )}
 
@@ -87,10 +87,10 @@ export default function InterviewPage() {
                 className="w-full h-36 p-3 border rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/30 bg-transparent"
               />
               <div className="flex gap-2 mt-3">
-                <Button variant="outline" onClick={() => setRecording(!recording)} className="flex-1">
+                <Button className="btn-press flex-1" onClick={() => setRecording(!recording)}>
                   {recording ? <><MicOff className="w-3 h-3 mr-1" /> 暂停</> : <><Mic className="w-3 h-3 mr-1" /> 继续</>}
                 </Button>
-                <Button onClick={submitAnswer} className="flex-1 btn-press">
+                <Button className="btn-press flex-1 btn-press" onClick={submitAnswer}>
                   <Send className="w-3 h-3 mr-1" /> 提交作答
                 </Button>
               </div>
@@ -98,12 +98,12 @@ export default function InterviewPage() {
           )}
 
           {phase === 'feedback' && (
-            <div className="space-y-3 animate-fade-up">
+            <div className="hero-reveal space-y-3 animate-fade-up">
               <div className="topo-card p-5 border-emerald-200 bg-emerald-400/10/50">
                 <h3 className="font-semibold text-sm mb-3 flex items-center gap-2">
                   <Star className="w-4 h-4 text-amber-500" /> AI 点评
                 </h3>
-                <div className="space-y-2 text-sm">
+                <div className="hero-reveal space-y-2 text-sm">
                   <p><strong>优点：</strong>答题结构清晰，逻辑层次分明，能从多角度分析问题。</p>
                   <p><strong>不足：</strong>对策部分略显空泛，建议更具体化；可增加个人理解与岗位结合的深度。</p>
                 </div>
@@ -116,7 +116,7 @@ export default function InterviewPage() {
                   这道综合分析题，建议采用"表态→分析→对策→升华"四步法。首先明确观点，其次从原因和影响两个维度深入分析，然后提出2-3条具体可行的对策，最后升华到更高站位。注意对策要有针对性，避免泛泛而谈。
                 </p>
               </div>
-              <Button variant="outline" onClick={reset} className="w-full">
+              <Button className="btn-press w-full" onClick={reset}>
                 <RotateCcw className="w-3 h-3 mr-1" /> 再练一题
               </Button>
             </div>
@@ -129,7 +129,7 @@ export default function InterviewPage() {
             <h3 className="font-semibold text-xs mb-3 flex items-center gap-1">
               <MessageSquare className="w-3 h-3 text-[#b4ff39]" /> 题型技巧
             </h3>
-            <div className="space-y-2">
+            <div className="hero-reveal space-y-2">
               {INTERVIEW_TYPES.map((t, i) => (
                 <div key={i} className={`p-2.5 rounded-lg text-xs transition-all duration-300 ${i === activeType ? 'bg-[#b4ff39]/10 border border-[#b4ff39]/20' : 'bg-white/[0.03]'}`}>
                   <div className="font-medium">{t.name}</div>
