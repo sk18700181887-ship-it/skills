@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { Timer, TrendingUp, Users, Play, Trophy, BarChart3, Sparkles } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MOCK_PAPERS, RECENT_MOCKS } from '@/lib/data';
 
@@ -13,16 +12,16 @@ export default function MockPage() {
   return (
     <div className="space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-xl font-bold flex items-center gap-2">
-          <Timer className="w-5 h-5 text-primary" /> 模考中心
+        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+          <Timer className="w-6 h-6 text-[#b4ff39]" /> 模考中心
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">全国模考 + 成绩预测 + 上岸概率分析</p>
+        <p className="text-sm text-zinc-500 mt-1">全国模考 + 成绩预测 + 上岸概率分析</p>
       </div>
 
       {/* Tab */}
-      <div className="flex gap-1 bg-muted p-1 rounded-xl w-fit animate-fade-up delay-75">
+      <div className="flex gap-1 bg-white/[0.04] p-1 rounded-xl w-fit animate-fade-up delay-75">
         {(['schedule', 'results', 'predict'] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${tab === t ? 'bg-white shadow text-foreground' : 'text-muted-foreground'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${tab === t ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
             {t === 'schedule' ? '模考排期' : t === 'results' ? '历史成绩' : 'AI 预测'}
           </button>
         ))}
@@ -32,13 +31,13 @@ export default function MockPage() {
       {tab === 'schedule' && (
         <div className="grid md:grid-cols-2 gap-4 animate-fade-up delay-100">
           {MOCK_PAPERS.map((exam, i) => (
-            <Card key={i} className="p-5 card-hover animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
+            <div key={i} className="topo-card p-5 card-hover animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{exam.tag}</span>
-                <span className="text-[10px] text-muted-foreground">{exam.date}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{exam.tag}</span>
+                <span className="text-[10px] text-zinc-500">{exam.date}</span>
               </div>
               <h3 className="font-semibold text-sm mb-2">{exam.name}</h3>
-              <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+              <div className="flex items-center gap-4 text-xs text-zinc-500 mb-4">
                 <span className="flex items-center gap-1"><Timer className="w-3 h-3" /> {exam.duration}</span>
                 <span className="flex items-center gap-1"><Users className="w-3 h-3" /> {exam.joined}人报名</span>
               </div>
@@ -49,7 +48,7 @@ export default function MockPage() {
               >
                 {selectedExam === exam.id ? '已报名 ✓' : <><Play className="w-3 h-3 mr-1" /> 立即报名</>}
               </Button>
-            </Card>
+            </div>
           ))}
         </div>
       )}
@@ -58,9 +57,9 @@ export default function MockPage() {
       {tab === 'results' && (
         <div className="space-y-5 animate-fade-up delay-100">
           {/* 成绩趋势折线图 */}
-          <Card className="p-5">
+          <div className="topo-card p-5">
             <h3 className="font-semibold mb-4 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-primary" /> 模考成绩趋势
+              <TrendingUp className="w-4 h-4 text-[#b4ff39]" /> 模考成绩趋势
             </h3>
             <div className="h-48 relative">
               <svg viewBox="0 0 600 180" className="w-full h-full" preserveAspectRatio="none">
@@ -101,30 +100,30 @@ export default function MockPage() {
                 })()}
               </svg>
             </div>
-          </Card>
+          </div>
 
           {/* 历史列表 */}
           {RECENT_MOCKS.map((r, i) => (
-            <Card key={i} className="p-5 animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
+            <div key={i} className="topo-card p-5 animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-sm font-semibold">{r.name}</h3>
-                  <span className="text-[10px] text-muted-foreground">{r.date} · {r.duration}</span>
+                  <span className="text-[10px] text-zinc-500">{r.date} · {r.duration}</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-xl font-bold text-primary">{r.score}<span className="text-xs font-normal text-muted-foreground">/100</span></div>
+                  <div className="text-xl font-bold text-[#b4ff39]">{r.score}<span className="text-xs font-normal text-zinc-500">/100</span></div>
                 </div>
               </div>
               <div className="mt-3">
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
+                <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
                   <div className="h-full bg-primary rounded-full transition-all duration-700" style={{width: `${r.score}%`}} />
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-3 pt-3 border-t">
                 <Trophy className="w-3 h-3 text-amber-500" />
-                <span className="text-xs text-muted-foreground">全国排名 #{r.rank}</span>
+                <span className="text-xs text-zinc-500">全国排名 #{r.rank}</span>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       )}
@@ -134,21 +133,21 @@ export default function MockPage() {
         <div className="space-y-5 animate-fade-up delay-100">
           <div className="grid md:grid-cols-3 gap-4">
             {[
-              { icon: BarChart3, label: '预测行测分', value: '72.5', color: 'text-primary', sub: '基于模考趋势推算' },
-              { icon: TrendingUp, label: '上岸概率', value: '41%', color: 'text-emerald-600', sub: '综合排名与岗位竞争' },
-              { icon: Sparkles, label: 'AI 评语', value: '稳步上升', color: 'text-amber-600', sub: '近 3 次模考均提升 5 分+' },
+              { icon: BarChart3, label: '预测行测分', value: '72.5', color: 'text-[#b4ff39]', sub: '基于模考趋势推算' },
+              { icon: TrendingUp, label: '上岸概率', value: '41%', color: 'text-emerald-400', sub: '综合排名与岗位竞争' },
+              { icon: Sparkles, label: 'AI 评语', value: '稳步上升', color: 'text-amber-400', sub: '近 3 次模考均提升 5 分+' },
             ].map((item, i) => (
-              <Card key={i} className="p-5 text-center card-hover animate-scale-in" style={{animationDelay: `${i*0.1}s`}}>
+              <div key={i} className="topo-card p-5 text-center card-hover animate-scale-in" style={{animationDelay: `${i*0.1}s`}}>
                 <item.icon className={`w-8 h-8 mx-auto mb-3 ${item.color}`} />
                 <div className={`text-2xl font-bold ${item.color} animate-count-up`}>{item.value}</div>
                 <div className="text-xs font-medium mt-1">{item.label}</div>
-                <div className="text-[10px] text-muted-foreground mt-1">{item.sub}</div>
-              </Card>
+                <div className="text-[10px] text-zinc-500 mt-1">{item.sub}</div>
+              </div>
             ))}
           </div>
 
           {/* 上岸概率仪表盘 */}
-          <Card className="p-5">
+          <div className="topo-card p-5">
             <h3 className="font-semibold mb-4">上岸概率仪表盘</h3>
             <div className="flex items-center gap-8 justify-center">
               <div className="relative w-48 h-48">
@@ -159,30 +158,30 @@ export default function MockPage() {
                     strokeLinecap="round" className="transition-all duration-1000" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <span className="text-3xl font-bold font-serif text-primary">41%</span>
-                  <span className="text-[10px] text-muted-foreground">上岸概率</span>
+                  <span className="text-3xl font-bold font-serif text-[#b4ff39]">41%</span>
+                  <span className="text-[10px] text-zinc-500">上岸概率</span>
                 </div>
               </div>
               <div className="space-y-3">
                 {[
                   { label: '行测能力', value: 72, color: 'bg-primary' },
-                  { label: '申论能力', value: 65, color: 'bg-amber-500' },
-                  { label: '竞争压力', value: 85, color: 'bg-rose-500' },
-                  { label: '岗位匹配', value: 60, color: 'bg-sky-500' },
+                  { label: '申论能力', value: 65, color: 'bg-amber-400/100' },
+                  { label: '竞争压力', value: 85, color: 'bg-rose-400/100' },
+                  { label: '岗位匹配', value: 60, color: 'bg-sky-400/100' },
                 ].map(item => (
                   <div key={item.label} className="w-48">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">{item.label}</span>
+                      <span className="text-zinc-500">{item.label}</span>
                       <span className="font-semibold">{item.value}%</span>
                     </div>
-                    <div className="h-2 rounded-full bg-muted overflow-hidden">
+                    <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
                       <div className={`h-full rounded-full ${item.color} animate-progress`} style={{ width: `${item.value}%` }} />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-          </Card>
+          </div>
         </div>
       )}
     </div>

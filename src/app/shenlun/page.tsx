@@ -28,7 +28,7 @@ export default function ShenlunPage() {
           <button
             key={t.id}
             onClick={() => { setActiveTopic(i); setShowResult(false) }}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${i === activeTopic ? 'bg-primary text-white shadow-md shadow-primary/20 scale-105' : 'bg-card border hover:border-primary/30 hover:shadow-sm'}`}
+            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${i === activeTopic ? 'bg-[#b4ff39] text-black shadow-md shadow-primary/20 scale-105' : 'bg-card border hover:border-[#b4ff39]/30 hover:shadow-sm'}`}
           >
             {t.name}
           </button>
@@ -38,17 +38,17 @@ export default function ShenlunPage() {
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* 左侧 - 作答区 */}
         <div className="lg:col-span-3 space-y-4">
-          <Card className="p-5 animate-fade-up">
+          <div className="topo-card p-5 animate-fade-up">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{topic.name}</span>
-              <span className="text-[10px] text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> {topic.freq}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{topic.name}</span>
+              <span className="text-[10px] text-zinc-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {topic.freq}</span>
             </div>
             <p className="text-sm leading-relaxed mb-4">{topic.method}</p>
 
             {!showResult ? (
               <div className="space-y-3">
                 <textarea
-                  className="w-full h-48 rounded-xl border bg-background p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                  className="w-full h-48 rounded-xl border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/20 transition-all"
                   placeholder="在此作答..."
                 />
                 <div className="flex gap-3">
@@ -62,30 +62,30 @@ export default function ShenlunPage() {
               </div>
             ) : (
               <div className="space-y-4 animate-fade-up">
-                <div className="flex items-center gap-2 text-sm text-primary font-medium">
+                <div className="flex items-center gap-2 text-sm text-[#b4ff39] font-medium">
                   <Sparkles className="w-4 h-4 animate-pulse" /> AI 批改完成
                 </div>
                 <textarea
-                  className="w-full h-48 rounded-xl border bg-background p-4 text-sm leading-relaxed resize-none focus:outline-none"
+                  className="w-full h-48 rounded-xl border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none"
                   defaultValue={"近年来，我国城市化进程不断加快，但也带来了交通拥堵、环境污染、住房紧张等一系列城市病..."}
                 />
               </div>
             )}
-          </Card>
+          </div>
 
           {/* 批改结果 */}
           {showResult && (
-            <Card className="p-5 animate-fade-up">
+            <div className="topo-card p-5 animate-fade-up">
               <h3 className="font-medium mb-4 flex items-center gap-2">
-                <Star className="w-4 h-4 text-primary" /> 批改结果
+                <Star className="w-4 h-4 text-[#b4ff39]" /> 批改结果
               </h3>
 
               {/* 总分 + 五维雷达图 */}
               <div className="flex items-start gap-6 mb-5">
                 <div className="text-center shrink-0">
                   <div className={`text-4xl font-bold ${scoreColor(result.score)}`}>{result.score}</div>
-                  <div className="text-xs text-muted-foreground mt-1">/ {result.fullScore} 分</div>
-                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-primary/10 text-primary font-medium mt-2 inline-block">{result.tag}</span>
+                  <div className="text-xs text-zinc-500 mt-1">/ {result.fullScore} 分</div>
+                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium mt-2 inline-block">{result.tag}</span>
                 </div>
                 <div className="flex-1">
                   {/* 五维雷达图 */}
@@ -133,50 +133,50 @@ export default function ShenlunPage() {
                 <div className="p-3 rounded-lg bg-[oklch(0.72_0.14_145)]/8 border border-[oklch(0.72_0.14_145)]/15">
                   <div className="text-xs font-medium text-[oklch(0.72_0.14_145)] mb-2 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> 亮点</div>
                   {result.highlights.map((h, i) => (
-                    <div key={i} className="text-xs text-muted-foreground leading-relaxed animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                    <div key={i} className="text-xs text-zinc-500 leading-relaxed animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
                       {h}
                     </div>
                   ))}
                 </div>
               </div>
-            </Card>
+            </div>
           )}
         </div>
 
         {/* 右侧 - 写作指南 & 历史样本 */}
         <div className="lg:col-span-2 space-y-4">
           {/* 写作方法论 */}
-          <Card className="p-5 animate-fade-up delay-100">
+          <div className="topo-card p-5 animate-fade-up delay-100">
             <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
-              <PenLine className="w-4 h-4 text-primary" /> {topic.name}写作方法
+              <PenLine className="w-4 h-4 text-[#b4ff39]" /> {topic.name}写作方法
             </h3>
-            <p className="text-sm leading-relaxed text-muted-foreground">{topic.method}</p>
-            <div className="mt-3 text-xs text-muted-foreground flex items-center gap-1">
+            <p className="text-sm leading-relaxed text-zinc-500">{topic.method}</p>
+            <div className="mt-3 text-xs text-zinc-500 flex items-center gap-1">
               <Clock className="w-3 h-3" /> 建议练习频率：{topic.freq}
             </div>
-          </Card>
+          </div>
 
           {/* 历史批改样本 */}
-          <Card className="p-5 animate-fade-up delay-200">
+          <div className="topo-card p-5 animate-fade-up delay-200">
             <h3 className="font-medium mb-3 flex items-center gap-2 text-sm">
-              <MessageCircle className="w-4 h-4 text-primary" /> 历史批改样本
+              <MessageCircle className="w-4 h-4 text-[#b4ff39]" /> 历史批改样本
             </h3>
             <div className="space-y-2">
               {SHENLUN_SAMPLES.map((s, i) => (
                 <div key={s.id}>
                   <button
                     onClick={() => setShowSample(showSample === i ? -1 : i)}
-                    className="w-full flex items-center justify-between p-3 rounded-lg border hover:border-primary/30 hover:shadow-sm transition-all text-left"
+                    className="w-full flex items-center justify-between p-3 rounded-lg border hover:border-[#b4ff39]/30 hover:shadow-sm transition-all text-left"
                   >
                     <div className="flex items-center gap-2">
                       <span className={`text-sm font-bold ${scoreColor(s.score)}`}>{s.score}</span>
-                      <span className="text-xs text-muted-foreground">{s.title}</span>
+                      <span className="text-xs text-zinc-500">{s.title}</span>
                     </div>
                     {showSample === i ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                   </button>
                   {showSample === i && (
-                    <div className="p-3 text-xs text-muted-foreground leading-relaxed border-x border-b rounded-b-lg animate-fade-up">
-                      <div className="mb-2 text-[10px] text-primary">{s.tag}</div>
+                    <div className="p-3 text-xs text-zinc-500 leading-relaxed border-x border-b rounded-b-lg animate-fade-up">
+                      <div className="mb-2 text-[10px] text-[#b4ff39]">{s.tag}</div>
                       {s.highlights.map((h, j) => (
                         <div key={j} className="mb-1">• {h}</div>
                       ))}
@@ -185,16 +185,16 @@ export default function ShenlunPage() {
                 </div>
               ))}
             </div>
-          </Card>
+          </div>
 
           {/* VIP 入口 */}
-          <Card className="p-5 vip-gradient text-white animate-fade-up delay-300">
+          <div className="topo-card p-5 vip-gradient text-white animate-fade-up delay-300">
             <h3 className="font-medium mb-2">VIP 无限批改</h3>
             <p className="text-xs text-white/70 mb-3">AI 批改 ¥9.9/次，VIP 每日无限次批改</p>
             <Link href="/vip">
               <Button size="sm" variant="secondary" className="vip-text font-bold">开通 VIP</Button>
             </Link>
-          </Card>
+          </div>
         </div>
       </div>
     </div>

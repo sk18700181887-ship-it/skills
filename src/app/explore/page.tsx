@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 import { Compass, Search, ChevronRight, Sparkles, BookOpen, GraduationCap, Shield, Building2, Heart, Swords } from 'lucide-react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const EXAM_TYPES = [
-  { name: '国考', icon: Shield, color: 'text-rose-600 bg-rose-50', desc: '中央及国家机关公务员', salary: '15-25万/年', difficulty: '★★★★★', ratio: '60:1', period: '每年11月底笔试' },
-  { name: '省考', icon: Building2, color: 'text-sky-600 bg-sky-50', desc: '省、市、县、乡四级机关', salary: '10-20万/年', difficulty: '★★★★☆', ratio: '40:1', period: '各省不同，多为4月' },
-  { name: '事业单位', icon: Heart, color: 'text-emerald-600 bg-emerald-50', desc: '教育、医疗、科研等公益岗', salary: '8-15万/年', difficulty: '★★★☆☆', ratio: '25:1', period: '全年分散招录' },
-  { name: '选调生', icon: GraduationCap, color: 'text-violet-600 bg-violet-50', desc: '党政领导干部后备人才', salary: '12-22万/年', difficulty: '★★★★☆', ratio: '20:1', period: '每年12月-次年1月' },
-  { name: '三支一扶', icon: BookOpen, color: 'text-amber-600 bg-amber-50', desc: '支教、支农、支医、帮扶', salary: '5-8万/年', difficulty: '★★☆☆☆', ratio: '10:1', period: '每年4-6月' },
-  { name: '军队文职', icon: Swords, color: 'text-indigo-600 bg-indigo-50', desc: '军队编制非现役岗位', salary: '10-18万/年', difficulty: '★★★☆☆', ratio: '15:1', period: '每年3-4月' },
+  { name: '国考', icon: Shield, accent: 'text-rose-400', desc: '中央及国家机关公务员', salary: '15-25万/年', difficulty: '★★★★★', ratio: '60:1', period: '每年11月底笔试' },
+  { name: '省考', icon: Building2, accent: 'text-sky-400', desc: '省、市、县、乡四级机关', salary: '10-20万/年', difficulty: '★★★★☆', ratio: '40:1', period: '各省不同，多为4月' },
+  { name: '事业单位', icon: Heart, accent: 'text-emerald-400', desc: '教育、医疗、科研等公益岗', salary: '8-15万/年', difficulty: '★★★☆☆', ratio: '25:1', period: '全年分散招录' },
+  { name: '选调生', icon: GraduationCap, accent: 'text-violet-400', desc: '党政领导干部后备人才', salary: '12-22万/年', difficulty: '★★★★☆', ratio: '20:1', period: '每年12月-次年1月' },
+  { name: '三支一扶', icon: BookOpen, accent: 'text-amber-400', desc: '支教、支农、支医、帮扶', salary: '5-8万/年', difficulty: '★★☆☆☆', ratio: '10:1', period: '每年4-6月' },
+  { name: '军队文职', icon: Swords, accent: 'text-indigo-400', desc: '军队编制非现役岗位', salary: '10-18万/年', difficulty: '★★★☆☆', ratio: '15:1', period: '每年3-4月' },
 ];
 
 const FAQ = [
@@ -33,7 +32,7 @@ export default function ExplorePage() {
     if (!query.trim()) return;
     setTyping(true);
     setAiAnswer('');
-    const answer = `关于"${query}"：考公报名需关注国家公务员局官网（bm.scs.gov.cn），每年10月中旬发布公告，11月底笔试。建议先确认自身条件（专业、学历、政治面貌），再筛选合适岗位。如需更详细分析，可使用「AI 岗位匹配」功能获取个性化推荐。`;
+    const answer = `关于"${query}"：考公报名需关注国家公务员局官网，每年10月中旬发布公告，11月底笔试。建议先确认自身条件（专业、学历、政治面貌），再筛选合适岗位。如需更详细分析，可使用「AI 岗位匹配」功能获取个性化推荐。`;
     let i = 0;
     const timer = setInterval(() => {
       setAiAnswer(answer.slice(0, i + 1));
@@ -43,23 +42,23 @@ export default function ExplorePage() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl">
+    <div className="space-y-8 max-w-6xl">
       {/* 页面头部 */}
       <div className="animate-fade-up">
-        <h1 className="text-xl font-bold flex items-center gap-2">
-          <Compass className="w-5 h-5 text-primary" /> 了解考公
+        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+          <Compass className="w-6 h-6 text-[#b4ff39]" /> 了解考公
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">6 类公职考试全景对比 + AI 考公百科，帮你找到最适合的路</p>
+        <p className="text-sm text-zinc-500 mt-2">6 类公职考试全景对比 + AI 考公百科，帮你找到最适合的路</p>
       </div>
 
       {/* AI 考公百科 */}
-      <Card className="p-5 animate-fade-up delay-75">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center animate-pulse-glow">
-            <Sparkles className="w-4 h-4 text-primary" />
+      <div className="topo-card p-6 animate-fade-up delay-75">
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center animate-pulse-glow">
+            <Sparkles className="w-4 h-4 text-[#b4ff39]" />
           </div>
-          <h2 className="font-semibold">AI 考公百科</h2>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700">免费</span>
+          <h2 className="font-semibold text-lg">AI 考公百科</h2>
+          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">免费</span>
         </div>
         <div className="flex gap-2">
           <Input
@@ -67,81 +66,81 @@ export default function ExplorePage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleAsk()}
-            className="flex-1"
+            className="flex-1 bg-[var(--surface-1)] border-[rgba(255,255,255,0.06)] text-white placeholder:text-zinc-600"
           />
-          <Button onClick={handleAsk} disabled={typing} className="btn-press">
+          <Button onClick={handleAsk} disabled={typing} className="bg-[#b4ff39] text-black hover:bg-[#c5ff6b] btn-press font-medium">
             <Search className="w-4 h-4 mr-1" /> 提问
           </Button>
         </div>
         {aiAnswer && (
-          <div className="mt-4 p-4 rounded-xl bg-muted/50 border border-border/50 animate-fade-up">
+          <div className="mt-4 p-4 rounded-xl bg-[#b4ff39]/5 border border-[#b4ff39]/10 animate-fade-up">
             <div className="flex items-start gap-2">
-              <Sparkles className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-              <p className="text-sm leading-relaxed">{aiAnswer}<span className={typing ? 'typing-caret' : ''} /></p>
+              <Sparkles className="w-4 h-4 text-[#b4ff39] mt-0.5 shrink-0" />
+              <p className="text-sm leading-relaxed text-zinc-300">{aiAnswer}<span className={typing ? 'typing-caret' : ''} /></p>
             </div>
           </div>
         )}
-      </Card>
+      </div>
 
       {/* 6 类考试对比 */}
       <div className="animate-fade-up delay-150">
-        <h2 className="text-lg font-bold mb-4">6 类公职考试对比</h2>
+        <h2 className="text-lg font-bold mb-5">6 类公职考试对比</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {EXAM_TYPES.map((exam, i) => (
-            <Card key={exam.name} className={`p-4 card-hover animate-scale-in delay-${(i+1)*75}`}>
-              <div className="flex items-center gap-3 mb-3">
-                <div className={`w-10 h-10 rounded-xl ${exam.color} flex items-center justify-center`}>
+            <div key={exam.name} className={`topo-card p-5 card-hover animate-scale-in`} style={{animationDelay:`${(i+1)*75}ms`}}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center ${exam.accent}`}>
                   <exam.icon className="w-5 h-5" />
                 </div>
                 <div>
                   <h3 className="font-semibold">{exam.name}</h3>
-                  <p className="text-[10px] text-muted-foreground">{exam.desc}</p>
+                  <p className="text-[10px] text-zinc-500">{exam.desc}</p>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2 rounded-lg bg-muted/50">
-                  <span className="text-muted-foreground">薪资范围</span>
-                  <p className="font-semibold mt-0.5">{exam.salary}</p>
+                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                  <span className="text-zinc-500">薪资范围</span>
+                  <p className="font-semibold mt-0.5 text-zinc-200">{exam.salary}</p>
                 </div>
-                <div className="p-2 rounded-lg bg-muted/50">
-                  <span className="text-muted-foreground">竞争比</span>
-                  <p className="font-semibold mt-0.5">{exam.ratio}</p>
+                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                  <span className="text-zinc-500">竞争比</span>
+                  <p className="font-semibold mt-0.5 text-zinc-200">{exam.ratio}</p>
                 </div>
-                <div className="p-2 rounded-lg bg-muted/50">
-                  <span className="text-muted-foreground">难度</span>
-                  <p className="font-semibold mt-0.5">{exam.difficulty}</p>
+                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                  <span className="text-zinc-500">难度</span>
+                  <p className="font-semibold mt-0.5 text-zinc-200">{exam.difficulty}</p>
                 </div>
-                <div className="p-2 rounded-lg bg-muted/50">
-                  <span className="text-muted-foreground">笔试时间</span>
-                  <p className="font-semibold mt-0.5">{exam.period}</p>
+                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                  <span className="text-zinc-500">笔试时间</span>
+                  <p className="font-semibold mt-0.5 text-zinc-200">{exam.period}</p>
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>
 
       {/* 常见问题 FAQ */}
       <div className="animate-fade-up delay-300">
-        <h2 className="text-lg font-bold mb-4">考公常见问题</h2>
+        <h2 className="text-lg font-bold mb-5">考公常见问题</h2>
         <div className="space-y-2">
           {FAQ.map((f, i) => (
-            <Card
+            <div
               key={i}
-              className={`overflow-hidden transition-all duration-300 cursor-pointer ${faqOpen === i ? 'ring-1 ring-primary/30' : ''}`}
+              className={`topo-card overflow-hidden transition-all duration-300 cursor-pointer ${faqOpen === i ? 'ring-1 ring-[#b4ff39]/20' : ''}`}
               onClick={() => setFaqOpen(faqOpen === i ? null : i)}
             >
               <div className="p-4 flex items-center gap-3">
-                <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary shrink-0">Q</span>
+                <span className="w-6 h-6 rounded-full bg-[#b4ff39]/10 flex items-center justify-center text-xs font-bold text-[#b4ff39] shrink-0">Q</span>
                 <span className="text-sm font-medium flex-1">{f.q}</span>
-                <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform duration-300 ${faqOpen === i ? 'rotate-90' : ''}`} />
+                <ChevronRight className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${faqOpen === i ? 'rotate-90' : ''}`} />
               </div>
               <div className={`overflow-hidden transition-all duration-300 ${faqOpen === i ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                <div className="px-4 pb-4 pl-13 text-sm text-muted-foreground leading-relaxed" style={{paddingLeft: '52px'}}>
+                <div className="px-4 pb-4 text-sm text-zinc-400 leading-relaxed" style={{paddingLeft: '52px'}}>
                   {f.a}
                 </div>
               </div>
-            </Card>
+            </div>
           ))}
         </div>
       </div>

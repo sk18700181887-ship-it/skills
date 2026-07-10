@@ -19,11 +19,11 @@ export function PageHeader({
   return (
     <div className={cn('flex items-start justify-between gap-4 mb-6', className)}>
       <div className="min-w-0">
-        <h1 className="font-serif text-[22px] lg:text-2xl font-semibold leading-tight">
+        <h1 className="heading-lg">
           {title}
         </h1>
         {subtitle && (
-          <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p>
+          <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
         )}
       </div>
       {action && <div className="shrink-0">{action}</div>}
@@ -46,11 +46,11 @@ export function VipLock({
     <div
       className={cn(
         'absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 rounded-xl',
-        'bg-gradient-to-b from-card/40 via-card/85 to-card backdrop-blur-[1.5px]'
+        'bg-gradient-to-b from-[#0f0f12]/40 via-[#0f0f12]/85 to-[#0f0f12] backdrop-blur-[1.5px]'
       )}
     >
       <div className="rounded-full vip-gradient p-2">
-        <Lock className="size-4 text-amber-200" />
+        <Lock className="size-4 text-amber-300" />
       </div>
       <div
         className={cn(
@@ -58,9 +58,9 @@ export function VipLock({
           compact ? 'text-xs' : 'text-sm'
         )}
       >
-        <div className="font-medium">{message}</div>
+        <div className="font-medium text-zinc-200">{message}</div>
         {!compact && (
-          <div className="text-[11px] text-muted-foreground mt-0.5">
+          <div className="text-[11px] text-zinc-500 mt-0.5">
             月卡 ¥68 起 · 首月立减 ¥60
           </div>
         )}
@@ -99,12 +99,12 @@ export function PriceTag({
         : 'text-lg';
   return (
     <div className="flex items-baseline gap-1.5">
-      <span className="text-sm text-muted-foreground">¥</span>
-      <span className={cn('font-serif font-semibold tabular-nums', bigCls)}>
+      <span className="text-sm text-zinc-500">¥</span>
+      <span className={cn('font-mono font-semibold tabular-nums text-[#b4ff39]', bigCls)}>
         {price}
       </span>
       {origin != null && origin > price && (
-        <span className="text-xs text-muted-foreground line-through">
+        <span className="text-xs text-zinc-500 line-through">
           ¥{origin}
         </span>
       )}
@@ -117,27 +117,23 @@ export function Stat({
   value,
   hint,
   className,
-  serif = true,
+  icon,
 }: {
   label: string;
-  value: React.ReactNode;
-  hint?: React.ReactNode;
+  value: string | number;
+  hint?: string;
   className?: string;
-  serif?: boolean;
+  icon?: React.ReactNode;
 }) {
   return (
-    <div className={cn('rounded-xl border bg-card p-4', className)}>
-      <div className="text-xs text-muted-foreground">{label}</div>
-      <div
-        className={cn(
-          'mt-1.5 font-semibold tabular-nums leading-none',
-          serif ? 'font-serif text-[26px]' : 'text-xl'
-        )}
-      >
-        {value}
+    <div className={cn('space-y-1', className)}>
+      <div className="text-[11px] text-zinc-500 flex items-center gap-1.5">
+        {icon}
+        {label}
       </div>
+      <div className="stat-value">{value}</div>
       {hint && (
-        <div className="mt-1.5 text-[11px] text-muted-foreground">{hint}</div>
+        <div className="text-[11px] text-zinc-600">{hint}</div>
       )}
     </div>
   );

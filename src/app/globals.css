@@ -42,7 +42,7 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --font-sans:
-    'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif,
+    'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif,
     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     'Helvetica Neue', Arial, sans-serif;
   --font-mono:
@@ -53,81 +53,57 @@
     'Times New Roman', Times, serif;
 }
 
-/* 上岸引擎 · Design Tokens
- * 主色朱砂橘 (印泥意象) + 档案纸米灰底 + 深墨黑文字
+/* 上岸引擎 · Topology Dark Design Tokens
+ * 深邃暗色 + 石灰绿强调 + 大字排版 + 极简边框
+ * 灵感来源：topology.vc — edge-venture aesthetic
  */
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.98 0.004 80);
-  --foreground: oklch(0.22 0.01 60);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.01 60);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.01 60);
-  --primary: oklch(0.72 0.14 55);
-  --primary-foreground: oklch(0.99 0.005 80);
-  --secondary: oklch(0.96 0.006 80);
-  --secondary-foreground: oklch(0.28 0.02 60);
-  --muted: oklch(0.96 0.006 80);
-  --muted-foreground: oklch(0.5 0.014 60);
-  --accent: oklch(0.94 0.02 60);
-  --accent-foreground: oklch(0.28 0.02 60);
-  --destructive: oklch(0.6 0.19 25);
-  --border: oklch(0.9 0.008 70);
-  --input: oklch(0.94 0.006 70);
-  --ring: oklch(0.72 0.14 55);
-  --chart-1: oklch(0.72 0.14 55);
-  --chart-2: oklch(0.7 0.12 155);
-  --chart-3: oklch(0.6 0.14 210);
-  --chart-4: oklch(0.75 0.12 90);
-  --chart-5: oklch(0.65 0.16 20);
-  --sidebar: oklch(0.985 0.004 80);
-  --sidebar-foreground: oklch(0.22 0.01 60);
-  --sidebar-primary: oklch(0.72 0.14 55);
-  --sidebar-primary-foreground: oklch(0.99 0.005 80);
-  --sidebar-accent: oklch(0.94 0.02 60);
-  --sidebar-accent-foreground: oklch(0.28 0.02 60);
-  --sidebar-border: oklch(0.9 0.008 70);
-  --sidebar-ring: oklch(0.72 0.14 55);
+  --background: #09090b;
+  --foreground: #fafafa;
+  --card: #0f0f12;
+  --card-foreground: #fafafa;
+  --popover: #0f0f12;
+  --popover-foreground: #fafafa;
+  --primary: #b4ff39;
+  --primary-foreground: #09090b;
+  --secondary: #1a1a1f;
+  --secondary-foreground: #a1a1aa;
+  --muted: #18181b;
+  --muted-foreground: #71717a;
+  --accent: #1e1e23;
+  --accent-foreground: #e4e4e7;
+  --destructive: #ef4444;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #b4ff39;
+  --chart-1: #b4ff39;
+  --chart-2: #22d3ee;
+  --chart-3: #a78bfa;
+  --chart-4: #f59e0b;
+  --chart-5: #fb7185;
+  --sidebar: #0b0b0e;
+  --sidebar-foreground: #a1a1aa;
+  --sidebar-primary: #b4ff39;
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: #1a1a1f;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: rgba(255, 255, 255, 0.06);
+  --sidebar-ring: #b4ff39;
   /* 语义色 */
-  --ok: oklch(0.66 0.13 145);
-  --warn: oklch(0.78 0.15 80);
-  --err: oklch(0.63 0.19 25);
-  --vip: oklch(0.42 0.03 60);
-}
-
-.dark {
-  --background: oklch(0.16 0.008 60);
-  --foreground: oklch(0.96 0.006 80);
-  --card: oklch(0.22 0.01 60);
-  --card-foreground: oklch(0.96 0.006 80);
-  --popover: oklch(0.22 0.01 60);
-  --popover-foreground: oklch(0.96 0.006 80);
-  --primary: oklch(0.78 0.14 55);
-  --primary-foreground: oklch(0.2 0.01 60);
-  --secondary: oklch(0.28 0.01 60);
-  --secondary-foreground: oklch(0.96 0.006 80);
-  --muted: oklch(0.28 0.01 60);
-  --muted-foreground: oklch(0.72 0.008 70);
-  --accent: oklch(0.3 0.02 60);
-  --accent-foreground: oklch(0.96 0.006 80);
-  --destructive: oklch(0.7 0.19 22);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.72 0.14 55);
-  --chart-1: oklch(0.78 0.14 55);
-  --chart-2: oklch(0.72 0.12 155);
-  --chart-3: oklch(0.68 0.14 210);
-  --chart-4: oklch(0.78 0.14 90);
-  --chart-5: oklch(0.72 0.16 20);
-  --sidebar: oklch(0.22 0.01 60);
-  --sidebar-foreground: oklch(0.96 0.006 80);
-  --sidebar-primary: oklch(0.78 0.14 55);
-  --sidebar-primary-foreground: oklch(0.2 0.01 60);
-  --sidebar-accent: oklch(0.3 0.02 60);
-  --sidebar-accent-foreground: oklch(0.96 0.006 80);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.72 0.14 55);
+  --ok: #22c55e;
+  --warn: #f59e0b;
+  --err: #ef4444;
+  --vip: #f59e0b;
+  /* 拓扑强调色 */
+  --accent-lime: #b4ff39;
+  --accent-lime-dim: rgba(180, 255, 57, 0.15);
+  --accent-cyan: #22d3ee;
+  --surface-0: #09090b;
+  --surface-1: #0f0f12;
+  --surface-2: #18181b;
+  --surface-3: #1e1e23;
+  --surface-4: #27272a;
 }
 
 @layer base {
@@ -140,35 +116,79 @@
 }
 
 body {
-  @apply font-sans;
+  @apply font-sans antialiased;
   font-feature-settings: 'ss01', 'cv11';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* VIP 徽章渐变 */
+/* ============ VIP 徽章 ============ */
 .vip-gradient {
-  background: linear-gradient(135deg, #1f1a15 0%, #3d3327 45%, #6b4a1d 100%);
+  background: linear-gradient(135deg, #1a1500 0%, #3d2e00 45%, #6b4a00 100%);
 }
 .vip-text {
-  background: linear-gradient(135deg, #c9a066 0%, #f0d29a 50%, #c9a066 100%);
+  background: linear-gradient(135deg, #f5d066 0%, #ffd700 50%, #f5d066 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 .brand-gradient {
-  background: linear-gradient(135deg, #f3a04c 0%, #e58522 100%);
+  background: linear-gradient(135deg, #b4ff39 0%, #22d3ee 100%);
 }
 
-/* 章印 Stamp 效果（用于 Logo） */
+/* 章印 Stamp → 改为暗色石灰绿印章 */
 .stamp {
-  background: #e58522;
-  color: #fffaf3;
-  border-radius: 4px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+  background: #b4ff39;
+  color: #09090b;
+  border-radius: 6px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-size: 13px;
+  padding: 3px 7px;
 }
 
-/* 微光动画 */
+/* ============ 拓扑风格全局 ============ */
+
+/* 编号标记 topology-style */
+.section-number {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-lime);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* 大标题 */
+.heading-xl {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fafafa;
+}
+.heading-lg {
+  font-size: clamp(24px, 3.5vw, 40px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: #fafafa;
+}
+.heading-md {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: #fafafa;
+}
+
+/* 分割线 */
+.divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* 微光动画 → 改为石灰绿 */
 @keyframes shimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
@@ -177,25 +197,25 @@ body {
   background: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(243, 160, 76, 0.12) 40%,
-    rgba(243, 160, 76, 0.24) 50%,
-    rgba(243, 160, 76, 0.12) 60%,
+    rgba(180, 255, 57, 0.06) 40%,
+    rgba(180, 255, 57, 0.12) 50%,
+    rgba(180, 255, 57, 0.06) 60%,
     transparent 100%
   );
   background-size: 400px 100%;
   animation: shimmer 2.4s infinite linear;
 }
 
-/* 隐形滚动条美化 */
-.thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-.thin-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.14); border-radius: 999px; }
+/* 滚动条 */
+.thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
 .thin-scroll::-webkit-scrollbar-track { background: transparent; }
 
 /* ============ 动效体系 ============ */
 
 /* 入场动画 */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn {
@@ -217,8 +237,8 @@ body {
 
 /* 持续动效 */
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(243, 160, 76, 0.3); }
-  50% { box-shadow: 0 0 12px 4px rgba(243, 160, 76, 0.15); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 255, 57, 0.25); }
+  50% { box-shadow: 0 0 16px 4px rgba(180, 255, 57, 0.1); }
 }
 @keyframes float {
   0%, 100% { transform: translateY(0); }
@@ -230,8 +250,8 @@ body {
 }
 
 /* 工具类 */
-.animate-fade-up { animation: fadeUp 0.5s ease-out both; }
-.animate-fade-in { animation: fadeIn 0.4s ease-out both; }
+.animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fadeIn 0.5s ease-out both; }
 .animate-scale-in { animation: scaleIn 0.4s ease-out both; }
 .animate-slide-right { animation: slideRight 0.4s ease-out both; }
 .animate-count-up { animation: countUp 0.4s ease-out both; }
@@ -247,13 +267,14 @@ body {
 .delay-500 { animation-delay: 500ms; }
 .delay-700 { animation-delay: 700ms; }
 
-/* 卡片 hover 升起 */
+/* 卡片 hover → 暗色发光 */
 .card-hover {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 .card-hover:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px -8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px -8px rgba(180, 255, 57, 0.08);
+  border-color: rgba(180, 255, 57, 0.15);
 }
 
 /* 按钮 press 效果 */
@@ -355,7 +376,7 @@ body {
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(243,160,76,0.3), rgba(34,197,94,0.2), rgba(243,160,76,0.1));
+  background: linear-gradient(135deg, rgba(180,255,57,0.3), rgba(34,211,238,0.2), rgba(180,255,57,0.1));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -399,4 +420,74 @@ body {
 .animate-draw-line {
   stroke-dasharray: 1000;
   animation: draw-line 1.5s ease-out both;
+}
+
+/* ============ 拓扑风格新增 ============ */
+
+/* 石灰绿边框高亮 */
+.lime-border {
+  border: 1px solid rgba(180, 255, 57, 0.2);
+}
+.lime-border:hover {
+  border-color: rgba(180, 255, 57, 0.4);
+}
+
+/* 暗色标签页 */
+.topo-tab {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #71717a;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+}
+.topo-tab:hover {
+  color: #a1a1aa;
+}
+.topo-tab.active {
+  color: #b4ff39;
+  border-bottom-color: #b4ff39;
+}
+
+/* 暗色卡片 */
+.topo-card {
+  background: var(--surface-1);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.topo-card:hover {
+  border-color: rgba(180, 255, 57, 0.12);
+}
+
+/* 石灰绿 Badge */
+.lime-badge {
+  background: rgba(180, 255, 57, 0.12);
+  color: #b4ff39;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* 统计大数字 */
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #fafafa;
+}
+
+/* 背景点阵纹理 */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* 发光强调线 */
+.glow-line {
+  height: 2px;
+  background: linear-gradient(90deg, #b4ff39, transparent);
+  box-shadow: 0 0 12px rgba(180, 255, 57, 0.3);
 }
