@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 /* ===== 数字雨 Canvas ===== */
@@ -38,6 +39,7 @@ function MatrixRain() {
 /* ===== 开场页面 ===== */
 export default function LandingPage() {
   const [phase, setPhase] = useState(0); // 0=init, 1=grid, 2=title, 3=subtitle, 4=cta
+  const router = useRouter();
   const [entered, setEntered] = useState(false);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export default function LandingPage() {
   }, []);
 
   const handleEnter = () => {
-    setEntered(true);
+    router.push('/onboarding');
   };
 
   if (entered) {

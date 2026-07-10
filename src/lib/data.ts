@@ -647,6 +647,121 @@ export const TREE_HOLE_TOPICS = [
   { id: 'th6', title: '一个人备考太孤独了', replies: 112, tag: '孤独' },
 ];
 
+/* ========== Onboarding · 个人信息填写 ========== */
+export const MAJOR_CATEGORIES = [
+  { id: 'cs', label: '计算机/电子信息', majors: ['计算机科学与技术', '软件工程', '信息安全', '人工智能', '电子信息工程', '通信工程'] },
+  { id: 'law', label: '法学', majors: ['法学', '知识产权', '社会学', '政治学', '马克思主义理论'] },
+  { id: 'econ', label: '经济/金融', majors: ['经济学', '金融学', '财政学', '税收学', '国际经济与贸易'] },
+  { id: 'mgmt', label: '管理', majors: ['行政管理', '公共事业管理', '工商管理', '会计学', '人力资源管理'] },
+  { id: 'chinese', label: '中文/新闻', majors: ['汉语言文学', '新闻学', '传播学', '编辑出版学'] },
+  { id: 'med', label: '医学', majors: ['临床医学', '预防医学', '药学', '护理学', '公共卫生'] },
+  { id: 'edu', label: '教育', majors: ['教育学', '心理学', '学前教育', '特殊教育', '体育教育'] },
+  { id: 'sci', label: '理学/工学', majors: ['数学', '物理学', '化学', '机械工程', '土木工程', '电气工程'] },
+  { id: 'art', label: '艺术/其他', majors: ['设计学', '美术学', '音乐学', '历史学', '哲学'] },
+];
+
+export const EDUCATION_OPTIONS = [
+  { id: 'college', label: '大专' },
+  { id: 'bachelor', label: '本科' },
+  { id: 'master', label: '硕士' },
+  { id: 'phd', label: '博士' },
+];
+
+export const EXAM_TYPE_OPTIONS = [
+  { id: 'guokao', label: '国考', desc: '中央机关及其直属机构' },
+  { id: 'shengkao', label: '省考', desc: '各省市公务员考试' },
+  { id: 'xuandiao', label: '选调生', desc: '面向优秀应届毕业生' },
+  { id: 'shiyebian', label: '事业编', desc: '事业单位编制考试' },
+  { id: 'junzhuan', label: '军转干', desc: '军队转业干部安置' },
+];
+
+export const TARGET_PROVINCES = [
+  '北京','天津','河北','山西','内蒙古','辽宁','吉林','黑龙江',
+  '上海','江苏','浙江','安徽','福建','江西','山东','河南',
+  '湖北','湖南','广东','广西','海南','重庆','四川','贵州',
+  '云南','西藏','陕西','甘肃','青海','宁夏','新疆',
+];
+
+export const POLITICAL_STATUS = ['中共党员','中共预备党员','共青团员','群众','民主党派'];
+export const WORK_EXP_OPTIONS = ['应届生','1年以下','1-3年','3-5年','5年以上'];
+export const CERT_OPTIONS = ['法律职业资格','注册会计师','CFA','教师资格证','执业医师','心理咨询师','无'];
+
+/* ========== Report · 报考岗位报告 ========== */
+export const REPORT_SECTIONS = [
+  { id: 'profile', title: '个人画像', icon: 'User' },
+  { id: 'positions', title: '推荐岗位', icon: 'Target' },
+  { id: 'competition', title: '竞争分析', icon: 'BarChart3' },
+  { id: 'strategy', title: '报考策略', icon: 'Shield' },
+  { id: 'timeline', title: '备考时间线', icon: 'Clock' },
+];
+
+export const MOCK_REPORT = {
+  summary: '综合你的专业背景、学历层次和目标区域，AI 为你筛选出 3 类共 12 个高匹配度岗位，核心推荐竞争比 1:85 以内的岗位。',
+  profile: {
+    strengths: ['计算机专业对口面广', '本科满足多数岗位门槛', '山东生源省内岗位优势'],
+    weaknesses: ['非 985/211 院校需避开热门岗', '无法律/财会证书限制部分岗位', '应届身份窗口期仅 2 年'],
+  },
+  positions: [
+    { name: '省公安厅·网络安全管理', type: '省考', competition: '1:68', salary: '8-12K', match: 94, tag: '强推', city: '济南', education: '本科及以上' },
+    { name: '市大数据局·数据资源管理', type: '省考', competition: '1:52', salary: '7-10K', match: 91, tag: '强推', city: '青岛', education: '本科及以上' },
+    { name: '区行政审批服务局·信息化岗', type: '省考', competition: '1:45', salary: '6-9K', match: 88, tag: '推荐', city: '济南', education: '本科及以上' },
+    { name: '国家税务总局山东分局·信息技术', type: '国考', competition: '1:156', salary: '9-14K', match: 82, tag: '冲刺', city: '济南', education: '本科及以上' },
+    { name: '省纪委监委·网络监察', type: '省考', competition: '1:128', salary: '8-12K', match: 78, tag: '冲刺', city: '济南', education: '本科及以上' },
+    { name: '区应急管理局·科技信息化', type: '省考', competition: '1:38', salary: '6-8K', match: 85, tag: '保底', city: '淄博', education: '本科及以上' },
+  ],
+  strategy: {
+    chong: { label: '冲刺岗', count: 2, desc: '竞争比 1:100+，上限突破', color: 'rose' },
+    wen: { label: '稳妥岗', count: 3, desc: '竞争比 1:50~80，把握较大', color: 'amber' },
+    bao: { label: '保底岗', count: 1, desc: '竞争比 1:40 以下，稳拿', color: 'emerald' },
+  },
+  timeline: [
+    { month: '7-8月', task: '行测基础 + 申论入门', hours: 4 },
+    { month: '9-10月', task: '专项突破 + 真题精练', hours: 6 },
+    { month: '11月', task: '国考冲刺 + 模考密集', hours: 8 },
+    { month: '12月', task: '省考备考 + 弱项补强', hours: 6 },
+    { month: '1-2月', task: '省考冲刺 + 面试准备', hours: 8 },
+  ],
+  probability: {
+    overall: 72,
+    guokao: 28,
+    shengkao: 65,
+    xuandiao: 41,
+  },
+};
+
+/* ========== Report · 推荐岗位/竞争分析/策略 ========== */
+export const RECOMMENDED_POSTS = [
+  { id: 1, name: '国家税务总局XX区税务局—一级行政执法员', type: '国考', dept: '税务系统', location: '山东·济南', competition: '1:82', match: 95, matchRate: 95, salary: '8-12K', tags: ['计算机对口','应届优先'], level: '冲', headcount: 3, probability: 42 },
+  { id: 2, name: 'XX市公安局—网络安全管理岗', type: '省考', dept: '公安系统', location: '山东·青岛', competition: '1:128', match: 88, matchRate: 88, salary: '7-10K', tags: ['计算机对口','需体测'], level: '冲', headcount: 2, probability: 28 },
+  { id: 3, name: 'XX区数据局—信息化建设岗', type: '省考', dept: '数据局', location: '山东·济南', competition: '1:65', match: 92, matchRate: 92, salary: '6-9K', tags: ['计算机对口','冷门岗'], level: '稳', headcount: 5, probability: 58 },
+  { id: 4, name: 'XX县委办公室—综合文秘', type: '选调生', dept: '党政机关', location: '山东·潍坊', competition: '1:45', match: 78, matchRate: 78, salary: '5-8K', tags: ['不限专业','基层锻炼'], level: '保', headcount: 8, probability: 72 },
+  { id: 5, name: 'XX区人社局—劳动监察岗', type: '事业编', dept: '人社系统', location: '山东·烟台', competition: '1:55', match: 82, matchRate: 82, salary: '5-8K', tags: ['管理类','稳定'], level: '稳', headcount: 4, probability: 65 },
+  { id: 6, name: 'XX市统计局—数据分析岗', type: '国考', dept: '统计系统', location: '山东·济南', competition: '1:72', match: 90, matchRate: 90, salary: '7-11K', tags: ['计算机对口','数据岗'], level: '稳', headcount: 2, probability: 52 },
+];
+
+export const COMPETITION_ANALYSIS = {
+  provinces: [
+    { region: '济南', avgCompetition: 78, hotPositions: 12, myAdvantage: '省内户籍+对口专业', difficulty: 'medium', highlight: true },
+    { region: '青岛', avgCompetition: 112, hotPositions: 18, myAdvantage: '对口专业', difficulty: 'hard', highlight: false },
+    { region: '烟台', avgCompetition: 65, hotPositions: 8, myAdvantage: '竞争较低', difficulty: 'easy', highlight: true },
+    { region: '潍坊', avgCompetition: 58, hotPositions: 6, myAdvantage: '选调生优势', difficulty: 'easy', highlight: false },
+    { region: '北京', avgCompetition: 185, hotPositions: 35, myAdvantage: '对口专业', difficulty: 'very_hard' },
+    { region: '上海', avgCompetition: 160, hotPositions: 28, myAdvantage: '对口专业', difficulty: 'hard' },
+  ],
+  education: [
+    { level: '博士', competition: 15, advantage: '高', rate: 82, highlight: true },
+    { level: '硕士', competition: 45, advantage: '较高', rate: 68, highlight: true },
+    { level: '本科', competition: 85, advantage: '中等', rate: 45, highlight: false },
+    { level: '大专', competition: 25, advantage: '较低', rate: 22, highlight: false },
+  ],
+};
+
+export const STRATEGY_ADVICE = [
+  { type: 'chong', title: '冲刺岗', desc: '国税局济南分局 — 竞争适中但发展好，值得冲刺', risk: '中', probability: 35 },
+  { type: 'wen', title: '稳妥岗', desc: '数据局信息化岗 — 专业对口、竞争可控，上岸概率较高', risk: '低', probability: 68 },
+  { type: 'bao', title: '保底岗', desc: '区委办综合文秘 — 竞争最低、不限专业，确保上岸', risk: '极低', probability: 85 },
+];
+
 export const VIP_BENEFITS = [
   { name: '每日刷题', free: '10 题', vip: '无限' },
   { name: 'AI 岗位匹配', free: '预览 3 个', vip: '完整报告' },
