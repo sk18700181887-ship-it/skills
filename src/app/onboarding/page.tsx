@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   MAJOR_CATEGORIES, EDUCATION_OPTIONS, EXAM_TYPE_OPTIONS,
   TARGET_PROVINCES, POLITICAL_STATUS, WORK_EXP_OPTIONS, CERT_OPTIONS,
 } from '@/lib/data';
+import { useSupabaseConfig } from '@/lib/supabase-config-inject';
+import { getSupabaseBrowserClientAsync } from '@/lib/supabase-browser';
 
 const STEPS = [
   { id: 1, title: '基本信息', sub: '你的身份和学历' },
@@ -16,6 +18,7 @@ const STEPS = [
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { isLoading: configLoading } = useSupabaseConfig();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     name: '', age: '', education: '', major: '', majorCategory: '',
@@ -23,6 +26,23 @@ export default function OnboardingPage() {
     politicalStatus: '', workExp: '', certs: [] as string[],
   });
   const [generating, setGenerating] = useState(false);
+
+  // 检查登录状态
+  useEffect(() => {
+    if (configLoading) return;
+    const checkAuth = async () => {
+      try {
+        const supabase = await getSupabaseBrowserClientAsync();
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          router.push('/login');
+        }
+      } catch {
+        router.push('/login');
+      }
+    };
+    checkAuth();
+  }, [configLoading, router]);
 
   const update = (key: string, value: string | string[]) =>
     setForm(prev => ({ ...prev, [key]: value }));
@@ -43,8 +63,34 @@ export default function OnboardingPage() {
     return true;
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setGenerating(true);
+    try {
+      const supabase = await getSupabaseBrowserClientAsync();
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      if (token) {
+        // 保存用户档案到后端
+        await fetch('/api/user-profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'x-session': token },
+          body: JSON.stringify({
+            name: form.name,
+            age: form.age ? parseInt(form.age) : null,
+            education: form.education,
+            major: form.major,
+            major_category: form.majorCategory,
+            exam_type: form.examTypes.join(','),
+            target_province: form.provinces.join(','),
+            political_status: form.politicalStatus,
+            work_experience: form.workExp,
+            certificates: form.certs.join(','),
+          }),
+        });
+      }
+    } catch {
+      // 即使保存失败也继续生成报告
+    }
     setTimeout(() => {
       router.push('/report');
     }, 2500);

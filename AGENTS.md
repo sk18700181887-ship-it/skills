@@ -5,9 +5,11 @@
 
 - 品牌名：**上岸引擎**
 - 定位：AI 陪练 + 智能推题 + 全国模考排名 + 申论批改 + 面试模拟 + 协议班陪跑
-- 技术栈：Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4 + shadcn/ui
+- 技术栈：Next.js 16 (App Router) + React 19 + TypeScript 5 + Tailwind CSS 4 + shadcn/ui + Supabase (Auth + DB)
 - 端口：`process.env.DEPLOY_RUN_PORT`（默认 5000）
-- 数据：目前所有数据为客户端 Mock（`src/lib/data.ts`），未接入后端
+- 运行模式：Next.js 服务器模式（已移除 `output: 'export'`），支持 API Routes
+- 数据：Supabase 后端（用户认证 + 数据持久化），展示数据仍为 Mock（`src/lib/data.ts`）
+- 认证：Supabase Auth，支持手机号（+86）验证码登录 + 邮箱密码登录
 
 ## 7 阶段产品架构
 
@@ -36,7 +38,10 @@ src/
 ├── app/
 │   ├── layout.tsx           # RootLayout · 挂载 AppShell（侧边栏 + 主区）
 │   ├── globals.css          # Tailwind + Design Tokens + 自定义类
-│   ├── page.tsx             # / 学习中心 Dashboard（7 阶段全路径进度 + 情绪陪伴）
+│   ├── page.tsx             # / 开场Hero + 示例报告 + 全国可视化 + 左侧固定引导栏
+│   ├── login/page.tsx       # /login 手机号/邮箱注册登录
+│   ├── onboarding/page.tsx  # /onboarding 4步信息填写（需登录）
+│   ├── report/page.tsx      # /report AI 报告（需登录）
 │   ├── explore/page.tsx     # /explore 考公全景（6 类考试对比 + AI 百科）
 │   ├── match/page.tsx       # /match AI 岗位匹配（专业库 + 竞争预测）
 │   ├── apply/page.tsx       # /apply 报名决策（冲稳保 + 竞争比）
@@ -48,8 +53,13 @@ src/
 │   ├── interview/page.tsx   # /interview AI 面试模拟（4 大题型 + 实时点评）
 │   ├── diary/page.tsx       # /diary 上岸日记（心情记录 + AI陪伴 + 情绪树洞 + 能量站）
 │   ├── map/page.tsx         # /map 全国公考可视化（省份热力图 + 地市难度 + 岗位分布 + 国考系统）
+│   ├── dashboard/page.tsx   # /dashboard 学习中心（7 阶段全路径进度 + 情绪陪伴）
 │   ├── rank/page.tsx        # /rank 排行榜 + 上岸榜
 │   └── vip/page.tsx         # /vip 会员套餐 & 协议班
+├── api/
+│   └── supabase-config/     # GET /api/supabase-config 返回 Supabase URL+AnonKey
+│   └── user-profile/        # POST/GET /api/user-profile 用户信息 CRUD
+│   └── report/              # GET /api/report 获取用户报告
 ├── components/
 │   ├── layout/app-shell.tsx # 全站侧边栏 + 7 阶段路径条 + Logo + 用户卡片
 │   ├── ai-companion.tsx     # AI 陪伴浮窗（全局右下角可唤起聊天）
@@ -57,7 +67,9 @@ src/
 │   └── ui/                  # shadcn/ui 组件（Radix）
 ├── lib/
 │   ├── data.ts              # 全站 Mock 数据（含情绪陪伴数据）
-│   └── utils.ts             # cn() 等工具
+│   ├── utils.ts             # cn() 等工具
+│   ├── supabase-browser.ts  # Supabase 浏览器客户端（Auth + 数据库）
+│   └── supabase-config-inject.tsx  # Supabase 配置注入 Provider
 DESIGN.md                    # 商业版设计规范
 AGENTS.md                    # 本文档
 .coze                        # 预置，勿改
@@ -71,9 +83,11 @@ AGENTS.md                    # 本文档
 | Lint | `pnpm lint --quiet` |
 
 ## 服务模式说明
-- Next.js 采用 **`output: 'export'`** 静态导出
-- 构建后 `out/` 里的文件需拷贝到根目录：`cp -r out/* .`
-- **修改代码后**：必须 `pnpm build && cp -r out/* .` 才能看到更新
+- Next.js **App Router** 服务端模式（已移除 `output: 'export'`）
+- 支持 API Routes：`/api/supabase-config`、`/api/user-profile`、`/api/report`
+- 开发环境：`pnpm next dev --port ${DEPLOY_RUN_PORT}`
+- 认证：Supabase Auth（手机号 + 邮箱登录），前端通过 `x-session` header 携带 access_token
+- 数据库：Supabase PostgreSQL，表 `user_profiles` + `reports`，已启用 RLS
 
 ## 修改指南
 - **改数据**：直接改 `src/lib/data.ts`，重新 build
@@ -92,8 +106,9 @@ AGENTS.md                    # 本文档
 - 卡片以细描边 + 极浅底色为主
 
 ## 已知限制 & 后续工作
-1. 数据均为 Mock，未接入后端
+1. 报告内容仍为 Mock 数据，需接入 LLM 集成实现 AI 生成
 2. 支付按钮当前为占位
 3. AI 批改结果为固定 mock，需接入 LLM 集成
-4. 用户认证、订单、错题本持久化需要后端与数据库
+4. 错题本持久化需要完善
 5. 移动端可进一步优化：底部 Tab bar、Sheet 抽屉
+6. 登录页面未使用 AppShell 布局，后续可统一

@@ -302,7 +302,8 @@ export default function LandingPage() {
     }
   }, [phase]);
 
-  const handleCTA = () => router.push('/onboarding');
+  const handleCTA = () => router.push('/login');
+  const handleOnboarding = () => router.push('/onboarding');
 
   const sortedProvinces = [...PROVINCE_DATA].sort((a, b) => b.avgRatio - a.avgRatio);
   const maxRatio = sortedProvinces[0]?.avgRatio ?? 100;
@@ -381,11 +382,52 @@ export default function LandingPage() {
             <span className="text-[#b4ff39] font-serif text-lg">上岸引擎</span>
             <span className="text-zinc-600 text-xs font-mono">DEMO REPORT</span>
           </div>
-          <button onClick={() => router.push('/dashboard')} className="text-sm text-zinc-500 hover:text-zinc-300 transition-colors">直接进入学习中心 →</button>
+          <div className="flex items-center gap-4">
+            <button onClick={() => router.push('/login')} className="px-4 py-1.5 border border-white/10 text-xs text-zinc-400 hover:text-white hover:border-white/20 transition-all rounded-none">登录</button>
+            <button onClick={handleCTA} className="px-4 py-1.5 bg-[#b4ff39] text-black text-xs font-medium hover:bg-[#c5ff6b] transition-all rounded-none btn-press">注册生成报告</button>
+          </div>
         </div>
 
+        {/* 左侧固定引导栏 + 右侧内容 */}
+        <div className="relative">
+          {/* 左侧固定引导栏 - 仅在报告区域可见 */}
+          <div className="hidden lg:block fixed left-0 top-1/2 -translate-y-1/2 z-30 w-[220px]">
+            <div className="border-r border-t border-b border-white/6 bg-black/95 backdrop-blur-sm p-5 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 bg-[#b4ff39] animate-pulse" />
+                <span className="text-[10px] font-mono text-zinc-500">AI 实时分析</span>
+              </div>
+              <h3 className="text-sm font-serif text-white leading-snug">
+                填写信息<br />生成<span className="text-[#b4ff39]">专属</span>报告
+              </h3>
+              <p className="text-[10px] text-zinc-600 leading-relaxed">
+                这是示例报告<br />你的报告需要填写个人信息后由 AI 生成
+              </p>
+              <button
+                onClick={handleCTA}
+                className="w-full py-2.5 bg-[#b4ff39] text-black text-xs font-medium hover:bg-[#c5ff6b] transition-all rounded-none btn-press animate-breathe"
+              >
+                填写信息 →
+              </button>
+              <div className="pt-2 border-t border-white/5 space-y-1.5">
+                <div className="flex items-center gap-1.5">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#b4ff39" strokeWidth="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+                  <span className="text-[9px] text-zinc-500">手机号注册</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#b4ff39" strokeWidth="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  <span className="text-[9px] text-zinc-500">数据安全保障</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#b4ff39" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  <span className="text-[9px] text-zinc-500">1 分钟快速生成</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         {/* 报告 Hero */}
-        <div className="px-6 py-16 md:py-24 max-w-4xl mx-auto">
+        <div className="px-6 lg:pl-[260px] py-16 md:py-24 max-w-4xl lg:max-w-5xl mx-auto">
           <p className="text-xs font-mono text-zinc-600 mb-4">01.</p>
           <h1 className="text-4xl md:text-5xl font-serif font-light text-white leading-tight mb-6 animate-[glow-text_3s_ease-in-out_infinite]">
             示例·<span className="text-[#b4ff39]">AI 报考报告</span>
@@ -408,8 +450,8 @@ export default function LandingPage() {
         </div>
 
         {/* 目录导航 */}
-        <div className="border-y border-white/6 px-6">
-          <div className="max-w-4xl mx-auto flex gap-1 overflow-x-auto py-3">
+        <div className="border-y border-white/6 px-6 lg:pl-[260px]">
+          <div className="max-w-4xl lg:max-w-5xl mx-auto flex gap-1 overflow-x-auto py-3">
             {REPORT_SECTIONS.map((s, i) => (
               <a key={s.id} href={`#${s.id}`} className="px-4 py-2 text-xs whitespace-nowrap border rounded-none border-white/6 text-zinc-500 hover:text-zinc-300 hover:border-white/15 transition-all duration-200">
                 0{i + 1}. {s.title}
@@ -419,7 +461,7 @@ export default function LandingPage() {
         </div>
 
         {/* 报告内容 */}
-        <div className="max-w-4xl mx-auto px-6 py-12 space-y-16">
+        <div className="max-w-4xl lg:max-w-5xl mx-auto px-6 lg:pl-[260px] py-12 space-y-16">
 
           {/* 推荐岗位 */}
           <section id="positions">
@@ -514,7 +556,7 @@ export default function LandingPage() {
 
         {/* ═══════ 全国可视化 ═══════ */}
         <div className="border-t border-white/6" />
-        <div className="max-w-5xl mx-auto px-6 py-16 space-y-10">
+        <div className="max-w-5xl mx-auto px-6 lg:pl-[260px] py-16 space-y-10">
           {/* 标题区 */}
           <div>
             <p className="text-xs font-mono text-zinc-600 mb-2">06.</p>
@@ -568,22 +610,23 @@ export default function LandingPage() {
 
         {/* ═══════ CTA: 生成你的专属报告 ═══════ */}
         <div className="border-t border-white/6" />
-        <section className="py-20 text-center space-y-6 max-w-4xl mx-auto px-6">
+        <section className="py-20 text-center space-y-6 max-w-4xl lg:max-w-5xl mx-auto px-6 lg:pl-[260px]">
           <div className="inline-block px-4 py-1 border border-[#b4ff39]/20 text-[10px] font-mono text-[#b4ff39] tracking-wider mb-4 rounded-none">YOUR TURN</div>
           <h2 className="text-3xl md:text-5xl font-serif font-light text-white leading-tight">
             这是他的报告<br /><span className="text-[#b4ff39]">你的呢？</span>
           </h2>
           <p className="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">
-            填写你的专业、学历、目标省份等信息<br />AI 将为你生成专属的报考岗位报告
+            手机号注册 · 填写专业、学历、目标省份等信息<br />AI 将为你生成专属的报考岗位报告
           </p>
           <button onClick={handleCTA} className="mt-6 px-14 py-4 bg-[#b4ff39] text-black text-sm font-medium tracking-wider hover:bg-[#c5ff6b] transition-all btn-press animate-breathe">
-            填写信息，生成我的专属报告 →
+            手机号注册，生成专属报告 →
           </button>
           <div className="pt-4"><span className="text-[9px] text-zinc-700 font-mono">免费生成 · 仅需 1 分钟 · AI 智能匹配</span></div>
 
           <div className="pt-8 border-t border-white/5 mt-8">
-            <p className="text-zinc-600 text-xs mb-3">或直接进入</p>
+            <p className="text-zinc-600 text-xs mb-3">已有账号？直接进入</p>
             <div className="flex justify-center gap-4">
+              <button onClick={() => router.push('/login')} className="px-6 py-2 border border-white/8 text-xs text-zinc-400 hover:text-white hover:border-white/20 transition-all rounded-none">登录</button>
               <button onClick={() => router.push('/dashboard')} className="px-6 py-2 border border-white/8 text-xs text-zinc-400 hover:text-white hover:border-white/20 transition-all rounded-none">学习中心</button>
               <button onClick={() => router.push('/explore')} className="px-6 py-2 border border-white/8 text-xs text-zinc-400 hover:text-white hover:border-white/20 transition-all rounded-none">考公全景</button>
             </div>
@@ -594,6 +637,7 @@ export default function LandingPage() {
         <div className="border-t border-white/6 px-6 py-6 text-center">
           <span className="text-[9px] font-mono text-zinc-700">上岸引擎 · Anan Engine · 拓扑降维 · 精准上岸 · © 2026</span>
         </div>
+        </div>{/* 关闭左侧引导栏的 relative 容器 */}
       </section>
     </div>
   );

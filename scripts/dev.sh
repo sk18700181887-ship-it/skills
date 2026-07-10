@@ -1,7 +1,6 @@
 #!/bin/bash
 set -Eeuo pipefail
 
-
 PORT=5000
 COZE_WORKSPACE_PATH="${COZE_WORKSPACE_PATH:-$(pwd)}"
 DEPLOY_RUN_PORT="${DEPLOY_RUN_PORT:-${PORT}}"
@@ -20,11 +19,11 @@ kill_port_if_listening() {
     sleep 1
 }
 
-echo "== Building Next.js static export =="
-pnpm build
+echo "== Installing dependencies =="
+pnpm install --prefer-frozen-lockfile --prefer-offline --loglevel error 2>&1 | tail -5
 
 echo "== Clearing port ${DEPLOY_RUN_PORT} =="
 kill_port_if_listening
 
-echo "== Serving static site on port ${DEPLOY_RUN_PORT} =="
-exec python3 -m http.server "${DEPLOY_RUN_PORT}" --bind 0.0.0.0 --directory out
+echo "== Starting Next.js dev server on port ${DEPLOY_RUN_PORT} =="
+PORT=${DEPLOY_RUN_PORT} exec pnpm next dev --port ${DEPLOY_RUN_PORT} --hostname 0.0.0.0

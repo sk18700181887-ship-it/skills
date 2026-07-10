@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inspector } from 'react-dev-inspector';
+import { SupabaseConfigProvider } from '@/lib/supabase-config-inject';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -46,8 +47,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={`antialiased`}>
-        {isDev && <Inspector />}
-        {children}
+        <SupabaseConfigProvider>
+          {isDev && <Inspector />}
+          {children}
+        </SupabaseConfigProvider>
       </body>
     </html>
   );
