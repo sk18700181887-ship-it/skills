@@ -73,7 +73,7 @@ export default function LoginPage() {
         type: 'sms',
       });
       if (error) throw error;
-      router.push('/dashboard');
+      router.push('/onboarding');
     } catch (err) {
       setMessage({ type: 'error', text: '验证码错误或已过期，请重试或重新获取' });
     } finally {
@@ -97,7 +97,7 @@ export default function LoginPage() {
       const supabase = await getSupabaseBrowserClientAsync();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
-      router.push('/dashboard');
+      router.push('/onboarding');
     } catch (err) {
       setMessage({ type: 'error', text: '邮箱或密码错误' });
     } finally {
@@ -125,7 +125,7 @@ export default function LoginPage() {
       const supabase = await getSupabaseBrowserClientAsync();
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
-      router.push('/dashboard');
+      router.push('/onboarding');
     } catch (err) {
       setMessage({ type: 'error', text: err instanceof Error ? err.message : '注册失败' });
     } finally {
