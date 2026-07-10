@@ -237,11 +237,11 @@ function DashboardPage() {
       <section className="mb-16 animate-fade-up delay-100">
         <div className="flex items-center gap-3 mb-6">
           <span className="sec-num">01.</span>
-          <h2 className="text-lg font-medium text-white">今日状态</h2>
+          <h2 className="text-lg font-medium text-white animate-[glow-text_3s_ease-in-out_infinite]">今日状态</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[rgba(255,255,255,0.06)]">
           <div className="bg-[#0a0a0a] p-6">
-            <div className="text-[10px] text-zinc-600 uppercase tracking-wider mb-3">已刷题数</div>
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wider mb-3 animate-[glow-text_4s_ease-in-out_infinite]">已刷题数</div>
             <AnimatedNumber value={USER.totalQuestions} />
             <div className="mt-2 text-[11px] text-zinc-600">目标 3000</div>
             <div className="mt-3 h-px bg-zinc-900 overflow-hidden">
@@ -249,13 +249,13 @@ function DashboardPage() {
             </div>
           </div>
           <div className="bg-[#0a0a0a] p-6">
-            <div className="text-[10px] text-zinc-600 uppercase tracking-wider mb-3">正确率</div>
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wider mb-3 animate-[glow-text_4s_ease-in-out_1s_infinite]">正确率</div>
             <AnimatedNumber value={Math.round(USER.correctRate * 100)} />
             <span className="text-sm text-zinc-500 ml-1">%</span>
             <div className="mt-2 text-[11px] text-zinc-600">行测 + 申论综合</div>
           </div>
           <div className="bg-[#0a0a0a] p-6">
-            <div className="text-[10px] text-zinc-600 uppercase tracking-wider mb-3">连续打卡</div>
+            <div className="text-[10px] text-zinc-500 uppercase tracking-wider mb-3 animate-[glow-text_4s_ease-in-out_2s_infinite]">连续打卡</div>
             <div className="flex items-baseline gap-1">
               <AnimatedNumber value={USER.streakDays} />
               <span className="text-sm text-zinc-500">天</span>
@@ -278,7 +278,7 @@ function DashboardPage() {
       <section className="mb-16 animate-fade-up delay-200">
         <div className="flex items-center gap-3 mb-6">
           <span className="sec-num">02.</span>
-          <h2 className="text-lg font-medium text-white">七阶段路径</h2>
+          <h2 className="text-lg font-medium text-white animate-[glow-text_3s_ease-in-out_infinite]">七阶段路径</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-[rgba(255,255,255,0.06)] stagger">
           {JOURNEY_PHASES.map((phase, i) => {
@@ -294,7 +294,7 @@ function DashboardPage() {
                     <span className="text-[8px] px-1 py-0.5 bg-[#b4ff39]/8 text-[#b4ff39] border border-[rgba(180,255,57,0.15)]">AI</span>
                   )}
                 </div>
-                <h3 className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors">{phase.label}</h3>
+                <h3 className="text-sm font-medium text-zinc-200 group-hover:text-[#b4ff39] group-hover:animate-[glow-text_2s_ease-in-out_infinite] transition-colors">{phase.label}</h3>
                 <p className="text-[11px] text-zinc-600 mt-1 line-clamp-2">{phase.desc}</p>
                 <ChevronRight className="w-3 h-3 text-zinc-700 group-hover:text-[#b4ff39] mt-2 transition-colors" />
               </Link>
@@ -307,7 +307,7 @@ function DashboardPage() {
       <section className="mb-16 animate-fade-up delay-300">
         <div className="flex items-center gap-3 mb-6">
           <span className="sec-num">03.</span>
-          <h2 className="text-lg font-medium text-white">能力维度</h2>
+          <h2 className="text-lg font-medium text-white animate-[glow-text_3s_ease-in-out_infinite]">能力维度</h2>
         </div>
         <div className="topo-card p-6">
           <div className="space-y-4">
@@ -333,7 +333,7 @@ function DashboardPage() {
       <section className="mb-16 animate-fade-up delay-400">
         <div className="flex items-center gap-3 mb-6">
           <span className="sec-num">04.</span>
-          <h2 className="text-lg font-medium text-white">心情 & 能量</h2>
+          <h2 className="text-lg font-medium text-white animate-[glow-text_3s_ease-in-out_infinite]">心情 & 能量</h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[rgba(255,255,255,0.06)]">
           <div className="bg-[#0a0a0a] p-6">
@@ -370,7 +370,7 @@ function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <span className="sec-num">05.</span>
-            <h2 className="text-lg font-medium text-white">热门省份</h2>
+            <h2 className="text-lg font-medium text-white animate-[glow-text_3s_ease-in-out_infinite]">热门省份</h2>
           </div>
           <Link href="/map" className="topo-chip text-[10px]">查看全部 <ChevronRight className="w-3 h-3" /></Link>
         </div>
