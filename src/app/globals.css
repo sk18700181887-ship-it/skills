@@ -546,3 +546,32 @@ body {
   50% { transform: translateY(-3px); }
 }
 .animate-gentle-bounce { animation: gentle-bounce 2s ease-in-out infinite; }
+
+/* ===== 开场动画 ===== */
+@keyframes scanLine {
+  0% { transform: translateY(-100vh); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes glitch-1 {
+  0%, 100% { clip-path: inset(0 0 0 0); transform: translate(0); }
+  20% { clip-path: inset(20% 0 60% 0); transform: translate(-3px, 2px); }
+  40% { clip-path: inset(60% 0 10% 0); transform: translate(3px, -1px); }
+  60% { clip-path: inset(40% 0 30% 0); transform: translate(-2px, 1px); }
+  80% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
+}
+
+@keyframes text-reveal {
+  0% { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-scan { animation: scanLine 2s ease-in-out infinite; }
+.animate-glitch { animation: glitch-1 3s ease-in-out infinite; }
+.animate-text-reveal { animation: text-reveal 1.2s cubic-bezier(0.77, 0, 0.175, 1) forwards; }
+.animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
