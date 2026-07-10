@@ -5,32 +5,33 @@ import { Crown, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+/* PageHeader — topology style: sec-num + 衬线标题 */
 export function PageHeader({
   title,
   subtitle,
   action,
+  sectionNum,
   className,
 }: {
   title: string;
   subtitle?: string;
   action?: React.ReactNode;
+  sectionNum?: string;
   className?: string;
 }) {
   return (
-    <div className={cn('flex items-start justify-between gap-4 mb-6', className)}>
-      <div className="min-w-0">
-        <h1 className="heading-lg">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="mt-1 text-sm text-zinc-500">{subtitle}</p>
-        )}
-      </div>
-      {action && <div className="shrink-0">{action}</div>}
+    <div className={cn('mb-10', className)}>
+      {sectionNum && <div className="sec-num mb-2">{sectionNum}</div>}
+      <h1 className="heading-section">{title}</h1>
+      {subtitle && (
+        <p className="mt-2 text-sm text-zinc-500 max-w-lg">{subtitle}</p>
+      )}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   );
 }
 
+/* VipLock — topology style: no blur, no rounded, border */
 export function VipLock({
   message = '开通 VIP 解锁完整内容',
   ctaLabel = '开通 VIP',
@@ -45,36 +46,24 @@ export function VipLock({
   return (
     <div
       className={cn(
-        'absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 rounded-xl',
-        'bg-gradient-to-b from-[#0f0f12]/40 via-[#0f0f12]/85 to-[#0f0f12] backdrop-blur-[1.5px]'
+        'absolute inset-0 z-10 flex flex-col items-center justify-center gap-2',
+        'bg-black/90 border border-[rgba(255,255,255,0.06)]'
       )}
     >
-      <div className="rounded-full vip-gradient p-2">
-        <Lock className="size-4 text-amber-300" />
-      </div>
-      <div
-        className={cn(
-          'text-center px-4',
-          compact ? 'text-xs' : 'text-sm'
-        )}
-      >
-        <div className="font-medium text-zinc-200">{message}</div>
+      <Lock className="w-4 h-4 text-zinc-600" />
+      <div className={cn('text-center px-4', compact ? 'text-xs' : 'text-sm')}>
+        <div className="font-medium text-zinc-300">{message}</div>
         {!compact && (
-          <div className="text-[11px] text-zinc-500 mt-0.5">
-            月卡 ¥68 起 · 首月立减 ¥60
-          </div>
+          <div className="text-[11px] text-zinc-600 mt-0.5">月卡 ¥68 起</div>
         )}
       </div>
       <Button
         asChild
         size="sm"
-        className={cn(
-          'vip-gradient border-0 hover:opacity-90',
-          compact ? 'h-7 px-3 text-xs' : 'h-8 px-4'
-        )}
+        className="vip-gradient border-0 hover:opacity-90 btn-press"
       >
         <Link href={href}>
-          <Crown className="size-3.5 mr-1 text-amber-200" />
+          <Crown className="size-3 mr-1 text-amber-200" />
           <span className="vip-text font-medium">{ctaLabel}</span>
         </Link>
       </Button>
@@ -82,6 +71,7 @@ export function VipLock({
   );
 }
 
+/* PriceTag */
 export function PriceTag({
   price,
   origin,
@@ -91,50 +81,36 @@ export function PriceTag({
   origin?: number;
   size?: 'sm' | 'md' | 'lg';
 }) {
-  const bigCls =
-    size === 'lg'
-      ? 'text-[32px]'
-      : size === 'md'
-        ? 'text-2xl'
-        : 'text-lg';
+  const bigCls = size === 'lg' ? 'text-2xl' : size === 'md' ? 'text-xl' : 'text-base';
   return (
-    <div className="flex items-baseline gap-1.5">
-      <span className="text-sm text-zinc-500">¥</span>
-      <span className={cn('font-mono font-semibold tabular-nums text-[#b4ff39]', bigCls)}>
-        {price}
+    <div className="flex items-baseline gap-2">
+      <span className={cn(bigCls, 'font-bold text-white font-serif')}>
+        ¥{price}
       </span>
-      {origin != null && origin > price && (
-        <span className="text-xs text-zinc-500 line-through">
-          ¥{origin}
-        </span>
+      {origin && origin > price && (
+        <span className="text-xs text-zinc-600 line-through">¥{origin}</span>
       )}
     </div>
   );
 }
 
+/* Stat — topology: mono number + label */
 export function Stat({
   label,
   value,
-  hint,
-  className,
-  icon,
+  sub,
+  accent,
 }: {
   label: string;
   value: string | number;
-  hint?: string;
-  className?: string;
-  icon?: React.ReactNode;
+  sub?: string;
+  accent?: boolean;
 }) {
   return (
-    <div className={cn('space-y-1', className)}>
-      <div className="text-[11px] text-zinc-500 flex items-center gap-1.5">
-        {icon}
-        {label}
-      </div>
-      <div className="stat-value">{value}</div>
-      {hint && (
-        <div className="text-[11px] text-zinc-600">{hint}</div>
-      )}
+    <div>
+      <div className="text-[10px] text-zinc-600 uppercase tracking-wider mb-1">{label}</div>
+      <div className={cn('stat-value', accent && 'text-[#b4ff39]')}>{value}</div>
+      {sub && <div className="text-[10px] text-zinc-600 mt-0.5">{sub}</div>}
     </div>
   );
 }

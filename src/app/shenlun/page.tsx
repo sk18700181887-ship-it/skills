@@ -28,7 +28,7 @@ export default function ShenlunPage() {
           <button
             key={t.id}
             onClick={() => { setActiveTopic(i); setShowResult(false) }}
-            className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${i === activeTopic ? 'bg-[#b4ff39] text-black shadow-md shadow-primary/20 scale-105' : 'bg-card border hover:border-[#b4ff39]/30 hover:shadow-sm'}`}
+            className={`shrink-0 px-4 py-2 rounded-none text-sm font-medium transition-all duration-300 ${i === activeTopic ? 'bg-[#b4ff39] text-black  shadow-primary/20 scale-105' : 'bg-card border hover:border-[#b4ff39]/30 hover:'}`}
           >
             {t.name}
           </button>
@@ -40,7 +40,7 @@ export default function ShenlunPage() {
         <div className="lg:col-span-3 space-y-4">
           <div className="topo-card p-5 animate-fade-up">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{topic.name}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{topic.name}</span>
               <span className="text-[10px] text-zinc-500 flex items-center gap-1"><Clock className="w-3 h-3" /> {topic.freq}</span>
             </div>
             <p className="text-sm leading-relaxed mb-4">{topic.method}</p>
@@ -48,11 +48,11 @@ export default function ShenlunPage() {
             {!showResult ? (
               <div className="hero-reveal space-y-3">
                 <textarea
-                  className="w-full h-48 rounded-xl border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/20 transition-all"
+                  className="w-full h-48 rounded-none border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/20 transition-all"
                   placeholder="在此作答..."
                 />
                 <div className="flex gap-3">
-                  <Button className="flex-1 gap-2 shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all" onClick={() => setShowResult(true)}>
+                  <Button className="flex-1 gap-2  shadow-primary/20 hover: hover:shadow-primary/30 transition-all" onClick={() => setShowResult(true)}>
                     <Sparkles className="w-4 h-4" /> AI 智能批改
                   </Button>
                   <Button className="btn-press gap-2" variant="outline">
@@ -66,7 +66,7 @@ export default function ShenlunPage() {
                   <Sparkles className="w-4 h-4 animate-pulse" /> AI 批改完成
                 </div>
                 <textarea
-                  className="w-full h-48 rounded-xl border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none"
+                  className="w-full h-48 rounded-none border bg-transparent p-4 text-sm leading-relaxed resize-none focus:outline-none"
                   defaultValue={"近年来，我国城市化进程不断加快，但也带来了交通拥堵、环境污染、住房紧张等一系列城市病..."}
                 />
               </div>
@@ -85,7 +85,7 @@ export default function ShenlunPage() {
                 <div className="text-center shrink-0">
                   <div className={`text-4xl font-bold ${scoreColor(result.score)}`}>{result.score}</div>
                   <div className="text-xs text-zinc-500 mt-1">/ {result.fullScore} 分</div>
-                  <span className="text-[10px] px-2.5 py-1 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium mt-2 inline-block">{result.tag}</span>
+                  <span className="text-[10px] px-2.5 py-1 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium mt-2 inline-block">{result.tag}</span>
                 </div>
                 <div className="flex-1">
                   {/* 五维雷达图 */}
@@ -130,7 +130,7 @@ export default function ShenlunPage() {
 
               {/* 亮点与待改进 */}
               <div className="hero-reveal space-y-3">
-                <div className="p-3 rounded-lg bg-[oklch(0.72_0.14_145)]/8 border border-[oklch(0.72_0.14_145)]/15">
+                <div className="p-3 rounded-none bg-[oklch(0.72_0.14_145)]/8 border border-[oklch(0.72_0.14_145)]/15">
                   <div className="text-xs font-medium text-[oklch(0.72_0.14_145)] mb-2 flex items-center gap-1"><Lightbulb className="w-3 h-3" /> 亮点</div>
                   {result.highlights.map((h, i) => (
                     <div key={i} className="text-xs text-zinc-500 leading-relaxed animate-fade-up" style={{ animationDelay: `${i * 0.1}s` }}>
@@ -166,7 +166,7 @@ export default function ShenlunPage() {
                 <div key={s.id}>
                   <button
                     onClick={() => setShowSample(showSample === i ? -1 : i)}
-                    className="w-full flex items-center justify-between p-3 rounded-lg border hover:border-[#b4ff39]/30 hover:shadow-sm transition-all text-left"
+                    className="w-full flex items-center justify-between p-3 rounded-none border hover:border-[#b4ff39]/30 hover: transition-all text-left"
                   >
                     <div className="flex items-center gap-2">
                       <span className={`text-sm font-bold ${scoreColor(s.score)}`}>{s.score}</span>

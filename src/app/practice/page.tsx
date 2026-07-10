@@ -38,7 +38,7 @@ export default function PracticePage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <BookOpen className="w-6 h-6 text-[#b4ff39]" /> 智能题库
         </h1>
         <p className="text-sm text-zinc-500 mt-1">AI 推题 · 弱项诊断 · 错题归因</p>
@@ -46,8 +46,8 @@ export default function PracticePage() {
 
       {/* 进度条 + 统计 */}
       <div className="flex items-center gap-4 animate-fade-up delay-75">
-        <div className="flex-1 h-2 rounded-full bg-white/[0.04] overflow-hidden">
-          <div className="h-full bg-primary rounded-full transition-all duration-700 ease-out" style={{width: `${progress}%`}} />
+        <div className="flex-1 h-2 rounded-none bg-zinc-900 overflow-hidden">
+          <div className="h-full bg-primary rounded-none transition-all duration-700 ease-out" style={{width: `${progress}%`}} />
         </div>
         <span className="text-xs text-zinc-500 whitespace-nowrap">{doneSet.size}/{QUESTIONS.length} 题</span>
         {streak > 0 && (
@@ -64,10 +64,10 @@ export default function PracticePage() {
           { name: '资料', done: 1, total: 1, color: 'bg-emerald-400/100' },
           { name: '常识', done: 0, total: 1, color: 'bg-rose-400/100' },
         ].map(m => (
-          <div key={m.name} className="p-2 rounded-lg border border-[rgba(255,255,255,0.06)]/50 text-center card-hover">
+          <div key={m.name} className="p-2 rounded-none border border-[rgba(255,255,255,0.06)]/50 text-center card-hover">
             <div className="text-xs font-medium mb-1">{m.name}</div>
-            <div className="h-1.5 rounded-full bg-white/[0.04] overflow-hidden mb-1">
-              <div className={`h-full rounded-full ${m.color} animate-progress`} style={{ width: m.total > 0 ? `${(m.done / m.total) * 100}%` : '0%' }} />
+            <div className="h-1.5 rounded-none bg-zinc-900 overflow-hidden mb-1">
+              <div className={`h-full rounded-none ${m.color} animate-progress`} style={{ width: m.total > 0 ? `${(m.done / m.total) * 100}%` : '0%' }} />
             </div>
             <div className="text-[9px] text-zinc-500">{m.done}/{m.total}</div>
           </div>
@@ -77,7 +77,7 @@ export default function PracticePage() {
       {/* 题目卡片 */}
       <div className="topo-card p-6 animate-fade-up delay-100">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{q.module}</span>
+          <span className="text-[10px] px-2 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{q.module}</span>
           <span className="text-xs text-zinc-500">第 {idx + 1} 题</span>
         </div>
         <h2 className="text-base font-semibold mb-6 leading-relaxed">{q.stem}</h2>
@@ -91,7 +91,7 @@ export default function PracticePage() {
                 key={opt}
                 onClick={() => handleSelect(opt)}
                 disabled={showAnswer}
-                className={`w-full text-left p-4 rounded-xl border transition-all duration-300 ${
+                className={`w-full text-left p-4 rounded-none border transition-all duration-300 ${
                   showAnswer
                     ? isAns ? 'border-emerald-400 bg-emerald-400/10' : isSelected ? 'border-rose-400 bg-rose-400/10' : 'border-[rgba(255,255,255,0.06)] opacity-50'
                     : isSelected ? 'border-[#b4ff39] bg-[#b4ff39]/5' : 'border-[rgba(255,255,255,0.06)] card-hover'
@@ -110,7 +110,7 @@ export default function PracticePage() {
 
         {/* 解析 */}
         {showAnswer && (
-          <div className={`mt-5 p-4 rounded-xl animate-fade-in ${isCorrect ? 'bg-emerald-400/10 border border-emerald-400/10' : 'bg-rose-400/10 border border-rose-400/10'}`}>
+          <div className={`mt-5 p-4 rounded-none animate-fade-in ${isCorrect ? 'bg-emerald-400/10 border border-emerald-400/10' : 'bg-rose-400/10 border border-rose-400/10'}`}>
             <div className="flex items-center gap-2 mb-2">
               {isCorrect ? <CheckCircle2 className="w-4 h-4 text-emerald-400" /> : <XCircle className="w-4 h-4 text-rose-400" />}
               <span className={`text-sm font-semibold ${isCorrect ? 'text-emerald-800' : 'text-rose-800'}`}>

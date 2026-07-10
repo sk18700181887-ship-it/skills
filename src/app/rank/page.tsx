@@ -10,18 +10,18 @@ export default function RankPage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Trophy className="w-6 h-6 text-[#b4ff39]" /> 排行榜 & 上岸榜
         </h1>
         <p className="text-sm text-zinc-500 mt-1">学习排名激励 + 上岸数据背书</p>
       </div>
 
       {/* Tab */}
-      <div className="flex gap-1 bg-white/[0.04] p-1 rounded-xl w-fit animate-fade-up delay-75">
-        <button onClick={() => setTab('study')} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${tab === 'study' ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
+      <div className="flex gap-1 bg-zinc-900 p-1 rounded-none w-fit animate-fade-up delay-75">
+        <button onClick={() => setTab('study')} className={`px-4 py-2 rounded-none text-xs font-medium transition-all duration-300 ${tab === 'study' ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
           <Flame className="w-3 h-3 inline mr-1" /> 学习榜
         </button>
-        <button onClick={() => setTab('success')} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${tab === 'success' ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
+        <button onClick={() => setTab('success')} className={`px-4 py-2 rounded-none text-xs font-medium transition-all duration-300 ${tab === 'success' ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
           <Medal className="w-3 h-3 inline mr-1" /> 上岸榜
         </button>
       </div>
@@ -29,7 +29,7 @@ export default function RankPage() {
       {/* 学习榜 */}
       {tab === 'study' && (
         <div className="topo-card p-0 overflow-hidden animate-fade-up delay-100">
-          <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-white/[0.03] text-[10px] font-medium text-zinc-500">
+          <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-zinc-900 text-[10px] font-medium text-zinc-500">
             <div className="col-span-1">排名</div>
             <div className="col-span-3">考生</div>
             <div className="col-span-3">学校</div>
@@ -45,7 +45,7 @@ export default function RankPage() {
             >
               <div className="col-span-1">
                 {i < 3 ? (
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-white ${
+                  <div className={`w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-bold text-white ${
                     i === 0 ? 'bg-amber-400/100' : i === 1 ? 'bg-slate-400' : 'bg-amber-700'
                   }`}>
                     {i + 1}
@@ -72,7 +72,7 @@ export default function RankPage() {
       {/* 上岸榜 */}
       {tab === 'success' && (
         <div className="topo-card p-0 overflow-hidden animate-fade-up delay-100">
-          <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-white/[0.03] text-[10px] font-medium text-zinc-500">
+          <div className="grid grid-cols-12 gap-2 px-4 py-3 bg-zinc-900 text-[10px] font-medium text-zinc-500">
             <div className="col-span-1">#</div>
             <div className="col-span-2">考生</div>
             <div className="col-span-4">上岸岗位</div>
@@ -85,7 +85,7 @@ export default function RankPage() {
               style={{animationDelay: `${i*0.03}s`}}
             >
               <div className="col-span-1">
-                <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-emerald-400/100 text-white">
+                <div className="w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-bold bg-emerald-400/100 text-white">
                   {i + 1}
                 </div>
               </div>

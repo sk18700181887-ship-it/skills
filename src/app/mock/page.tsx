@@ -12,16 +12,16 @@ export default function MockPage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Timer className="w-6 h-6 text-[#b4ff39]" /> 模考中心
         </h1>
         <p className="text-sm text-zinc-500 mt-1">全国模考 + 成绩预测 + 上岸概率分析</p>
       </div>
 
       {/* Tab */}
-      <div className="flex gap-1 bg-white/[0.04] p-1 rounded-xl w-fit animate-fade-up delay-75">
+      <div className="flex gap-1 bg-zinc-900 p-1 rounded-none w-fit animate-fade-up delay-75">
         {(['schedule', 'results', 'predict'] as const).map(t => (
-          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-lg text-xs font-medium transition-all duration-300 ${tab === t ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-none text-xs font-medium transition-all duration-300 ${tab === t ? 'bg-white shadow text-white' : 'text-zinc-500'}`}>
             {t === 'schedule' ? '模考排期' : t === 'results' ? '历史成绩' : 'AI 预测'}
           </button>
         ))}
@@ -33,7 +33,7 @@ export default function MockPage() {
           {MOCK_PAPERS.map((exam, i) => (
             <div key={i} className="topo-card p-5 card-hover animate-slide-up" style={{animationDelay: `${i*0.08}s`}}>
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{exam.tag}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{exam.tag}</span>
                 <span className="text-[10px] text-zinc-500">{exam.date}</span>
               </div>
               <h3 className="font-semibold text-sm mb-2">{exam.name}</h3>
@@ -115,8 +115,8 @@ export default function MockPage() {
                 </div>
               </div>
               <div className="mt-3">
-                <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
-                  <div className="h-full bg-primary rounded-full transition-all duration-700" style={{width: `${r.score}%`}} />
+                <div className="h-2 rounded-none bg-zinc-900 overflow-hidden">
+                  <div className="h-full bg-primary rounded-none transition-all duration-700" style={{width: `${r.score}%`}} />
                 </div>
               </div>
               <div className="flex items-center gap-2 mt-3 pt-3 border-t">
@@ -174,8 +174,8 @@ export default function MockPage() {
                       <span className="text-zinc-500">{item.label}</span>
                       <span className="font-semibold">{item.value}%</span>
                     </div>
-                    <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden">
-                      <div className={`h-full rounded-full ${item.color} animate-progress`} style={{ width: `${item.value}%` }} />
+                    <div className="h-2 rounded-none bg-zinc-900 overflow-hidden">
+                      <div className={`h-full rounded-none ${item.color} animate-progress`} style={{ width: `${item.value}%` }} />
                     </div>
                   </div>
                 ))}

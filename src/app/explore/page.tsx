@@ -45,7 +45,7 @@ export default function ExplorePage() {
     <div className="hero-reveal space-y-8 max-w-6xl">
       {/* 页面头部 */}
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Compass className="w-6 h-6 text-[#b4ff39]" /> 了解考公
         </h1>
         <p className="text-sm text-zinc-500 mt-2">6 类公职考试全景对比 + AI 考公百科，帮你找到最适合的路</p>
@@ -54,11 +54,11 @@ export default function ExplorePage() {
       {/* AI 考公百科 */}
       <div className="topo-card p-6 animate-fade-up delay-75">
         <div className="flex items-center gap-3 mb-4">
-          <div className="w-9 h-9 rounded-lg bg-[#b4ff39]/10 flex items-center justify-center animate-pulse-glow">
+          <div className="w-9 h-9 rounded-none bg-[#b4ff39]/10 flex items-center justify-center animate-pulse-glow">
             <Sparkles className="w-4 h-4 text-[#b4ff39]" />
           </div>
           <h2 className="font-semibold text-lg">AI 考公百科</h2>
-          <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">免费</span>
+          <span className="text-[10px] px-2.5 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium">免费</span>
         </div>
         <div className="flex gap-2">
           <Input
@@ -73,7 +73,7 @@ export default function ExplorePage() {
           </Button>
         </div>
         {aiAnswer && (
-          <div className="mt-4 p-4 rounded-xl bg-[#b4ff39]/5 border border-[#b4ff39]/10 animate-fade-up">
+          <div className="mt-4 p-4 rounded-none bg-[#b4ff39]/5 border border-[#b4ff39]/10 animate-fade-up">
             <div className="flex items-start gap-2">
               <Sparkles className="w-4 h-4 text-[#b4ff39] mt-0.5 shrink-0" />
               <p className="text-sm leading-relaxed text-zinc-300">{aiAnswer}<span className={typing ? 'typing-caret' : ''} /></p>
@@ -89,7 +89,7 @@ export default function ExplorePage() {
           {EXAM_TYPES.map((exam, i) => (
             <div key={exam.name} className={`topo-card p-5 card-hover animate-scale-in`} style={{animationDelay:`${(i+1)*75}ms`}}>
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center ${exam.accent}`}>
+                <div className={`w-10 h-10 rounded-none bg-white/5 flex items-center justify-center ${exam.accent}`}>
                   <exam.icon className="w-5 h-5" />
                 </div>
                 <div>
@@ -98,19 +98,19 @@ export default function ExplorePage() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                <div className="p-2.5 rounded-none bg-zinc-900">
                   <span className="text-zinc-500">薪资范围</span>
                   <p className="font-semibold mt-0.5 text-zinc-200">{exam.salary}</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                <div className="p-2.5 rounded-none bg-zinc-900">
                   <span className="text-zinc-500">竞争比</span>
                   <p className="font-semibold mt-0.5 text-zinc-200">{exam.ratio}</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                <div className="p-2.5 rounded-none bg-zinc-900">
                   <span className="text-zinc-500">难度</span>
                   <p className="font-semibold mt-0.5 text-zinc-200">{exam.difficulty}</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-white/[0.03]">
+                <div className="p-2.5 rounded-none bg-zinc-900">
                   <span className="text-zinc-500">笔试时间</span>
                   <p className="font-semibold mt-0.5 text-zinc-200">{exam.period}</p>
                 </div>
@@ -131,7 +131,7 @@ export default function ExplorePage() {
               onClick={() => setFaqOpen(faqOpen === i ? null : i)}
             >
               <div className="p-4 flex items-center gap-3">
-                <span className="w-6 h-6 rounded-full bg-[#b4ff39]/10 flex items-center justify-center text-xs font-bold text-[#b4ff39] shrink-0">Q</span>
+                <span className="w-6 h-6 rounded-none bg-[#b4ff39]/10 flex items-center justify-center text-xs font-bold text-[#b4ff39] shrink-0">Q</span>
                 <span className="text-sm font-medium flex-1">{f.q}</span>
                 <ChevronRight className={`w-4 h-4 text-zinc-500 transition-transform duration-300 ${faqOpen === i ? 'rotate-90' : ''}`} />
               </div>

@@ -60,13 +60,13 @@ export default function MapPage() {
       </div>
 
       {/* Tab 切换 */}
-      <div className="flex gap-1 p-1 bg-white/[0.03] rounded-xl animate-fade-up delay-100">
+      <div className="flex gap-1 p-1 bg-zinc-900 rounded-none animate-fade-up delay-100">
         {views.map(v => (
           <button
             key={v.key}
             onClick={() => setActiveView(v.key)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all flex-1 ${
-              activeView === v.key ? 'bg-card shadow-sm text-[#b4ff39]' : 'text-zinc-500 hover:text-white'
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-none text-sm font-medium transition-all flex-1 ${
+              activeView === v.key ? 'bg-card  text-[#b4ff39]' : 'text-zinc-500 hover:text-white'
             }`}
           >
             <v.icon className="w-4 h-4" />
@@ -100,16 +100,16 @@ export default function MapPage() {
             <div className="flex gap-1.5 flex-wrap">
               <button
                 onClick={() => setDiffFilter('all')}
-                className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-                  diffFilter === 'all' ? 'bg-[#b4ff39] text-black' : 'bg-white/[0.04] text-zinc-500 hover:bg-muted/80'
+                className={`text-xs px-3 py-1.5 rounded-none transition-colors ${
+                  diffFilter === 'all' ? 'bg-[#b4ff39] text-black' : 'bg-zinc-900 text-zinc-500 hover:bg-muted/80'
                 }`}
               >全部</button>
               {DIFFICULTY_SCALE.map(d => (
                 <button
                   key={d.level}
                   onClick={() => setDiffFilter(d.level)}
-                  className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-                    diffFilter === d.level ? `${diffBgMap[d.level]} ${diffTextMap[d.level]} font-medium border ${diffColorMap[d.level]}/20` : 'bg-white/[0.04] text-zinc-500 hover:bg-muted/80'
+                  className={`text-xs px-3 py-1.5 rounded-none transition-colors ${
+                    diffFilter === d.level ? `${diffBgMap[d.level]} ${diffTextMap[d.level]} font-medium border ${diffColorMap[d.level]}/20` : 'bg-zinc-900 text-zinc-500 hover:bg-muted/80'
                   }`}
                 >{d.level}</button>
               ))}
@@ -120,7 +120,7 @@ export default function MapPage() {
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="搜索省份"
-                className="pl-9 pr-3 py-1.5 text-xs rounded-lg border bg-transparent focus:outline-none focus:ring-1 focus:ring-[#b4ff39]/30 w-32"
+                className="pl-9 pr-3 py-1.5 text-xs rounded-none border bg-transparent focus:outline-none focus:ring-1 focus:ring-[#b4ff39]/30 w-32"
               />
             </div>
           </div>
@@ -131,19 +131,19 @@ export default function MapPage() {
               <button
                 key={p.id}
                 onClick={() => setSelectedProvince(p.id)}
-                className={`relative p-3 rounded-xl border-2 transition-all card-hover text-center animate-scale-in ${
+                className={`relative p-3 rounded-none border-2 transition-all card-hover text-center animate-scale-in ${
                   selectedProvince === p.id
-                    ? 'border-[#b4ff39] shadow-md ring-2 ring-[#b4ff39]/20'
+                    ? 'border-[#b4ff39]  ring-2 ring-[#b4ff39]/20'
                     : 'border-transparent hover:border-[rgba(255,255,255,0.06)]'
                 }`}
                 style={{ animationDelay: `${i * 30}ms` }}
               >
-                <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-full ${diffColorMap[p.difficulty]}`} />
+                <div className={`absolute top-2 right-2 w-2.5 h-2.5 rounded-none ${diffColorMap[p.difficulty]}`} />
                 <div className="text-lg font-serif font-bold mb-0.5">{p.short}</div>
                 <div className="text-[10px] text-zinc-500 truncate">{p.name}</div>
-                <div className="mt-1.5 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
+                <div className="mt-1.5 h-1.5 rounded-none bg-zinc-900 overflow-hidden">
                   <div
-                    className={`h-full rounded-full ${diffColorMap[p.difficulty]} animate-progress`}
+                    className={`h-full rounded-none ${diffColorMap[p.difficulty]} animate-progress`}
                     style={{ width: `${Math.min(100, p.avgRatio * 1.3)}%` }}
                   />
                 </div>
@@ -156,13 +156,13 @@ export default function MapPage() {
           {selectedData && (
             <div className="topo-card p-5 animate-fade-up">
               <div className="flex items-center gap-3 mb-4">
-                <div className={`w-12 h-12 rounded-xl ${diffBgMap[selectedData.difficulty]} flex items-center justify-center`}>
+                <div className={`w-12 h-12 rounded-none ${diffBgMap[selectedData.difficulty]} flex items-center justify-center`}>
                   <span className="text-xl font-serif font-bold">{selectedData.short}</span>
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">{selectedData.name}</h3>
                   <div className="flex items-center gap-2 mt-0.5">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${diffBgMap[selectedData.difficulty]} ${diffTextMap[selectedData.difficulty]} font-medium`}>
+                    <span className={`text-xs px-2 py-0.5 rounded-none ${diffBgMap[selectedData.difficulty]} ${diffTextMap[selectedData.difficulty]} font-medium`}>
                       {selectedData.difficulty}
                     </span>
                     <span className="text-xs text-zinc-500">平均竞争比 {selectedData.avgRatio}:1</span>
@@ -170,15 +170,15 @@ export default function MapPage() {
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="text-center p-3 rounded-xl bg-muted/30">
+                <div className="text-center p-3 rounded-none bg-muted/30">
                   <div className="text-2xl font-bold font-serif text-[#b4ff39]">{selectedData.posts.toLocaleString()}</div>
                   <div className="text-[10px] text-zinc-500 mt-1">招录岗位</div>
                 </div>
-                <div className="text-center p-3 rounded-xl bg-muted/30">
+                <div className="text-center p-3 rounded-none bg-muted/30">
                   <div className="text-2xl font-bold font-serif">{selectedData.avgRatio}:1</div>
                   <div className="text-[10px] text-zinc-500 mt-1">平均竞争比</div>
                 </div>
-                <div className="text-center p-3 rounded-xl bg-muted/30">
+                <div className="text-center p-3 rounded-none bg-muted/30">
                   <div className="text-sm font-bold font-serif">{selectedData.salary}</div>
                   <div className="text-[10px] text-zinc-500 mt-1">薪资范围</div>
                 </div>
@@ -187,7 +187,7 @@ export default function MapPage() {
                 <div className="text-xs font-medium text-zinc-500 mb-2">热门城市</div>
                 <div className="flex gap-2 flex-wrap">
                   {selectedData.hotCities.map(c => (
-                    <span key={c} className="text-xs px-3 py-1 rounded-full bg-[#b4ff39]/8 text-[#b4ff39]">
+                    <span key={c} className="text-xs px-3 py-1 rounded-none bg-[#b4ff39]/8 text-[#b4ff39]">
                       {c}
                     </span>
                   ))}
@@ -196,13 +196,13 @@ export default function MapPage() {
               {/* 竞争比柱状图 */}
               <div className="mt-4">
                 <div className="text-xs font-medium text-zinc-500 mb-2">竞争比可视化</div>
-                <div className="h-4 rounded-full bg-white/[0.04] overflow-hidden relative">
+                <div className="h-4 rounded-none bg-zinc-900 overflow-hidden relative">
                   <div
-                    className={`h-full rounded-full ${diffColorMap[selectedData.difficulty]} animate-progress transition-all`}
+                    className={`h-full rounded-none ${diffColorMap[selectedData.difficulty]} animate-progress transition-all`}
                     style={{ width: `${Math.min(100, selectedData.avgRatio * 1.3)}%` }}
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-[10px] font-bold text-white drop-shadow-sm">{selectedData.avgRatio}:1</span>
+                    <span className="text-[10px] font-bold text-white drop-">{selectedData.avgRatio}:1</span>
                   </div>
                 </div>
                 <div className="flex justify-between text-[9px] text-zinc-500 mt-1">
@@ -223,17 +223,17 @@ export default function MapPage() {
             <div className="hero-reveal space-y-2">
               {[...PROVINCE_DATA].sort((a, b) => b.avgRatio - a.avgRatio).slice(0, 10).map((p, i) => (
                 <div key={p.id} className="flex items-center gap-3">
-                  <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                    i < 3 ? 'bg-red-100 text-red-400' : 'bg-white/[0.04] text-zinc-500'
+                  <span className={`w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-bold ${
+                    i < 3 ? 'bg-red-100 text-red-400' : 'bg-zinc-900 text-zinc-500'
                   }`}>{i + 1}</span>
                   <span className="text-sm w-16 shrink-0">{p.name}</span>
-                  <div className="flex-1 h-5 rounded-full bg-white/[0.04] overflow-hidden relative">
+                  <div className="flex-1 h-5 rounded-none bg-zinc-900 overflow-hidden relative">
                     <div
-                      className={`h-full rounded-full ${diffColorMap[p.difficulty]} animate-progress transition-all`}
+                      className={`h-full rounded-none ${diffColorMap[p.difficulty]} animate-progress transition-all`}
                       style={{ width: `${Math.min(100, p.avgRatio * 1.3)}%` }}
                     />
                     <div className="absolute inset-0 flex items-center pl-2">
-                      <span className="text-[10px] font-bold text-white drop-shadow-sm">{p.avgRatio}:1</span>
+                      <span className="text-[10px] font-bold text-white drop-">{p.avgRatio}:1</span>
                     </div>
                   </div>
                   <span className="text-xs text-zinc-500 w-20 text-right">{p.posts} 岗</span>
@@ -251,7 +251,7 @@ export default function MapPage() {
             <div className="flex items-center gap-2 mb-2">
               <Building2 className="w-4 h-4 text-[#b4ff39]" />
               <h3 className="font-semibold">山东省地市难度分布</h3>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] ml-auto">示例省份</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] ml-auto">示例省份</span>
             </div>
             <p className="text-xs text-zinc-500">点击各省概览页的省份卡片，可查看该省地市详情（当前以山东省为示例）</p>
           </div>
@@ -262,13 +262,13 @@ export default function MapPage() {
               <div key={c.city} className={`topo-card p-4 card-hover border-l-4 animate-scale-in`} style={{ borderLeftColor: diffColorMap[c.difficulty].replace('bg-', '#'), animationDelay: `${i * 40}ms` }}>
                 <div className="flex items-center justify-between mb-2">
                   <h4 className="font-semibold text-sm">{c.city}</h4>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full ${diffBgMap[c.difficulty]} ${diffTextMap[c.difficulty]} font-medium`}>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-none ${diffBgMap[c.difficulty]} ${diffTextMap[c.difficulty]} font-medium`}>
                     {c.difficulty}
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-white/[0.04] overflow-hidden mb-2">
+                <div className="h-2 rounded-none bg-zinc-900 overflow-hidden mb-2">
                   <div
-                    className={`h-full rounded-full ${diffColorMap[c.difficulty]} animate-progress`}
+                    className={`h-full rounded-none ${diffColorMap[c.difficulty]} animate-progress`}
                     style={{ width: `${Math.min(100, c.ratio * 1.2)}%` }}
                   />
                 </div>
@@ -321,7 +321,7 @@ export default function MapPage() {
                     <div className="flex items-center gap-2">
                       <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: p.color }} />
                       <span className="text-sm">{p.type}</span>
-                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${diffBgMap[p.difficulty as DiffLevel] || 'bg-muted'} ${diffTextMap[p.difficulty as DiffLevel] || 'text-zinc-500'}`}>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-none ${diffBgMap[p.difficulty as DiffLevel] || 'bg-muted'} ${diffTextMap[p.difficulty as DiffLevel] || 'text-zinc-500'}`}>
                         {p.difficulty}
                       </span>
                     </div>
@@ -330,13 +330,13 @@ export default function MapPage() {
                       <span className="text-[10px] text-zinc-500 ml-1">({p.ratio}%)</span>
                     </div>
                   </div>
-                  <div className="h-6 rounded-lg bg-white/[0.03] overflow-hidden relative">
+                  <div className="h-6 rounded-none bg-zinc-900 overflow-hidden relative">
                     <div
-                      className="h-full rounded-lg animate-progress transition-all"
+                      className="h-full rounded-none animate-progress transition-all"
                       style={{ width: `${p.ratio * 4}%`, backgroundColor: p.color }}
                     />
                     <div className="absolute inset-0 flex items-center pl-3">
-                      <span className="text-[10px] font-bold text-white drop-shadow-sm">{p.ratio}%</span>
+                      <span className="text-[10px] font-bold text-white drop-">{p.ratio}%</span>
                     </div>
                   </div>
                 </div>
@@ -402,14 +402,14 @@ export default function MapPage() {
 
             <div className="hero-reveal space-y-3">
               {[...GUOKAO_SYSTEMS].sort((a, b) => b.ratio - a.ratio).map((s, i) => (
-                <div key={s.name} className="p-4 rounded-xl border border-[rgba(255,255,255,0.06)]/50 card-hover animate-slide-right" style={{ animationDelay: `${i * 50}ms` }}>
+                <div key={s.name} className="p-4 rounded-none border border-[rgba(255,255,255,0.06)]/50 card-hover animate-slide-right" style={{ animationDelay: `${i * 50}ms` }}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                        i < 3 ? 'bg-red-100 text-red-400' : 'bg-white/[0.04] text-zinc-500'
+                      <span className={`w-6 h-6 rounded-none flex items-center justify-center text-[10px] font-bold ${
+                        i < 3 ? 'bg-red-100 text-red-400' : 'bg-zinc-900 text-zinc-500'
                       }`}>{i + 1}</span>
                       <h4 className="font-semibold text-sm">{s.name}</h4>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full ${diffBgMap[s.difficulty]} ${diffTextMap[s.difficulty]} font-medium`}>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-none ${diffBgMap[s.difficulty]} ${diffTextMap[s.difficulty]} font-medium`}>
                         {s.difficulty}
                       </span>
                     </div>
@@ -421,9 +421,9 @@ export default function MapPage() {
                         <span>竞争比</span>
                         <span>{s.ratio}:1</span>
                       </div>
-                      <div className="h-3 rounded-full bg-white/[0.04] overflow-hidden">
+                      <div className="h-3 rounded-none bg-zinc-900 overflow-hidden">
                         <div
-                          className={`h-full rounded-full ${diffColorMap[s.difficulty]} animate-progress`}
+                          className={`h-full rounded-none ${diffColorMap[s.difficulty]} animate-progress`}
                           style={{ width: `${Math.min(100, s.ratio * 1.2)}%` }}
                         />
                       </div>

@@ -17,7 +17,7 @@ export default function ApplyPage() {
   return (
     <div className="hero-reveal space-y-8 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <ClipboardList className="w-6 h-6 text-[#b4ff39]" /> 报名决策
         </h1>
         <p className="text-sm text-zinc-500 mt-2">AI 冲稳保组合推荐 + 竞争比预测，帮你科学填报</p>
@@ -29,13 +29,13 @@ export default function ApplyPage() {
           <div
             key={s.type}
             className={`topo-card p-5 cursor-pointer transition-all duration-300 ${
-              selected.includes(s.type) ? 'ring-2 ring-[#b4ff39] shadow-lg shadow-[#b4ff39]/5 scale-[1.02]' : 'card-hover'
+              selected.includes(s.type) ? 'ring-2 ring-[#b4ff39]  shadow-[#b4ff39]/5 scale-[1.02]' : 'card-hover'
             } animate-scale-in`}
             style={{animationDelay:`${(i+1)*75}ms`}}
             onClick={() => toggle(s.type)}
           >
             <div className="flex items-center justify-between mb-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+              <div className={`w-10 h-10 rounded-none flex items-center justify-center ${
                 s.type === '冲' ? 'bg-rose-400/10 text-rose-400' :
                 s.type === '稳' ? 'bg-amber-400/10 text-amber-400' :
                 'bg-emerald-400/10 text-emerald-400'
@@ -45,14 +45,14 @@ export default function ApplyPage() {
                  <Shield className="w-5 h-5" />}
               </div>
               {selected.includes(s.type) && (
-                <div className="w-5 h-5 rounded-full bg-[#b4ff39] text-black flex items-center justify-center animate-scale-in">
+                <div className="w-5 h-5 rounded-none bg-[#b4ff39] text-black flex items-center justify-center animate-scale-in">
                   <CheckCircle2 className="w-3 h-3" />
                 </div>
               )}
             </div>
             <h3 className="font-bold text-lg mb-1">{s.type}·{s.color === 'err' ? '冲刺' : s.color === 'warn' ? '稳妥' : '保底'}</h3>
             <p className="text-xs text-zinc-500 leading-relaxed mb-3">{s.desc}</p>
-            <div className="p-2 rounded-lg bg-white/[0.03]">
+            <div className="p-2 rounded-none bg-zinc-900">
               <p className="text-[10px] text-[#b4ff39] font-medium">💡 {s.tip}</p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function ApplyPage() {
         <p className="text-sm text-zinc-500 mb-4">选择你需要的策略组合，AI 将生成最优报名方案</p>
         <div className="flex items-center gap-2 flex-wrap mb-4">
           {selected.map(s => (
-            <span key={s} className="px-3 py-1 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] text-sm font-medium flex items-center gap-1 animate-scale-in">
+            <span key={s} className="px-3 py-1 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] text-sm font-medium flex items-center gap-1 animate-scale-in">
               {s}策略
               <X className="w-3 h-3 cursor-pointer" onClick={() => toggle(s)} />
             </span>
@@ -95,7 +95,7 @@ export default function ApplyPage() {
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold ${
+                    <span className={`text-[10px] px-2 py-0.5 rounded-none font-bold ${
                       job.type === '冲' ? 'bg-rose-400/10 text-rose-400' :
                       job.type === '稳' ? 'bg-amber-400/10 text-amber-400' :
                       'bg-emerald-400/10 text-emerald-400'

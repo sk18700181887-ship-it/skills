@@ -35,12 +35,12 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 2px;
+  --radius-xl: 4px;
+  --radius-2xl: 6px;
+  --radius-3xl: 8px;
   --font-sans:
     'Inter', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', ui-sans-serif,
     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
@@ -53,25 +53,25 @@
     'Times New Roman', Times, serif;
 }
 
-/* 上岸引擎 · Topology Dark Design Tokens
- * 深邃暗色 + 石灰绿强调 + 大字排版 + 极简边框
- * 灵感来源：topology.vc — edge-venture aesthetic
- */
+/* ============================================================
+ * 上岸引擎 · Topology.vc Style — Pure Dark + Dramatic Typography
+ * 极致暗色 + 衬线大标题 + 编号段落 + Chip数据 + 无圆角
+ * ============================================================ */
 :root {
-  --radius: 0.625rem;
-  --background: #09090b;
+  --radius: 0px;
+  --background: #000000;
   --foreground: #fafafa;
-  --card: #0f0f12;
+  --card: #0a0a0a;
   --card-foreground: #fafafa;
-  --popover: #0f0f12;
+  --popover: #0a0a0a;
   --popover-foreground: #fafafa;
   --primary: #b4ff39;
-  --primary-foreground: #09090b;
-  --secondary: #1a1a1f;
+  --primary-foreground: #000000;
+  --secondary: #111111;
   --secondary-foreground: #a1a1aa;
-  --muted: #18181b;
-  --muted-foreground: #71717a;
-  --accent: #1e1e23;
+  --muted: #111111;
+  --muted-foreground: #52525b;
+  --accent: #141414;
   --accent-foreground: #e4e4e7;
   --destructive: #ef4444;
   --border: rgba(255, 255, 255, 0.08);
@@ -82,28 +82,20 @@
   --chart-3: #a78bfa;
   --chart-4: #f59e0b;
   --chart-5: #fb7185;
-  --sidebar: #0b0b0e;
-  --sidebar-foreground: #a1a1aa;
+  --sidebar: #000000;
+  --sidebar-foreground: #71717a;
   --sidebar-primary: #b4ff39;
-  --sidebar-primary-foreground: #09090b;
-  --sidebar-accent: #1a1a1f;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #111111;
   --sidebar-accent-foreground: #fafafa;
   --sidebar-border: rgba(255, 255, 255, 0.06);
   --sidebar-ring: #b4ff39;
-  /* 语义色 */
   --ok: #22c55e;
   --warn: #f59e0b;
   --err: #ef4444;
   --vip: #f59e0b;
-  /* 拓扑强调色 */
   --accent-lime: #b4ff39;
-  --accent-lime-dim: rgba(180, 255, 57, 0.15);
-  --accent-cyan: #22d3ee;
-  --surface-0: #09090b;
-  --surface-1: #0f0f12;
-  --surface-2: #18181b;
-  --surface-3: #1e1e23;
-  --surface-4: #27272a;
+  --accent-lime-dim: rgba(180, 255, 57, 0.12);
 }
 
 @layer base {
@@ -122,7 +114,97 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ============ VIP 徽章 ============ */
+/* ============ Typography — topology style ============ */
+
+/* 编号标记 01. 02. */
+.sec-num {
+  font-size: 12px;
+  font-weight: 400;
+  color: #52525b;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 衬线大标题 — Hero */
+.heading-serif {
+  font-family: var(--font-serif);
+  font-size: clamp(36px, 5.5vw, 64px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: #fafafa;
+}
+
+/* 页面标题 — section heading */
+.heading-section {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: #fafafa;
+}
+
+/* ============ Card — 无圆角 + 超细边框 ============ */
+.topo-card {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  transition: border-color 0.2s ease;
+}
+.topo-card:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ============ Chip — topology data chip ============ */
+.topo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  background: #0a0a0a;
+  color: #a1a1aa;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+  cursor: default;
+  white-space: nowrap;
+}
+.topo-chip:hover {
+  border-color: rgba(180, 255, 57, 0.3);
+  color: #fafafa;
+  background: #111111;
+}
+.topo-chip-lime {
+  border-color: rgba(180, 255, 57, 0.25);
+  color: #b4ff39;
+  background: rgba(180, 255, 57, 0.06);
+}
+.topo-chip-lime:hover {
+  border-color: rgba(180, 255, 57, 0.5);
+  background: rgba(180, 255, 57, 0.1);
+}
+
+/* ============ Tab — underline style ============ */
+.topo-tab {
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 400;
+  color: #52525b;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+.topo-tab:hover { color: #a1a1aa; }
+.topo-tab.active {
+  color: #fafafa;
+  border-bottom-color: #fafafa;
+}
+
+/* ============ VIP ============ */
 .vip-gradient {
   background: linear-gradient(135deg, #1a1500 0%, #3d2e00 45%, #6b4a00 100%);
 }
@@ -135,87 +217,63 @@ body {
 .brand-gradient {
   background: linear-gradient(135deg, #b4ff39 0%, #22d3ee 100%);
 }
-
-/* 章印 Stamp → 改为暗色石灰绿印章 */
 .stamp {
   background: #b4ff39;
-  color: #09090b;
-  border-radius: 6px;
+  color: #000;
+  border-radius: 2px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  font-size: 13px;
-  padding: 3px 7px;
+  font-size: 11px;
+  padding: 2px 6px;
 }
 
-/* ============ 拓扑风格全局 ============ */
-
-/* 编号标记 topology-style */
-.section-number {
-  font-size: 12px;
+/* ============ Badge ============ */
+.lime-badge {
+  background: rgba(180, 255, 57, 0.08);
+  color: #b4ff39;
+  font-size: 11px;
   font-weight: 500;
-  color: var(--accent-lime);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  border: 1px solid rgba(180, 255, 57, 0.15);
 }
 
-/* 大标题 */
-.heading-xl {
-  font-size: clamp(32px, 5vw, 56px);
+/* ============ Stat Number ============ */
+.stat-value {
+  font-family: var(--font-serif);
+  font-size: 32px;
   font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: #fafafa;
-}
-.heading-lg {
-  font-size: clamp(24px, 3.5vw, 40px);
-  font-weight: 700;
-  line-height: 1.1;
   letter-spacing: -0.02em;
+  line-height: 1;
   color: #fafafa;
-}
-.heading-md {
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
-  color: #fafafa;
+  font-variant-numeric: tabular-nums;
 }
 
-/* 分割线 */
+/* ============ Divider ============ */
 .divider {
   height: 1px;
   background: rgba(255, 255, 255, 0.06);
 }
 
-/* 微光动画 → 改为石灰绿 */
+/* ============ Scrolling ============ */
+.thin-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 0; }
+.thin-scroll::-webkit-scrollbar-track { background: transparent; }
+
+/* ============ Animations ============ */
+
 @keyframes shimmer {
   0% { background-position: -400px 0; }
   100% { background-position: 400px 0; }
 }
 .shimmer {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(180, 255, 57, 0.06) 40%,
-    rgba(180, 255, 57, 0.12) 50%,
-    rgba(180, 255, 57, 0.06) 60%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 40%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 60%, transparent 100%);
   background-size: 400px 100%;
   animation: shimmer 2.4s infinite linear;
 }
 
-/* 滚动条 */
-.thin-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
-.thin-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 999px; }
-.thin-scroll::-webkit-scrollbar-track { background: transparent; }
-
-/* ============ 动效体系 ============ */
-
-/* 入场动画 */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn {
@@ -223,196 +281,97 @@ body {
   to { opacity: 1; }
 }
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.92); }
+  from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
 @keyframes slideRight {
-  from { opacity: 0; transform: translateX(-20px); }
+  from { opacity: 0; transform: translateX(-16px); }
   to { opacity: 1; transform: translateX(0); }
 }
 @keyframes countUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 持续动效 */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 255, 57, 0.25); }
-  50% { box-shadow: 0 0 16px 4px rgba(180, 255, 57, 0.1); }
-}
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-@keyframes rotate-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
+.animate-fade-up { animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fadeIn 0.4s ease-out both; }
+.animate-scale-in { animation: scaleIn 0.35s ease-out both; }
+.animate-slide-right { animation: slideRight 0.35s ease-out both; }
+.animate-count-up { animation: countUp 0.35s ease-out both; }
 
-/* 工具类 */
-.animate-fade-up { animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-fade-in { animation: fadeIn 0.5s ease-out both; }
-.animate-scale-in { animation: scaleIn 0.4s ease-out both; }
-.animate-slide-right { animation: slideRight 0.4s ease-out both; }
-.animate-count-up { animation: countUp 0.4s ease-out both; }
-.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
-.animate-float { animation: float 3s ease-in-out infinite; }
-
-/* 交错延迟 */
 .delay-75 { animation-delay: 75ms; }
 .delay-150 { animation-delay: 150ms; }
 .delay-200 { animation-delay: 200ms; }
 .delay-300 { animation-delay: 300ms; }
 .delay-400 { animation-delay: 400ms; }
 .delay-500 { animation-delay: 500ms; }
-.delay-700 { animation-delay: 700ms; }
 
-/* 卡片 hover → 暗色发光 */
+/* Card hover */
 .card-hover {
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: border-color 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px -8px rgba(180, 255, 57, 0.08);
-  border-color: rgba(180, 255, 57, 0.15);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* 按钮 press 效果 */
+/* Button press */
 .btn-press {
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  transition: transform 0.1s ease, opacity 0.1s ease;
 }
 .btn-press:active {
   transform: scale(0.97);
+  opacity: 0.9;
 }
 
-/* 进度条动画 */
+/* Progress bar */
 @keyframes progress-fill {
   from { width: 0; }
 }
-.animate-progress {
-  animation: progress-fill 1s ease-out both;
+.animate-progress { animation: progress-fill 0.8s ease-out both; }
+
+/* Number flip */
+@keyframes num-roll {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.num-roll {
+  display: inline-block;
+  animation: num-roll 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* 数字翻牌 */
-@keyframes flip-in {
-  0% { transform: rotateX(90deg); opacity: 0; }
-  100% { transform: rotateX(0); opacity: 1; }
-}
-.animate-flip { animation: flip-in 0.5s ease-out both; }
-
-/* AI 打字效果 */
+/* AI typing */
 @keyframes blink-caret {
-  0%, 100% { border-color: var(--primary); }
+  0%, 100% { border-color: #52525b; }
   50% { border-color: transparent; }
 }
 .typing-caret {
-  border-right: 2px solid var(--primary);
+  border-right: 2px solid #52525b;
   animation: blink-caret 0.8s step-end infinite;
 }
 
-/* 状态标签呼吸 */
+/* Breathe */
 @keyframes breathe {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  50% { opacity: 0.6; }
 }
 .animate-breathe { animation: breathe 2s ease-in-out infinite; }
 
-/* 渐变背景流动 */
-@keyframes gradient-flow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-flow 6s ease infinite;
-}
-
-/* 情绪陪伴动画 */
+/* Heart beat */
 @keyframes heart-beat {
   0%, 100% { transform: scale(1); }
   15% { transform: scale(1.15); }
   30% { transform: scale(1); }
   45% { transform: scale(1.1); }
 }
-.animate-heart-beat {
-  animation: heart-beat 1.5s ease-in-out infinite;
-}
+.animate-heart-beat { animation: heart-beat 1.5s ease-in-out infinite; }
 
-@keyframes gentle-bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-}
-.animate-gentle-bounce {
-  animation: gentle-bounce 2s ease-in-out infinite;
-}
-
-@keyframes sparkle {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1); }
-}
-.animate-sparkle {
-  animation: sparkle 1.5s ease-in-out infinite;
-}
-
-/* 心情选择按钮 hover 微弹 */
-.mood-btn {
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
-}
-.mood-btn:hover {
-  transform: scale(1.08);
-}
-.mood-btn:active {
-  transform: scale(0.96);
-}
-
-/* 日记卡片情感渐变边框 */
-.emotion-border {
-  position: relative;
-}
-.emotion-border::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(180,255,57,0.3), rgba(34,211,238,0.2), rgba(180,255,57,0.1));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* 柱状图升起动画 */
+/* Bar rise */
 @keyframes bar-rise {
   from { height: 0; }
 }
-.animate-bar-rise {
-  animation: bar-rise 0.6s ease-out both;
-}
+.animate-bar-rise { animation: bar-rise 0.6s ease-out both; }
 
-/* 雷达图刻度线 */
-.radar-grid {
-  position: relative;
-}
-.radar-grid::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  border: 1px dashed var(--border);
-}
-
-/* 脉冲圆点 */
-@keyframes ping-slow {
-  0% { transform: scale(1); opacity: 1; }
-  75%, 100% { transform: scale(2.2); opacity: 0; }
-}
-.animate-ping-slow {
-  animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-/* 趋势线动画 */
+/* Draw line */
 @keyframes draw-line {
   from { stroke-dashoffset: 1000; }
   to { stroke-dashoffset: 0; }
@@ -422,110 +381,28 @@ body {
   animation: draw-line 1.5s ease-out both;
 }
 
-/* ============ 拓扑风格新增 ============ */
+/* Ping slow */
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.8; }
+  75%, 100% { transform: scale(2); opacity: 0; }
+}
+.animate-ping-slow { animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite; }
 
-/* 石灰绿边框高亮 */
-.lime-border {
-  border: 1px solid rgba(180, 255, 57, 0.2);
+/* Pulse glow */
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(180, 255, 57, 0.15); }
+  50% { box-shadow: 0 0 12px 2px rgba(180, 255, 57, 0.06); }
 }
-.lime-border:hover {
-  border-color: rgba(180, 255, 57, 0.4);
-}
+.animate-pulse-glow { animation: pulse-glow 2.5s ease-in-out infinite; }
 
-/* 暗色标签页 */
-.topo-tab {
-  padding: 6px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #71717a;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
+/* Float */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
 }
-.topo-tab:hover {
-  color: #a1a1aa;
-}
-.topo-tab.active {
-  color: #b4ff39;
-  border-bottom-color: #b4ff39;
-}
+.animate-float { animation: float 3s ease-in-out infinite; }
 
-/* 暗色卡片 */
-.topo-card {
-  background: var(--surface-1);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
-  transition: border-color 0.25s ease, transform 0.25s ease;
-}
-.topo-card:hover {
-  border-color: rgba(180, 255, 57, 0.12);
-}
-
-/* 石灰绿 Badge */
-.lime-badge {
-  background: rgba(180, 255, 57, 0.12);
-  color: #b4ff39;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-/* 统计大数字 */
-.stat-value {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: #fafafa;
-}
-
-/* 背景点阵纹理 */
-.dot-grid {
-  background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* 发光强调线 */
-.glow-line {
-  height: 2px;
-  background: linear-gradient(90deg, #b4ff39, transparent);
-  box-shadow: 0 0 12px rgba(180, 255, 57, 0.3);
-}
-
-/* ============ 全局动态效果 ============ */
-
-/* 鼠标跟随光晕 */
-.mouse-glow {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(180,255,57,0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  transform: translate(-50%, -50%);
-  transition: left 0.3s ease-out, top 0.3s ease-out;
-}
-
-/* 渐变网格背景 */
-.grid-bg {
-  background-image:
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* 数字滚动动画 */
-@keyframes num-roll {
-  0% { transform: translateY(100%); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
-}
-.num-roll {
-  display: inline-block;
-  animation: num-roll 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* 光束扫过 */
+/* Beam sweep */
 @keyframes beam {
   0% { left: -100px; opacity: 0; }
   10%, 90% { opacity: 1; }
@@ -540,122 +417,132 @@ body {
   position: absolute;
   top: 0;
   left: -100px;
-  width: 100px;
+  width: 80px;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(180,255,57,0.08), transparent);
-  animation: beam 4s ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+  animation: beam 5s ease-in-out infinite;
 }
 
-/* 卡片入场 - 从下方弹入 */
+/* Card pop */
 @keyframes card-pop {
-  0% { opacity: 0; transform: translateY(32px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-.card-pop {
-  animation: card-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+.card-pop { animation: card-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-/* 卡片入场 - 从缩放弹入 */
-@keyframes card-zoom {
-  0% { opacity: 0; transform: scale(0.88); }
-  100% { opacity: 1; transform: scale(1); }
+/* Hero reveal */
+@keyframes hero-reveal {
+  0% { opacity: 0; transform: translateY(32px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
-.card-zoom {
-  animation: card-zoom 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
+.hero-reveal { animation: hero-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-/* 文字逐字出现 */
-@keyframes char-appear {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 标签页切换 */
+/* Tab slide */
 @keyframes tab-slide {
-  from { opacity: 0; transform: translateX(12px); }
+  from { opacity: 0; transform: translateX(8px); }
   to { opacity: 1; transform: translateX(0); }
 }
-.tab-slide {
-  animation: tab-slide 0.3s ease-out both;
-}
+.tab-slide { animation: tab-slide 0.25s ease-out both; }
 
-/* 脉冲圆点 - 强版 */
-@keyframes pulse-dot {
-  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0.4); }
-  70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(180,255,57,0); }
-  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0); }
-}
-.pulse-dot {
-  animation: pulse-dot 2s infinite;
-}
-
-/* 波纹扩散 */
-@keyframes ripple {
-  0% { transform: scale(0); opacity: 0.5; }
-  100% { transform: scale(4); opacity: 0; }
-}
-
-/* 悬浮光环 */
-@keyframes orbit {
-  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-  to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
-}
-
-/* 仪表盘指针转动 */
-@keyframes gauge-swing {
-  0% { transform: rotate(-90deg); }
-  100% { transform: rotate(var(--gauge-angle, 0deg)); }
-}
-.gauge-swing {
-  animation: gauge-swing 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-}
-
-/* 柱状图逐条升起 */
-.bar-stagger > * {
-  animation: bar-rise 0.5s ease-out both;
-}
-.bar-stagger > *:nth-child(1) { animation-delay: 0s; }
-.bar-stagger > *:nth-child(2) { animation-delay: 0.08s; }
-.bar-stagger > *:nth-child(3) { animation-delay: 0.16s; }
-.bar-stagger > *:nth-child(4) { animation-delay: 0.24s; }
-.bar-stagger > *:nth-child(5) { animation-delay: 0.32s; }
-.bar-stagger > *:nth-child(6) { animation-delay: 0.40s; }
-.bar-stagger > *:nth-child(7) { animation-delay: 0.48s; }
-.bar-stagger > *:nth-child(8) { animation-delay: 0.56s; }
-
-/* 交错入场 */
+/* Stagger children */
 .stagger > * {
-  animation: card-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  opacity: 0;
+  animation: card-pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 .stagger > *:nth-child(1) { animation-delay: 0ms; }
-.stagger > *:nth-child(2) { animation-delay: 80ms; }
-.stagger > *:nth-child(3) { animation-delay: 160ms; }
-.stagger > *:nth-child(4) { animation-delay: 240ms; }
-.stagger > *:nth-child(5) { animation-delay: 320ms; }
-.stagger > *:nth-child(6) { animation-delay: 400ms; }
-.stagger > *:nth-child(7) { animation-delay: 480ms; }
-.stagger > *:nth-child(8) { animation-delay: 560ms; }
+.stagger > *:nth-child(2) { animation-delay: 50ms; }
+.stagger > *:nth-child(3) { animation-delay: 100ms; }
+.stagger > *:nth-child(4) { animation-delay: 150ms; }
+.stagger > *:nth-child(5) { animation-delay: 200ms; }
+.stagger > *:nth-child(6) { animation-delay: 250ms; }
+.stagger > *:nth-child(7) { animation-delay: 300ms; }
+.stagger > *:nth-child(8) { animation-delay: 350ms; }
+.stagger > *:nth-child(9) { animation-delay: 400ms; }
+.stagger > *:nth-child(10) { animation-delay: 450ms; }
 
-/* Hero 大标题入场 */
-@keyframes hero-reveal {
-  0% { opacity: 0; transform: translateY(40px); filter: blur(8px); }
-  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
-}
-.hero-reveal {
-  animation: hero-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+/* Mouse glow */
+.mouse-glow {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  transform: translate(-50%, -50%);
+  transition: left 0.4s ease-out, top 0.4s ease-out;
 }
 
-/* 扫描线 */
-@keyframes scanline {
-  0% { top: -2px; }
-  100% { top: 100%; }
+/* Dot grid */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
 }
-.scanline::after {
+
+/* Glow line */
+.glow-line {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.15), transparent);
+}
+
+/* Lime border highlight */
+.lime-border {
+  border: 1px solid rgba(180, 255, 57, 0.15);
+}
+.lime-border:hover {
+  border-color: rgba(180, 255, 57, 0.3);
+}
+
+/* Mood btn */
+.mood-btn {
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+.mood-btn:hover {
+  transform: scale(1.05);
+}
+.mood-btn:active {
+  transform: scale(0.96);
+}
+
+/* Emotion border */
+.emotion-border {
+  position: relative;
+}
+.emotion-border::before {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(180,255,57,0.15), transparent);
-  animation: scanline 8s linear infinite;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(180,255,57,0.2), rgba(34,211,238,0.1), rgba(180,255,57,0.05));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
 }
+
+/* Gradient flow */
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-flow 8s ease infinite;
+}
+
+/* Pulse dot */
+@keyframes pulse-dot {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0.3); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(180,255,57,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(180,255,57,0); }
+}
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Gentle bounce */
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.animate-gentle-bounce { animation: gentle-bounce 2s ease-in-out infinite; }

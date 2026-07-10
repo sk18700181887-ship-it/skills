@@ -11,7 +11,7 @@ export default function VipPage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Crown className="w-6 h-6 text-[#b4ff39]" /> 会员中心
         </h1>
         <p className="text-sm text-zinc-500 mt-1">开通 VIP，解锁全部 AI 能力</p>
@@ -22,7 +22,7 @@ export default function VipPage() {
         {VIP_PLANS.map((plan, i) => (
           <div key={i} onClick={() => setSelected(i)}
             className={`topo-card p-5 cursor-pointer transition-all duration-500 animate-scale-in relative overflow-hidden ${
-              selected === i ? 'ring-2 ring-[#b4ff39] shadow-lg scale-[1.02]' : 'card-hover'
+              selected === i ? 'ring-2 ring-[#b4ff39]  scale-[1.02]' : 'card-hover'
             }`}
             style={{animationDelay: `${i*0.1}s`}}
           >
@@ -35,11 +35,11 @@ export default function VipPage() {
               <span className="text-xs text-zinc-500">/{plan.unit}</span>
             </div>
             {plan.highlight && (
-              <div className="text-[10px] text-amber-400 bg-amber-400/10 px-2 py-1 rounded-lg mb-3 inline-block">
+              <div className="text-[10px] text-amber-400 bg-amber-400/10 px-2 py-1 rounded-none mb-3 inline-block">
                 相当于每天仅 ¥{(plan.price / 90).toFixed(1)}
               </div>
             )}
-            <Button className={`w-full btn-press ${selected === i ? '' : 'bg-white/[0.04] text-white hover:bg-muted/80'}`} variant={selected === i ? 'default' : 'outline'}>
+            <Button className={`w-full btn-press ${selected === i ? '' : 'bg-zinc-900 text-white hover:bg-muted/80'}`} variant={selected === i ? 'default' : 'outline'}>
               {selected === i ? '已选择' : '选择套餐'}
             </Button>
           </div>
@@ -73,12 +73,12 @@ export default function VipPage() {
           <Shield className="w-10 h-10 text-amber-300 shrink-0" />
           <div className="flex-1">
             <h3 className="font-bold text-base flex items-center gap-2">
-              协议班 <span className="text-xs px-2 py-0.5 bg-amber-400/100/30 rounded-full">不过退 ¥8000</span>
+              协议班 <span className="text-xs px-2 py-0.5 bg-amber-400/100/30 rounded-none">不过退 ¥8000</span>
             </h3>
             <p className="text-sm text-white/80 mt-1">¥9800 · 笔试 + 面试全程陪跑 · 1 对 1 班主任 · 未上岸退 ¥8000</p>
             <div className="flex gap-2 mt-3">
               {['1对1规划', '每日督学', '申论人工批改', '面试模拟无限'].map((t, i) => (
-                <span key={i} className="text-[10px] px-2 py-1 bg-white/10 rounded-lg">{t}</span>
+                <span key={i} className="text-[10px] px-2 py-1 bg-white/10 rounded-none">{t}</span>
               ))}
             </div>
           </div>

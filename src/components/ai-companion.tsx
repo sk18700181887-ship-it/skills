@@ -76,24 +76,24 @@ export function AICompanion() {
       {/* 浮动按钮 */}
       <button
         onClick={() => setOpen(!open)}
-        className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 btn-press ${
-          open ? 'bg-zinc-700 text-zinc-200' : 'bg-[#b4ff39] text-zinc-900 animate-pulse-glow'
+        className={`fixed bottom-6 right-6 z-50 w-12 h-12 rounded-none flex items-center justify-center transition-all duration-300 btn-press border ${
+          open ? 'bg-zinc-800 text-zinc-200 border-zinc-700' : 'bg-[#b4ff39] text-black border-[#b4ff39] animate-pulse-glow'
         }`}
         aria-label="AI 陪伴"
       >
         {open ? <X className="w-5 h-5" /> : <Heart className="w-5 h-5" />}
         {!open && (
-          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#09090b]" />
+          <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-400 rounded-none border-2 border-[#09090b]" />
         )}
       </button>
 
       {/* 聊天窗口 */}
       {open && (
-        <div className="fixed bottom-22 right-6 z-50 w-[340px] max-h-[480px] bg-[#0f0f12] rounded-2xl shadow-2xl border border-[rgba(255,255,255,0.08)] flex flex-col animate-scale-in overflow-hidden">
+        <div className="fixed bottom-22 right-6 z-50 w-[340px] max-h-[480px] bg-[#0a0a0a] rounded-none border border-[rgba(255,255,255,0.1)] flex flex-col animate-scale-in overflow-hidden">
           {/* 头部 */}
           <div className="shrink-0 p-4 border-b border-[rgba(255,255,255,0.06)] bg-[#b4ff39]/5">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-full bg-[#b4ff39]/10 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-none bg-[#b4ff39]/10 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-[#b4ff39]" />
               </div>
               <div>
@@ -107,10 +107,10 @@ export function AICompanion() {
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 thin-scroll" style={{ maxHeight: '300px' }}>
             {messages.map(msg => (
               <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed ${
+                <div className={`max-w-[85%] rounded-none px-3.5 py-2.5 text-xs leading-relaxed ${
                   msg.role === 'user'
-                    ? 'bg-[#b4ff39] text-zinc-900 rounded-br-md'
-                    : 'bg-[var(--surface-2)] text-zinc-300 rounded-bl-md'
+                    ? 'bg-[#b4ff39] text-zinc-900 rounded-none'
+                    : 'bg-[var(--surface-2)] text-zinc-300 rounded-none'
                 }`}>
                   {msg.content}
                   <div className={`text-[9px] mt-1 ${msg.role === 'user' ? 'text-zinc-600' : 'text-zinc-600'}`}>
@@ -121,11 +121,11 @@ export function AICompanion() {
             ))}
             {typing && (
               <div className="flex justify-start">
-                <div className="bg-[var(--surface-2)] rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="bg-[var(--surface-2)] rounded-none rounded-none px-4 py-3">
                   <div className="flex gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce" style={{ animationDelay: '0ms' }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce" style={{ animationDelay: '150ms' }} />
-                    <span className="w-1.5 h-1.5 rounded-full bg-zinc-600 animate-bounce" style={{ animationDelay: '300ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-none bg-zinc-600 animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-none bg-zinc-600 animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <span className="w-1.5 h-1.5 rounded-none bg-zinc-600 animate-bounce" style={{ animationDelay: '300ms' }} />
                   </div>
                 </div>
               </div>
@@ -139,7 +139,7 @@ export function AICompanion() {
                 <button
                   key={q}
                   onClick={() => sendMessage(q)}
-                  className="shrink-0 text-[10px] px-2.5 py-1 rounded-full bg-white/5 text-zinc-400 hover:bg-[#b4ff39]/10 hover:text-[#b4ff39] transition-colors whitespace-nowrap"
+                  className="shrink-0 text-[10px] px-2.5 py-1 rounded-none bg-white/5 text-zinc-400 hover:bg-[#b4ff39]/10 hover:text-[#b4ff39] transition-colors whitespace-nowrap"
                 >
                   {q}
                 </button>
@@ -155,12 +155,12 @@ export function AICompanion() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && sendMessage(input)}
                 placeholder="说说你的感受…"
-                className="flex-1 px-3 py-2 rounded-xl bg-[var(--surface-2)] text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-[#b4ff39]/30 placeholder:text-zinc-600"
+                className="flex-1 px-3 py-2 rounded-none bg-[var(--surface-2)] text-xs text-zinc-200 focus:outline-none focus:ring-1 focus:ring-[#b4ff39]/30 placeholder:text-zinc-600"
               />
               <button
                 onClick={() => sendMessage(input)}
                 disabled={!input.trim()}
-                className="w-9 h-9 rounded-xl bg-[#b4ff39] text-zinc-900 flex items-center justify-center disabled:opacity-30 btn-press"
+                className="w-9 h-9 rounded-none bg-[#b4ff39] text-zinc-900 flex items-center justify-center disabled:opacity-30 btn-press"
               >
                 <Send className="w-4 h-4" />
               </button>

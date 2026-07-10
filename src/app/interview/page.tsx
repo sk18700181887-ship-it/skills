@@ -31,7 +31,7 @@ export default function InterviewPage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Mic className="w-6 h-6 text-[#b4ff39]" /> AI 面试模拟
         </h1>
         <p className="text-sm text-zinc-500 mt-1">4 大题型实战 + 实时点评 + 高分技巧</p>
@@ -41,8 +41,8 @@ export default function InterviewPage() {
       <div className="flex gap-2 flex-wrap animate-fade-up delay-75">
         {INTERVIEW_TYPES.map((t, i) => (
           <button key={i} onClick={() => { setActiveType(i); reset(); }}
-            className={`px-4 py-2 rounded-xl text-xs font-medium transition-all duration-300 ${
-              i === activeType ? 'bg-[#b4ff39] text-black shadow-md' : 'bg-white/[0.04] card-hover'
+            className={`px-4 py-2 rounded-none text-xs font-medium transition-all duration-300 ${
+              i === activeType ? 'bg-[#b4ff39] text-black ' : 'bg-zinc-900 card-hover'
             }`}
           >
             {t.name}
@@ -55,7 +55,7 @@ export default function InterviewPage() {
         <div className="md:col-span-3 space-y-4">
           <div className="topo-card p-5 animate-fade-up delay-100">
             <div className="flex items-center gap-2 mb-3">
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{INTERVIEW_TYPES[activeType].name}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium">{INTERVIEW_TYPES[activeType].name}</span>
               <span className="text-[10px] text-zinc-500 flex items-center gap-1"><Clock className="w-3 h-3" /> 建议时长 3 分钟</span>
             </div>
             <p className="text-sm leading-relaxed font-medium">{q.question}</p>
@@ -84,7 +84,7 @@ export default function InterviewPage() {
                 value={answer}
                 onChange={e => setAnswer(e.target.value)}
                 placeholder="在此输入你的口头作答要点..."
-                className="w-full h-36 p-3 border rounded-xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/30 bg-transparent"
+                className="w-full h-36 p-3 border rounded-none text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#b4ff39]/30 bg-transparent"
               />
               <div className="flex gap-2 mt-3">
                 <Button className="btn-press flex-1" onClick={() => setRecording(!recording)}>
@@ -131,7 +131,7 @@ export default function InterviewPage() {
             </h3>
             <div className="hero-reveal space-y-2">
               {INTERVIEW_TYPES.map((t, i) => (
-                <div key={i} className={`p-2.5 rounded-lg text-xs transition-all duration-300 ${i === activeType ? 'bg-[#b4ff39]/10 border border-[#b4ff39]/20' : 'bg-white/[0.03]'}`}>
+                <div key={i} className={`p-2.5 rounded-none text-xs transition-all duration-300 ${i === activeType ? 'bg-[#b4ff39]/10 border border-[#b4ff39]/20' : 'bg-zinc-900'}`}>
                   <div className="font-medium">{t.name}</div>
                   <div className="text-[10px] text-zinc-500 mt-0.5">{t.structure}</div>
                 </div>

@@ -17,7 +17,7 @@ export default function PlanPage() {
   return (
     <div className="hero-reveal space-y-8 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <CalendarDays className="w-6 h-6 text-[#b4ff39]" /> AI 备考规划
         </h1>
         <p className="text-sm text-zinc-500 mt-2">智能四阶段规划 + 周课表 + 动态调整，备考节奏一目了然</p>
@@ -34,7 +34,7 @@ export default function PlanPage() {
           <div className="grid md:grid-cols-4 gap-4">
             {STUDY_PLAN.map((phase, i) => (
               <div key={i} className="topo-card p-4 card-hover animate-slide-up relative" style={{animationDelay:`${(i+1)*100}ms`}}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-black mb-3 ${
+                <div className={`w-8 h-8 rounded-none flex items-center justify-center text-xs font-bold text-black mb-3 ${
                   i === 0 ? 'bg-[#b4ff39]' : i === 1 ? 'bg-amber-400' : i === 2 ? 'bg-rose-400' : 'bg-emerald-400'
                 }`}>
                   {i + 1}
@@ -50,7 +50,7 @@ export default function PlanPage() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-3 p-2 rounded-lg bg-[#b4ff39]/5 border border-[#b4ff39]/10">
+                <div className="mt-3 p-2 rounded-none bg-[#b4ff39]/5 border border-[#b4ff39]/10">
                   <p className="text-[10px] text-[#b4ff39] flex items-start gap-1">
                     <Sparkles className="w-3 h-3 mt-0.5 shrink-0" /> {phase.ai}
                   </p>
@@ -69,10 +69,10 @@ export default function PlanPage() {
         <div className="overflow-x-auto">
           <div className="min-w-[640px]">
             <div className="grid grid-cols-4 gap-0 text-center">
-              <div className="p-2 text-xs font-medium text-zinc-500 bg-white/[0.03] rounded-tl-lg">星期</div>
-              <div className="p-2 text-xs font-medium text-zinc-500 bg-white/[0.03]">上午/主时段</div>
-              <div className="p-2 text-xs font-medium text-zinc-500 bg-white/[0.03]">下午/副时段</div>
-              <div className="p-2 text-xs font-medium text-zinc-500 bg-white/[0.03] rounded-tr-lg">晚上/复盘</div>
+              <div className="p-2 text-xs font-medium text-zinc-500 bg-zinc-900 rounded-tl-lg">星期</div>
+              <div className="p-2 text-xs font-medium text-zinc-500 bg-zinc-900">上午/主时段</div>
+              <div className="p-2 text-xs font-medium text-zinc-500 bg-zinc-900">下午/副时段</div>
+              <div className="p-2 text-xs font-medium text-zinc-500 bg-zinc-900 rounded-tr-lg">晚上/复盘</div>
             </div>
             {WEEKLY.map((d, i) => (
               <div key={d.day} className={`grid grid-cols-4 gap-0 ${i % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.02]'}`}>
@@ -96,8 +96,8 @@ export default function PlanPage() {
         <div className="flex flex-wrap items-center gap-2">
           {['常识判断 10min', '资料分析 25min', '判断推理 35min', '言语理解 35min', '数量关系 15min'].map((step, i) => (
             <div key={i} className="flex items-center gap-2 animate-slide-right" style={{animationDelay: `${i*0.1}s`}}>
-              <span className={`px-3 py-1.5 rounded-lg text-xs font-medium ${
-                i === 1 ? 'bg-[#b4ff39] text-black' : 'bg-white/[0.04] text-zinc-300'
+              <span className={`px-3 py-1.5 rounded-none text-xs font-medium ${
+                i === 1 ? 'bg-[#b4ff39] text-black' : 'bg-zinc-900 text-zinc-300'
               }`}>{step}</span>
               {i < 4 && <ChevronRight className="w-3 h-3 text-zinc-600" />}
             </div>

@@ -14,7 +14,7 @@ export default function GongjiPage() {
   return (
     <div className="hero-reveal space-y-6 max-w-6xl">
       <div className="animate-fade-up">
-        <h1 className="text-2xl font-bold tracking-tight card-pop flex items-center gap-3">
+        <h1 className="text-3xl font-serif font-light tracking-tight card-pop flex items-center gap-3">
           <Globe className="w-6 h-6 text-[#b4ff39]" /> 公基 AI 图谱
         </h1>
         <p className="text-sm text-zinc-500 mt-1">6 大模块知识图谱 + AI 记忆助手，公基不再靠死记</p>
@@ -26,18 +26,18 @@ export default function GongjiPage() {
           <button
             key={i}
             onClick={() => { setActiveModule(i); setAskAi(false); }}
-            className={`p-3 rounded-xl text-center transition-all duration-300 ${
+            className={`p-3 rounded-none text-center transition-all duration-300 ${
               i === activeModule
-                ? 'bg-[#b4ff39] text-black shadow-lg scale-105'
-                : 'bg-white/[0.04] card-hover'
+                ? 'bg-[#b4ff39] text-black  scale-105'
+                : 'bg-zinc-900 card-hover'
             }`}
           >
             <div className="text-sm font-semibold">{m.name}</div>
             <div className={`text-[10px] mt-1 ${i === activeModule ? 'text-white/70' : 'text-zinc-500'}`}>
               {m.coverage}% 覆盖
             </div>
-            <div className="mt-1.5 h-1 rounded-full bg-white/20 overflow-hidden">
-              <div className={`h-full rounded-full transition-all duration-700 ${i === activeModule ? 'bg-white' : 'bg-primary'}`} style={{width: `${m.coverage}%`}} />
+            <div className="mt-1.5 h-1 rounded-none bg-white/20 overflow-hidden">
+              <div className={`h-full rounded-none transition-all duration-700 ${i === activeModule ? 'bg-white' : 'bg-primary'}`} style={{width: `${m.coverage}%`}} />
             </div>
           </button>
         ))}
@@ -76,8 +76,8 @@ export default function GongjiPage() {
                 <div key={m.name} className="flex items-center gap-2 text-xs">
                   <div className={`w-2.5 h-2.5 rounded-sm shrink-0 ${colors[i]}`} />
                   <span className="w-16">{m.name}</span>
-                  <div className="w-16 h-1.5 rounded-full bg-white/[0.04] overflow-hidden">
-                    <div className={`h-full rounded-full ${colors[i]}`} style={{ width: `${m.coverage}%` }} />
+                  <div className="w-16 h-1.5 rounded-none bg-zinc-900 overflow-hidden">
+                    <div className={`h-full rounded-none ${colors[i]}`} style={{ width: `${m.coverage}%` }} />
                   </div>
                   <span className="text-zinc-500 w-8 text-right">{m.coverage}%</span>
                 </div>
@@ -95,7 +95,7 @@ export default function GongjiPage() {
           </h2>
           <button
             onClick={() => setAskAi(!askAi)}
-            className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-[#b4ff39]/10 text-[#b4ff39] font-medium transition-all duration-300 hover:bg-[#b4ff39]/20"
+            className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-none bg-[#b4ff39]/10 text-[#b4ff39] font-medium transition-all duration-300 hover:bg-[#b4ff39]/20"
           >
             <Sparkles className="w-3 h-3 animate-pulse-glow" /> AI 记忆助手
           </button>
@@ -104,7 +104,7 @@ export default function GongjiPage() {
 
         {/* AI 问答区 */}
         {askAi && (
-          <div className="mb-4 p-4 rounded-xl bg-[#b4ff39]/5 border border-[#b4ff39]/10 animate-fade-in">
+          <div className="mb-4 p-4 rounded-none bg-[#b4ff39]/5 border border-[#b4ff39]/10 animate-fade-in">
             <div className="flex items-center gap-2 mb-2">
               <Brain className="w-4 h-4 text-[#b4ff39]" />
               <span className="text-xs font-medium text-[#b4ff39]">AI 记忆助手</span>
@@ -116,7 +116,7 @@ export default function GongjiPage() {
         {/* 知识点列表 */}
         <div className="hero-reveal space-y-3">
           {knowledge.map((k, i) => (
-            <div key={i} className="p-3 rounded-lg border bg-transparent card-hover animate-slide-up" style={{animationDelay: `${i*0.05}s`}}>
+            <div key={i} className="p-3 rounded-none border bg-transparent card-hover animate-slide-up" style={{animationDelay: `${i*0.05}s`}}>
               <div className="flex items-start gap-2">
                 <CheckCircle2 className={`w-4 h-4 mt-0.5 shrink-0 ${i < Math.ceil(knowledge.length * mod.coverage / 100) ? 'text-emerald-500' : 'text-zinc-500/30'}`} />
                 <div>
