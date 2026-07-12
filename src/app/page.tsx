@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { RECOMMENDED_POSTS, COMPETITION_ANALYSIS, STRATEGY_ADVICE, REPORT_SECTIONS, PROVINCE_DATA, POST_DISTRIBUTION, GUOKAO_SYSTEMS, DIFFICULTY_SCALE } from '@/lib/data';
 import type { DiffLevel } from '@/lib/data';
-import { Globe, ArrowRight, ChevronDown, Phone, Shield, Zap, Menu, X, Instagram, Twitter } from 'lucide-react';
+import { Globe, ArrowRight, ChevronDown, Phone, Shield, Zap, Menu, X, Target, BookOpen, Brain, Trophy, Sparkles, BarChart3, Users, Clock } from 'lucide-react';
 
 /* ═══════════════════════════════════════════
    Video Fade System (Asme-style)
@@ -12,7 +12,6 @@ function useVideoFade(videoRef: React.RefObject<HTMLVideoElement | null>) {
   const fadeRef = useRef<number>(0);
   const fadingOutRef = useRef(false);
   const currentOpacityRef = useRef(0);
-
   const fadeTo = useCallback((target: number, duration: number) => {
     if (fadeRef.current) cancelAnimationFrame(fadeRef.current);
     const start = currentOpacityRef.current;
@@ -27,7 +26,6 @@ function useVideoFade(videoRef: React.RefObject<HTMLVideoElement | null>) {
     };
     fadeRef.current = requestAnimationFrame(animate);
   }, [videoRef]);
-
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -156,6 +154,29 @@ function useInView(threshold = 0.15) {
 }
 
 /* ═══════════════════════════════════════════
+   CountUp 数字动画
+   ═══════════════════════════════════════════ */
+function CountUp({ end, suffix = '', prefix = '', duration = 2000 }: { end: number; suffix?: string; prefix?: string; duration?: number }) {
+  const [count, setCount] = useState(0);
+  const { setRef, inView } = useInView(0.3);
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      start = Math.round(eased * end);
+      setCount(start);
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [inView, end, duration]);
+  return <span ref={setRef}>{prefix}{count.toLocaleString()}{suffix}</span>;
+}
+
+/* ═══════════════════════════════════════════
    Tab Panels
    ═══════════════════════════════════════════ */
 function ProvinceRankPanel() {
@@ -258,12 +279,11 @@ function GuokaoPanel() {
 }
 
 /* ═══════════════════════════════════════════
-   Parallax Quote Section (Serene-style)
+   Parallax Section
    ═══════════════════════════════════════════ */
 function ParallaxSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [progress, setProgress] = useState(0);
-
   useEffect(() => {
     let rafId = 0;
     let currentProgress = 0;
@@ -286,7 +306,6 @@ function ParallaxSection() {
     onScroll();
     return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(rafId); };
   }, []);
-
   const mainY = progress * -160 + 120;
   const cloudLeftX = progress > 0.12 && progress < 0.92
     ? Math.max(-200, -200 + (progress - 0.12) / 0.8 * 400) : progress >= 0.92 ? 200 : -200;
@@ -294,14 +313,12 @@ function ParallaxSection() {
   const cloudRightX = progress > 0.12 && progress < 0.92
     ? Math.min(200, 200 - (progress - 0.12) / 0.8 * 400) : progress >= 0.92 ? -200 : 200;
   const cloudOpacity = Math.max(0, 1 - Math.abs(cloudLeftX) / 200);
-
   return (
     <section ref={sectionRef} className="relative h-screen overflow-hidden section-gradient-deep">
       <div className="mesh-orb mesh-orb-1" />
       <div className="mesh-orb mesh-orb-2" />
       <div className="mesh-orb mesh-orb-3" />
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
-        {/* Main data band — parallax vertical */}
         <div className="absolute inset-x-0 top-0 z-30 opacity-60"
           style={{ transform: `translate3d(0, ${mainY}px, 0)`, willChange: 'transform' }}>
           <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-[#b4ff39]/30 to-transparent" />
@@ -315,7 +332,6 @@ function ParallaxSection() {
           </div>
           <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-[#b4ff39]/30 to-transparent" />
         </div>
-        {/* Left floating shape */}
         <div className="absolute left-0 bottom-[10%] z-10 hidden sm:block"
           style={{ width: '400px', marginLeft: '-50%', opacity: cloudOpacity, transform: `translate3d(${cloudLeftX}px, ${cloudY}px, 0)`, willChange: 'transform', transition: 'opacity 0.3s' }}>
           <div className="liquid-glass p-8 rounded-none">
@@ -323,7 +339,6 @@ function ParallaxSection() {
             <p className="text-[10px] font-mono text-zinc-500 mt-3">AI-POWERED</p>
           </div>
         </div>
-        {/* Right floating shape */}
         <div className="absolute right-0 bottom-[15%] z-10 hidden sm:block"
           style={{ width: '400px', marginRight: '-75%', opacity: cloudOpacity, transform: `scale(-1,1) translate3d(${cloudRightX}px, ${cloudY}px, 0)`, willChange: 'transform', transition: 'opacity 0.3s' }}>
           <div className="liquid-glass p-8 rounded-none" style={{ transform: 'scale(-1,1)' }}>
@@ -335,7 +350,6 @@ function ParallaxSection() {
           </div>
         </div>
       </div>
-      {/* Center quote */}
       <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
         <div className="max-w-4xl text-center" style={{ opacity: Math.min(1, progress * 3), transform: `translate3d(0, ${(1 - Math.min(1, progress * 2)) * 30}px, 0)`, willChange: 'transform' }}>
           <p className="text-[11px] font-mono text-[#b4ff39]/60 tracking-[0.3em] mb-6">ANAN ENGINE — AI INTELLIGENT COMPANION</p>
@@ -343,6 +357,159 @@ function ParallaxSection() {
             &ldquo;上岸引擎基于一个信念：每个考生都值得拥有<strong className="text-[#b4ff39] text-glow-lime">精准导航</strong>。我们追求清晰的结构、缜密的策略、持久的进步。我们花时间了解你的背景，再决定什么最适合你。没有盲目，没有浪费——只有让你<strong className="text-[#b4ff39] text-glow-lime">稳步上岸</strong>的支撑。&rdquo;
           </p>
           <p className="mt-6 md:mt-8 text-white/60 text-sm tracking-wide">上岸引擎 · AI 智能陪练 · 精准导航</p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   滚动数据条带 (Marquee)
+   ═══════════════════════════════════════════ */
+function DataMarquee() {
+  const items = [
+    '国考报名 291万+', '平均竞争 68:1', '招录岗位 12.9万', '覆盖 28 省份',
+    '上岸率提升 40%', 'AI 匹配精度 92%', '7 阶段全路径', '智能题库 50万+',
+    '申论批改 AI', '面试模拟实时', '模考全国排名', '选调专项辅导',
+  ];
+  return (
+    <div className="relative py-6 overflow-hidden border-y border-white/5 bg-[#0a0608]">
+      <div className="flex animate-[marquee_40s_linear_infinite]" style={{ width: 'max-content' }}>
+        {[...items, ...items].map((item, i) => (
+          <span key={i} className="flex items-center gap-3 px-6 text-xs font-mono text-zinc-500 whitespace-nowrap">
+            <span className="w-1 h-1 bg-[#b4ff39]/40 rounded-full" />
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   统计数据区 (Stats)
+   ═══════════════════════════════════════════ */
+function StatsSection() {
+  const stats = [
+    { value: 291, suffix: '万+', label: '国考报名人数', icon: <Users size={20} /> },
+    { value: 12.9, suffix: '万', label: '招录岗位总数', icon: <BarChart3 size={20} /> },
+    { value: 92, suffix: '%', label: 'AI匹配精度', icon: <Target size={20} /> },
+    { value: 7, suffix: '阶段', label: '完整备考路径', icon: <Sparkles size={20} /> },
+  ];
+  return (
+    <section className="relative py-24 md:py-32 bg-[#0a0608] overflow-hidden">
+      <div className="mesh-orb mesh-orb-2" style={{ top: '20%', left: '-10%' }} />
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <p className="text-xs font-mono text-[#b4ff39]/60 tracking-[0.3em] mb-4">PLATFORM DATA</p>
+          <h2 className="text-4xl md:text-5xl font-light text-white tracking-tight text-glow-white" style={{ fontFamily: "'Instrument Serif', serif" }}>
+            数据驱动<span className="text-[#b4ff39] text-glow-lime">精准决策</span>
+          </h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          {stats.map((s, i) => (
+            <div key={i} className="liquid-glass p-8 rounded-none text-center group transition-all duration-300 hover:bg-white/[0.02]">
+              <div className="text-[#b4ff39]/40 mb-4 flex justify-center group-hover:text-[#b4ff39]/60 transition-colors">{s.icon}</div>
+              <p className="text-3xl md:text-4xl font-mono text-white mb-2">
+                <CountUp end={s.value} suffix={s.suffix} />
+              </p>
+              <p className="text-xs text-zinc-500">{s.label}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   7 阶段展示 (Stages)
+   ═══════════════════════════════════════════ */
+function StagesSection() {
+  const stages = [
+    { num: '01', title: '了解考公', desc: '6 类考试对比表 + AI 百科问答', icon: <BookOpen size={24} />, color: '#b4ff39' },
+    { num: '02', title: '岗位匹配', desc: '专业→岗位推荐 + 竞争预测', icon: <Target size={24} />, color: '#b4ff39' },
+    { num: '03', title: '报名决策', desc: '冲稳保组合 + 竞争比预测', icon: <BarChart3 size={24} />, color: '#84cc16' },
+    { num: '04', title: '备考规划', desc: 'AI 四阶段规划 + 周课表', icon: <Clock size={24} />, color: '#84cc16' },
+    { num: '05', title: '笔试训练', desc: '智能题库 + 申论批改 + 知识图谱', icon: <Brain size={24} />, color: '#fbbf24' },
+    { num: '06', title: '模考冲刺', desc: '全国排名 + 成绩预测', icon: <Trophy size={24} />, color: '#fbbf24' },
+    { num: '07', title: '面试上岸', desc: 'AI 面试模拟 + 实时点评', icon: <Sparkles size={24} />, color: '#b4ff39' },
+  ];
+  return (
+    <section className="relative py-24 md:py-32 bg-black overflow-hidden">
+      <div className="mesh-orb mesh-orb-1" style={{ bottom: '10%', right: '-5%' }} />
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <p className="text-xs font-mono text-[#b4ff39]/60 tracking-[0.3em] mb-4">7-STAGE PATH</p>
+          <h2 className="text-4xl md:text-5xl font-light text-white tracking-tight text-glow-white" style={{ fontFamily: "'Instrument Serif', serif" }}>
+            从了解考公到<span className="text-[#b4ff39] text-glow-lime">面试上岸</span>
+          </h2>
+          <p className="text-zinc-500 text-sm mt-4 max-w-lg mx-auto">7 阶段 AI 智能导航，每一步都有精准指引</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+          {stages.map((s, i) => (
+            <StageCard key={s.num} stage={s} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function StageCard({ stage, index }: { stage: { num: string; title: string; desc: string; icon: React.ReactNode; color: string }; index: number }) {
+  const { setRef, inView } = useInView(0.1);
+  return (
+    <div ref={setRef}
+      className="liquid-glass p-6 rounded-none group transition-all duration-500 hover:bg-white/[0.02]"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? 'translateY(0)' : 'translateY(30px)',
+        transition: `opacity 0.6s ${index * 0.08}s, transform 0.6s ${index * 0.08}s`,
+      }}>
+      <div className="flex items-start justify-between mb-4">
+        <span className="text-3xl font-mono text-white/5 group-hover:text-[#b4ff39]/10 transition-colors">{stage.num}</span>
+        <div className="text-white/20 group-hover:text-[#b4ff39]/50 transition-colors">{stage.icon}</div>
+      </div>
+      <h3 className="text-lg text-white mb-2 group-hover:text-[#b4ff39] transition-colors" style={{ fontFamily: "'Instrument Serif', serif" }}>{stage.title}</h3>
+      <p className="text-xs text-zinc-500 leading-relaxed">{stage.desc}</p>
+      <div className="mt-4 h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent group-hover:via-[#b4ff39]/10 transition-all" />
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════
+   How It Works
+   ═══════════════════════════════════════════ */
+function HowItWorksSection() {
+  const steps = [
+    { num: '01', title: '手机号注册', desc: '1 分钟完成注册，数据安全有保障', icon: <Phone size={20} /> },
+    { num: '02', title: '填写个人信息', desc: '学历、专业、考试意向、目标省份', icon: <BookOpen size={20} /> },
+    { num: '03', title: 'AI 生成专属报告', desc: '岗位推荐 + 竞争分析 + 冲稳保策略', icon: <Brain size={20} /> },
+  ];
+  return (
+    <section className="relative py-24 md:py-32 bg-[#0a0608] overflow-hidden">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <p className="text-xs font-mono text-[#b4ff39]/60 tracking-[0.3em] mb-4">HOW IT WORKS</p>
+          <h2 className="text-4xl md:text-5xl font-light text-white tracking-tight text-glow-white" style={{ fontFamily: "'Instrument Serif', serif" }}>
+            <span className="text-[#b4ff39] text-glow-lime">3 步</span>生成你的专属报告
+          </h2>
+        </div>
+        <div className="relative">
+          {/* 连接线 */}
+          <div className="hidden md:block absolute top-1/2 left-[16%] right-[16%] h-[1px] bg-gradient-to-r from-[#b4ff39]/10 via-[#b4ff39]/20 to-[#b4ff39]/10" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            {steps.map((s, i) => (
+              <div key={s.num} className="text-center relative">
+                <div className="liquid-glass w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6 group hover:bg-white/[0.02] transition-all">
+                  <span className="text-[#b4ff39]">{s.icon}</span>
+                </div>
+                <span className="text-2xl font-mono text-white/5">{s.num}</span>
+                <h3 className="text-lg text-white mt-2 mb-2" style={{ fontFamily: "'Instrument Serif', serif" }}>{s.title}</h3>
+                <p className="text-xs text-zinc-500 leading-relaxed">{s.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -363,9 +530,7 @@ function MobileMenu({ open, onClose, onLogin, onSignup }: {
   ];
   return (
     <>
-      {/* Overlay */}
       <div className={`fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={onClose} />
-      {/* Panel */}
       <div className={`fixed top-0 right-0 z-50 h-full w-[85%] max-w-[340px] bg-[#0a0608]/95 backdrop-blur-xl border-l border-white/10 transition-transform duration-500 ${open ? 'translate-x-0' : 'translate-x-full'}`}
         style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }}>
         <div className="p-6 pt-8">
@@ -396,7 +561,6 @@ export default function LandingPage() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   useVideoFade(videoRef);
-
   const [phase, setPhase] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -432,64 +596,48 @@ export default function LandingPage() {
 
       {/* ═══════ SECTION 1: Hero — Full-screen Video + Liquid Glass ═══════ */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
-        {/* Background Video with fade system */}
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover translate-y-[17%]"
           style={{ opacity: 0 }}
-          autoPlay
-          muted
-          loop
-          playsInline
+          autoPlay muted loop playsInline
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4"
         />
-
-        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/40 z-[1]" />
-
-        {/* Grid pattern overlay */}
         <div className={`fixed inset-0 z-[1] transition-opacity duration-[2000ms] ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}>
           <svg width="100%" height="100%" className="absolute inset-0">
             <defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(255,255,255,0.03)" strokeWidth="0.5" /></pattern></defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
           </svg>
         </div>
-
-        {/* Scan line */}
         <div className={`fixed top-0 left-0 w-full h-[2px] z-[2] transition-opacity duration-1000 ${phase >= 1 ? 'opacity-100' : 'opacity-0'}`}>
           <div className="w-full h-full bg-gradient-to-r from-transparent via-[#b4ff39]/40 to-transparent animate-[scanLine_2s_ease-in-out_infinite]" />
         </div>
-
-        {/* Mesh orbs */}
         <div className="absolute inset-0 z-[0] pointer-events-none">
           <div className="mesh-orb mesh-orb-1" />
           <div className="mesh-orb mesh-orb-2" />
           <div className="mesh-orb mesh-orb-3" />
         </div>
 
-        {/* ── Fixed Navbar (liquid-glass) ── */}
+        {/* Navbar */}
         <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
           <div className="px-6 md:px-12 py-5">
             <div className="liquid-glass rounded-full px-6 py-3 flex items-center justify-between max-w-5xl mx-auto">
-              {/* Left: Logo */}
               <div className="flex items-center gap-2">
                 <Globe size={20} className="text-[#b4ff39]" />
                 <span className="text-white font-semibold text-lg" style={{ fontFamily: "'Instrument Serif', serif" }}>上岸引擎</span>
-                {/* Desktop nav links */}
                 <div className="hidden md:flex items-center gap-8 ml-8">
+                  <a href="#stages" className="text-white/80 hover:text-white transition-colors text-sm font-medium">7 阶段</a>
                   <a href="#demo-report" className="text-white/80 hover:text-white transition-colors text-sm font-medium">示例报告</a>
                   <a href="/map" className="text-white/80 hover:text-white transition-colors text-sm font-medium">全国可视化</a>
-                  <a href="/explore" className="text-white/80 hover:text-white transition-colors text-sm font-medium">考公全景</a>
                 </div>
               </div>
-              {/* Right: Auth buttons */}
               <div className="flex items-center gap-4">
                 <button onClick={handleSignup} className="hidden md:block text-white/80 hover:text-white transition-colors text-sm font-medium">注册</button>
                 <button onClick={() => router.push('/login')} className="hidden md:block liquid-glass rounded-full px-6 py-2 text-white text-sm font-medium hover:bg-white/5 transition-colors">登录</button>
-                {/* Mobile hamburger */}
                 <button onClick={() => setMenuOpen(true)} className="md:hidden text-white p-1" aria-label="菜单">
                   <div className="w-5 flex flex-col gap-[5px]">
-                    <span className={`block h-[1.5px] bg-white transition-all duration-300`} style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }} />
+                    <span className="block h-[1.5px] bg-white transition-all duration-300" style={{ transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)' }} />
                     <span className="block h-[1.5px] bg-white transition-all duration-300" />
                     <span className="block h-[1.5px] bg-white transition-all duration-300" />
                   </div>
@@ -499,37 +647,25 @@ export default function LandingPage() {
           </div>
         </nav>
 
-        {/* ── Center content ── */}
+        {/* Center content */}
         <div className="relative z-[3] flex-1 flex flex-col items-center justify-center px-6 py-12 text-center" style={{ transform: 'translateY(-20%)' }}>
-          {/* Top label */}
           <div className={`mb-6 transition-all duration-1000 ${phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <span className="text-[11px] font-mono text-zinc-500 tracking-[0.3em]">AI-POWERED CIVIL SERVICE EXAM PLATFORM</span>
           </div>
-
-          {/* Main heading — Instrument Serif */}
           <h1 className={`mb-8 transition-all duration-[1500ms] ${phase >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
             style={{ fontFamily: "'Instrument Serif', serif" }}>
-            <span className="block text-5xl md:text-6xl lg:text-7xl text-white tracking-tight text-glow-white leading-[0.9]">
-              拓扑降维
-            </span>
+            <span className="block text-5xl md:text-6xl lg:text-7xl text-white tracking-tight text-glow-white leading-[0.9]">拓扑降维</span>
             <span className="block text-5xl md:text-6xl lg:text-7xl tracking-tight leading-[0.9] mt-2">
               <span className="text-[#b4ff39] text-glow-lime">精准</span>
               <span className="text-white text-glow-white">上岸</span>
             </span>
           </h1>
-
-          {/* Phone input bar (liquid-glass pill) */}
           <div className={`max-w-xl w-full space-y-4 transition-all duration-1000 delay-200 ${phase >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
             <div className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-3">
-              <input
-                type="tel"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                 placeholder="输入手机号，生成专属报告"
-                className="flex-1 bg-transparent text-white placeholder:text-white/40 text-base outline-none"
-              />
-              <button onClick={handleSignup}
-                className="bg-white rounded-full p-3 text-black hover:bg-white/90 transition-all shrink-0 button-glow-white">
+                className="flex-1 bg-transparent text-white placeholder:text-white/40 text-base outline-none" />
+              <button onClick={handleSignup} className="bg-white rounded-full p-3 text-black hover:bg-white/90 transition-all shrink-0 button-glow-white">
                 <ArrowRight size={20} />
               </button>
             </div>
@@ -537,17 +673,15 @@ export default function LandingPage() {
               将复杂的公考信息降维到极致清晰的结构中，从了解考公到面试上岸，7 阶段 AI 智能导航
             </p>
             <div className="flex justify-center">
-              <button
-                onClick={() => document.getElementById('demo-report')?.scrollIntoView({ behavior: 'smooth' })}
-                className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors"
-              >
-                查看示例报告 ↓
+              <button onClick={() => document.getElementById('stages')?.scrollIntoView({ behavior: 'smooth' })}
+                className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors">
+                探索 7 阶段路径 ↓
               </button>
             </div>
           </div>
         </div>
 
-        {/* ── Social icons footer ── */}
+        {/* Social icons */}
         <div className={`relative z-10 flex justify-center gap-4 pb-12 transition-all duration-1000 ${phase >= 4 ? 'opacity-100' : 'opacity-0'}`}>
           {[
             { icon: <Phone size={20} />, label: '手机号登录' },
@@ -560,19 +694,32 @@ export default function LandingPage() {
             </button>
           ))}
         </div>
-
-        {/* Scroll indicator */}
         <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 z-[3] scroll-indicator transition-opacity duration-1000 ${phase >= 4 ? 'opacity-60' : 'opacity-0'}`}>
           <ChevronDown size={20} className="text-white/40" />
         </div>
       </section>
 
-      {/* ═══════ SECTION 2: Parallax Quote ═══════ */}
+      {/* ═══════ Data Marquee ═══════ */}
+      <DataMarquee />
+
+      {/* ═══════ SECTION: Stats ═══════ */}
+      <StatsSection />
+
+      {/* ═══════ SECTION: 7 Stages ═══════ */}
+      <div id="stages" />
+      <StagesSection />
+
+      {/* ═══════ SECTION: How It Works ═══════ */}
+      <HowItWorksSection />
+
+      {/* ═══════ SECTION: Parallax Quote ═══════ */}
       <ParallaxSection />
 
-      {/* ═══════ SECTION 3: 示例报告 ═══════ */}
+      {/* ═══════ Data Marquee 2 ═══════ */}
+      <DataMarquee />
+
+      {/* ═══════ SECTION: 示例报告 ═══════ */}
       <section id="demo-report" className="relative z-10 bg-black">
-        {/* Sticky report header */}
         <div className={`sticky top-0 z-20 border-b border-white/6 px-6 py-4 flex items-center justify-between transition-colors duration-300 ${scrolled ? 'bg-black/95 backdrop-blur-sm' : 'bg-black'}`}>
           <div className="flex items-center gap-3">
             <Globe size={16} className="text-[#b4ff39]" />
@@ -589,19 +736,12 @@ export default function LandingPage() {
           {/* 左侧固定引导栏 */}
           <div className="hidden lg:block fixed left-0 top-1/2 -translate-y-1/2 z-30 w-[220px]">
             <div className="liquid-glass p-5 space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-[#b4ff39] animate-pulse" />
-                <span className="text-[10px] font-mono text-zinc-500">AI 实时分析</span>
-              </div>
+              <div className="flex items-center gap-2"><span className="w-2 h-2 bg-[#b4ff39] animate-pulse" /><span className="text-[10px] font-mono text-zinc-500">AI 实时分析</span></div>
               <h3 className="text-sm text-white leading-snug" style={{ fontFamily: "'Instrument Serif', serif" }}>
                 填写信息<br />生成<span className="text-[#b4ff39] text-glow-lime">专属</span>报告
               </h3>
-              <p className="text-[10px] text-zinc-600 leading-relaxed">
-                这是示例报告<br />你的报告需要填写个人信息后由 AI 生成
-              </p>
-              <button onClick={handleCTA} className="bg-[#b4ff39] text-black rounded-full w-full py-2.5 text-xs font-medium hover:bg-[#c5ff6b] transition-colors button-glow justify-center">
-                填写信息 →
-              </button>
+              <p className="text-[10px] text-zinc-600 leading-relaxed">这是示例报告<br />你的报告需要填写个人信息后由 AI 生成</p>
+              <button onClick={handleCTA} className="bg-[#b4ff39] text-black rounded-full w-full py-2.5 text-xs font-medium hover:bg-[#c5ff6b] transition-colors button-glow justify-center">填写信息 →</button>
               <div className="pt-2 border-t border-white/5 space-y-1.5">
                 <div className="flex items-center gap-1.5"><Phone size={10} className="text-[#b4ff39]" /><span className="text-[9px] text-zinc-500">手机号注册</span></div>
                 <div className="flex items-center gap-1.5"><Shield size={10} className="text-[#b4ff39]" /><span className="text-[9px] text-zinc-500">数据安全保障</span></div>
@@ -737,7 +877,7 @@ export default function LandingPage() {
             </section>
           </div>
 
-          {/* ═══════ 全国可视化 ═══════ */}
+          {/* 全国可视化 */}
           <div className="border-t border-white/6" />
           <div className="max-w-5xl mx-auto px-6 lg:pl-[260px] py-16 space-y-10">
             <div>
@@ -745,10 +885,7 @@ export default function LandingPage() {
               <h2 className="text-3xl md:text-4xl font-light text-white leading-tight text-glow-lime" style={{ fontFamily: "'Instrument Serif', serif" }}>
                 全国公考<span className="text-[#b4ff39]">可视化</span>
               </h2>
-              <p className="text-zinc-500 text-sm mt-3 max-w-lg leading-relaxed">
-                全国 28 省份竞争热度 · 岗位类型分布 · 国考系统竞争分析<br />
-                实时数据，动态条形图呈现
-              </p>
+              <p className="text-zinc-500 text-sm mt-3 max-w-lg leading-relaxed">全国 28 省份竞争热度 · 岗位类型分布 · 国考系统竞争分析<br />实时数据，动态条形图呈现</p>
             </div>
             <div className="flex gap-1 p-1 bg-white/3 rounded-full">
               {([{ key: 'rank' as const, label: '省份排行' }, { key: 'posts' as const, label: '岗位分布' }, { key: 'guokao' as const, label: '国考系统' }]).map(t => (
@@ -761,25 +898,19 @@ export default function LandingPage() {
             {mapTab === 'posts' && <PostsPanel />}
             {mapTab === 'guokao' && <GuokaoPanel />}
             <div className="text-center pt-4">
-              <button onClick={() => router.push('/map')} className="liquid-glass rounded-full px-6 py-3 text-[#b4ff39] text-sm font-medium hover:bg-white/5 transition-colors">
-                查看完整全国可视化 →
-              </button>
+              <button onClick={() => router.push('/map')} className="liquid-glass rounded-full px-6 py-3 text-[#b4ff39] text-sm font-medium hover:bg-white/5 transition-colors">查看完整全国可视化 →</button>
             </div>
           </div>
 
-          {/* ═══════ CTA: 生成你的专属报告 ═══════ */}
+          {/* CTA */}
           <div className="border-t border-white/6" />
           <section className="py-20 text-center space-y-6 max-w-4xl lg:max-w-5xl mx-auto px-6 lg:pl-[260px]">
             <div className="inline-block px-4 py-1 border border-[#b4ff39]/20 text-[10px] font-mono text-[#b4ff39] tracking-wider mb-4 rounded-full text-glow-lime">YOUR TURN</div>
             <h2 className="text-3xl md:text-5xl font-light text-white leading-tight text-glow-white" style={{ fontFamily: "'Instrument Serif', serif" }}>
               这是他的报告<br /><span className="text-[#b4ff39] text-glow-lime">你的呢？</span>
             </h2>
-            <p className="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">
-              手机号注册 · 填写专业、学历、目标省份等信息<br />AI 将为你生成专属的报考岗位报告
-            </p>
-            <button onClick={handleCTA} className="bg-[#b4ff39] text-black rounded-full px-8 py-3.5 font-medium text-sm tracking-wide hover:bg-[#c5ff6b] transition-all button-glow mt-6">
-              手机号注册，生成专属报告 →
-            </button>
+            <p className="text-zinc-500 text-sm max-w-md mx-auto leading-relaxed">手机号注册 · 填写专业、学历、目标省份等信息<br />AI 将为你生成专属的报考岗位报告</p>
+            <button onClick={handleCTA} className="bg-[#b4ff39] text-black rounded-full px-8 py-3.5 font-medium text-sm tracking-wide hover:bg-[#c5ff6b] transition-all button-glow mt-6">手机号注册，生成专属报告 →</button>
             <div className="pt-4"><span className="text-[9px] text-zinc-700 font-mono">免费生成 · 仅需 1 分钟 · AI 智能匹配</span></div>
             <div className="pt-8 border-t border-white/5 mt-8">
               <p className="text-zinc-600 text-xs mb-3">已有账号？直接进入</p>
@@ -791,14 +922,12 @@ export default function LandingPage() {
             </div>
           </section>
 
-          {/* 底部 */}
           <div className="border-t border-white/6 px-6 py-6 text-center">
             <span className="text-[9px] font-mono text-zinc-700">上岸引擎 · Anan Engine · 拓扑降维 · 精准上岸 · © 2026</span>
           </div>
         </div>
       </section>
 
-      {/* Mobile menu */}
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} onLogin={() => { setMenuOpen(false); router.push('/login'); }} onSignup={() => { setMenuOpen(false); handleSignup(); }} />
     </div>
   );
