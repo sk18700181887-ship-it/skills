@@ -34,7 +34,9 @@
 - 语义色：ok = emerald-400 / warn = amber-400 / err = rose-400
 
 ### 字体
-- 标题：`font-serif`（衬线体），light 字重，大字号
+- 标题：`Instrument Serif`（衬线体，Google Fonts），大字号，tracking-tight
+- 品牌标题发光：text-glow-lime / text-glow-white
+- 正文：系统栈 `PingFang SC / Hiragino Sans GB / Microsoft YaHei`
 - 正文：系统栈 `PingFang SC / Hiragino Sans GB / Microsoft YaHei`
 - 编号标注：`font-mono` 等宽字体，zinc-600 色
 - 页面标题：text-4xl font-serif font-light tracking-tight
